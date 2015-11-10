@@ -1,15 +1,20 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <windows.h>
 #include <mmsystem.h>
+#include <Digitalv.h>
+
 #include <stdlib.h>
 #include <string.h>
-#include <tchar.h>
 #include <math.h>
+#include <tchar.h>
+
 #include "resource.h"
 
 /*定义宏变量，WNDWIDTH、WNDHEIGHT为窗口的宽和高*/
 #define TIMER                1
-#define WNDWIDTH             800
-#define WNDHEIGHT            600
+#define WNDWIDTH             1280
+#define WNDHEIGHT            768
+#define WNDTITLEBARHEIGHT    32
 #define BLOCK_COLOR_NUM      4
 #define ROOF_COLOR_NUM       2
 #define MAX_TERRIAN_NUM      10
@@ -56,37 +61,40 @@ typedef struct
 	int     totalDist;
 }GameStatus;
 
-/*全局变量*/
-
-struct
+typedef struct 
 {
 	enum { GS_WELCOME = 0, GS_SONGSELECT, GS_OPTIONS, GS_PLAYING } status;
 	WCHAR songNames[1000][40];
 	UINT totalSongCount;
 	UINT currentSong;
-} global;
 
-static TCHAR szWindowClass[] = _T("win32app");
-static TCHAR szTitle[] = _T("Running Rhythm");
+	MCI_OPEN_PARMS ae; //Audio Engine
+} GLOBAL;
+
+/*全局变量*/
+extern GLOBAL global;
+
+extern TCHAR szWindowClass[];
+extern TCHAR szTitle[];
 
 /*声明位图句柄*/
-HBITMAP m_hBackgroundBmp;
-HBITMAP m_hBuildingBmp;
-HBITMAP m_hHeroBmp;
-HBITMAP m_hGameStatusBmp;
-HBITMAP	m_hBlockBmp[BLOCK_COLOR_NUM];
-HBITMAP	m_hRoofkBmp[ROOF_COLOR_NUM];
+extern HBITMAP m_hBackgroundBmp;
+extern HBITMAP m_hBuildingBmp;
+extern HBITMAP m_hHeroBmp;
+extern HBITMAP m_hGameStatusBmp;
+extern HBITMAP	m_hBlockBmp[BLOCK_COLOR_NUM];
+extern HBITMAP	m_hRoofkBmp[ROOF_COLOR_NUM];
 
 /*定义方块颜色数组，与m_hBlockBmp[BLOCK_COLOR_NUM]个数对应，0表示蓝色方块，1表示绿色方块，2表示橙色方块，3表示粉色方块*/
-int	m_blockBmpNames[] = { IDB_BLUE_BLOCK, IDB_GREEN_BLOCK, IDB_ORANGE_BLOCK, IDB_PINK_BLOCK };
+extern int	m_blockBmpNames[];
 /*定义屋顶颜色数组，与m_hRoofkBmp[ROOF_COLOR_NUM]个数对应，0表示黑色屋顶，1表示灰色屋顶*/
-int	m_roofBmpNames[] = { IDB_BLACK_ROOF, IDB_GREY_ROOF };
+extern int	m_roofBmpNames[];
 
 /*声明英雄、建筑、地形、游戏状态*/
-Hero          m_hero;
-Building      m_building;
-Terrian       m_terrian[MAX_TERRIAN_NUM];
-GameStatus    m_gameStatus;
+extern Hero          m_hero;
+extern Building      m_building;
+extern Terrian       m_terrian[MAX_TERRIAN_NUM];
+extern GameStatus    m_gameStatus;
 
 /*全局函数*/
 
