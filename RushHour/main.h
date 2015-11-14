@@ -1,7 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
+const double PI = 3.1415926536;
+
 #include <windows.h>
-#include <mmsystem.h>
-#include <Digitalv.h>
 
 #include <stdlib.h>
 #include <string.h>
@@ -61,10 +61,17 @@ typedef struct
 	int     totalDist;
 }GameStatus;
 
+typedef struct
+{
+	WCHAR name[40];
+	WCHAR osuFile[20];
+	WCHAR bgImgFile[20];
+} SONGINFO;
+
 typedef struct 
 {
 	enum { GS_WELCOME = 0, GS_SONGSELECT, GS_OPTIONS, GS_PLAYING } status;
-	WCHAR songNames[1000][40];
+	SONGINFO songs[1000];
 	UINT totalSongCount;
 	UINT currentSong;
 
@@ -144,8 +151,7 @@ Parameter:
 	roofWidth、roofHeight屋顶宽度和高度
 	blockWidth、blockHeight方块宽度和高度
 *************************************************/ 
-Terrian CreateTerrian(LONG posX, LONG posY, LONG sizeX, LONG sizeY, 
-					  HBITMAP hBlockBmp, HBITMAP hRoofBmp, int roofHeight, int blockHeight);
+VOID CreateTerrian();
 
 //双缓冲绘制
 VOID Render(HWND hWnd);
@@ -161,7 +167,11 @@ VOID GameStatusUpdate();
 BOOL Paused(POINT);
 //键盘按下事件处理
 VOID KeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam);
-//键盘松开事件处理
-VOID KeyUp(HWND hWnd, WPARAM wParam, LPARAM lParam);
 //左鼠标点击事件
 VOID LButtonDown(HWND hWnd, WPARAM wParam, LPARAM lParam);
+
+//Global Functions
+int ToWindowX(double rx);
+int ToWindowY(double ry);
+BOOL Circle(HDC hdc, int x, int y, int r);
+VOID SwitchSong();

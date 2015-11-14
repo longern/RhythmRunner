@@ -1,39 +1,41 @@
 #include "main.h"
+#include "audio.h"
 
-VOID GlobalInit()
+VOID GameFolderInit()
 {
 	global.totalSongCount = 0;
 	global.currentSong = 1;
 	HANDLE findFile;
 	WIN32_FIND_DATA fNextInfo;
 	findFile = FindFirstFile(_T("*"), &fNextInfo);
+	WCHAR firstOsuFile[60];
 	while(FindNextFile(findFile, &fNextInfo))
 	{
 		if(fNextInfo.cFileName[0] == '.')
 			continue;
 		else if(fNextInfo.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
 		{
-			wcscpy(global.songNames[global.totalSongCount], fNextInfo.cFileName);
+			HANDLE findOsuFile;
+			WIN32_FIND_DATA fOsuInfo;
+			wsprintf(firstOsuFile, TEXT("%s/*.osu"), _T("*"));
+			findOsuFile = FindFirstFile(firstOsuFile, &fOsuInfo);
+			if(findOsuFile != INVALID_HANDLE_VALUE)
+				wcscpy(global.songs[global.totalSongCount].osuFile, fOsuInfo.cFileName);
+
+			wcscpy(global.songs[global.totalSongCount].name, fNextInfo.cFileName);
 			global.totalSongCount++;
 		}
 	}
+	FindClose(findFile);
+}
+
+VOID GlobalInit()
+{
+	GameFolderInit();
+	AudioInit();
+	SwitchSong();
 
 	global.status = global.GS_SONGSELECT;
-
-    global.ae.dwCallback = NULL;
-    global.ae.lpstrAlias = NULL;
-    global.ae.lpstrDeviceType =_T("MPEGAudio");
-    global.ae.lpstrElementName = _T("50669 fripSide - only my railgun (TV Size)/only my railgun (TV size).mp3");
-    global.ae.wDeviceID = NULL;
-    UINT rs;
-    rs = mciSendCommand(NULL, MCI_OPEN, MCI_OPEN_ELEMENT, (DWORD)&global.ae);
-    if (!rs)
-    {
-        MCI_PLAY_PARMS pp;
-        pp.dwCallback = NULL;
-        pp.dwFrom = 0;
-		mciSendCommand(global.ae.wDeviceID, MCI_PLAY, MCI_NOTIFY | MCI_DGV_PLAY_REPEAT, (DWORD)&pp);
-	}
 }
 
 VOID WindowInit(HWND hWnd, WPARAM wParam, LPARAM lParam)
@@ -74,7 +76,6 @@ VOID WindowInit(HWND hWnd, WPARAM wParam, LPARAM lParam)
 		{
 			continue;
 		}
-		m_terrian[k] = CreateTerrian(k * 65, 100 + 50 * (k % 2), 65, 300, m_hBlockBmp[k % 4], m_hRoofkBmp[k % 2], 33, 65);
 	}
 
 	//´´½¨ÓÎÏ·×´Ì¬
@@ -121,20 +122,7 @@ GameStatus CreateGameStatus(LONG posX, LONG posY, LONG sizeX, LONG sizeY, HBITMA
 	return gameStatus;
 }
 
-Terrian CreateTerrian(LONG posX, LONG posY, LONG sizeX, LONG sizeY, 
-					  HBITMAP hBlockBmp, HBITMAP hRoofBmp, int roofHeight, int blockHeight)
+VOID CreateTerrians()
 {
-	Terrian terrian;
-	terrian.pos.x = posX;
-	terrian.pos.y = posY;
-	terrian.size.cx = sizeX;
-	terrian.size.cy = sizeY;
-	terrian.hBlockBmp = hBlockBmp;
-	terrian.hRoofBmp = hRoofBmp;
-	terrian.roofWidth = sizeX;
-	terrian.roofHeight = roofHeight;
-	terrian.blockWidth = sizeX;
-	terrian.blockHeight = blockHeight;
-	terrian.blockNum = (int)ceil((sizeY - roofHeight) * 1.0 / blockHeight); 
-	return terrian;
+	;
 }

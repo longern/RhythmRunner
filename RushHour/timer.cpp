@@ -71,7 +71,7 @@ VOID RenderSongSelect(HDC hdcBuffer, HDC hdcBmp)
 	{
 		if (i + 1 == global.currentSong)
 			SetTextColor(hdcBuffer, RGB(255, 0, 0));
-		TextOut(hdcBuffer, WNDWIDTH - 400, 15 + 25 * i, global.songNames[i], wcslen(global.songNames[i]));
+		TextOut(hdcBuffer, WNDWIDTH - 400, 15 + 25 * i, global.songs[i].name, wcslen(global.songs[i].name));
 		if (i + 1 == global.currentSong)
 			SetTextColor(hdcBuffer, RGB(255, 255, 255));
 	}
@@ -84,66 +84,31 @@ VOID RenderOptions(HDC hdcBuffer, HDC hdcBmp)
 
 VOID RenderPlaying(HDC hdcBuffer, HDC hdcBmp)
 {
-	//绘制背景到缓存
-	SelectObject(hdcBmp, m_hBackgroundBmp);
-	BitBlt(hdcBuffer, 0, 0, WNDWIDTH, WNDHEIGHT,
-		hdcBmp, 0, 0, SRCCOPY);
+	UINT i;
 
-	//绘制建筑到缓存
-	SelectObject(hdcBmp, m_building.hBmp);
-	TransparentBlt(
-		hdcBuffer, m_building.pos.x, m_building.pos.y,
-		m_building.size.cx, m_building.size.cy,
-		hdcBmp, 0, 0, m_building.size.cx, m_building.size.cy,
-		RGB(255, 255, 255)
-		);
+	//  Draw Background
+	SelectObject(hdcBuffer, GetStockObject(NULL_PEN));
+	Rectangle(hdcBuffer, 0, 0, WNDWIDTH, (int)(WNDHEIGHT * 0.26));
+	Rectangle(hdcBuffer, 0, (int)(WNDHEIGHT * 0.5), WNDWIDTH, (int)(WNDHEIGHT * 0.76));
 
-	//绘制Hero到缓存
-	SelectObject(hdcBmp, m_hero.hBmp);
-	TransparentBlt(
-		hdcBuffer, m_hero.pos.x, m_hero.pos.y,
-		m_hero.size.cx, m_hero.size.cy,
-		hdcBmp, 0, m_hero.size.cy * m_hero.curFrameIndex, m_hero.size.cx, m_hero.size.cy,
-		RGB(255, 255, 255)
-		);
-
-	//绘制地形
-	int k;
-	for (k = 0; k < MAX_TERRIAN_NUM; ++k)
+	for (i = 0; i < 4; i++) //  Four tracks
 	{
-		Terrian terrian = m_terrian[k];
-		SelectObject(hdcBmp, terrian.hRoofBmp);
-		TransparentBlt(
-			hdcBuffer, terrian.pos.x, terrian.pos.y,
-			terrian.roofWidth, terrian.roofHeight,
-			hdcBmp, 0, 0, terrian.roofWidth, terrian.roofHeight,
-			RGB(255, 255, 255)
-			);
-		SelectObject(hdcBmp, terrian.hBlockBmp);
-		int t;
-		for (t = 0; t < terrian.blockNum; ++t)
-		{
-			TransparentBlt(
-				hdcBuffer, terrian.pos.x, terrian.pos.y + terrian.roofHeight + terrian.blockHeight * t,
-				terrian.blockWidth, terrian.blockHeight,
-				hdcBmp, 0, 0, terrian.blockWidth, terrian.blockHeight,
-				RGB(255, 255, 255)
-				);
-		}
+		//  Draw Floor
+		SelectObject(hdcBuffer, GetStockObject(GRAY_BRUSH));
+		DOUBLE trackTop = i * 0.25 + (i % 2) * 0.01;
+		DOUBLE trackBottom = (i + 1) * 0.25 + ((i + 1) % 2) * 0.01;
+		Rectangle(hdcBuffer, 0, ToWindowY(trackBottom - 0.05) - 1, WNDWIDTH, ToWindowY(trackBottom) + 1);
+
+		//  Draw StickMan
+		if(i % 2)
+			SelectObject(hdcBuffer, GetStockObject(WHITE_BRUSH));
+		else
+			SelectObject(hdcBuffer, GetStockObject(BLACK_BRUSH));
+		Circle(hdcBuffer, ToWindowX(0.05), ToWindowY(trackBottom - 0.1), 7);
+
+		//  Draw Barriers
 	}
 
-	//绘制游戏状态
-	//暂停或继续位图
-	SelectObject(hdcBmp, m_gameStatus.hBmp);
-	TransparentBlt(hdcBuffer, m_gameStatus.pos.x, m_gameStatus.pos.y, m_gameStatus.size.cx, m_gameStatus.size.cy,
-		hdcBmp, 0, m_gameStatus.size.cy * m_gameStatus.isPaused,
-		m_gameStatus.size.cx, m_gameStatus.size.cy, RGB(255, 255, 255));
-
-	//绘制分数
-	TCHAR	szDist[13];
-	SetTextColor(hdcBuffer, RGB(0, 0, 0));
-	SetBkMode(hdcBuffer, TRANSPARENT);
-	TextOut(hdcBuffer, WNDWIDTH - 400, 15, szDist, wsprintf(szDist, _T("距离: %d"), m_gameStatus.totalDist));
 }
 
 VOID Render(HWND hWnd)

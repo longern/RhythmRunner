@@ -83,10 +83,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="audio.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="audio.cpp" />
+    <ClCompile Include="global.cpp" />
     <ClCompile Include="init.cpp" />
     <ClCompile Include="inpevents.cpp" />
     <ClCompile Include="main.cpp" />

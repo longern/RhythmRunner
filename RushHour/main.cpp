@@ -1,5 +1,3 @@
-#define _CRT_SECURE_NO_WARNINGS
-
 #include "main.h"
 
 #pragma comment(lib, "winmm.lib")
@@ -34,22 +32,12 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	{
 		MessageBox(NULL,
 			_T("Call to RegisterClassEx failed!"),
-			_T("Mega Plane"),
+			_T("Rhythm Runner"),
 			MB_OK);
 
 		return 1;
 	}
 
-	// The parameters to CreateWindow explained:
-	// szWindowClass: the name of the application
-	// szTitle: the text that appears in the title bar
-	// WS_OVERLAPPEDWINDOW: the type of window to create,~WS_THICKFRAME  fixed window size
-	// CW_USEDEFAULT, CW_USEDEFAULT: initial position (x, y)
-	// WNDWIDTH, WNDHEIGHT: initial size (width, length)
-	// NULL: the parent of this window
-	// NULL: this application does not have a menu bar
-	// hInstance: the first parameter from WinMain
-	// NULL: not used in this application
 	hWnd = CreateWindow(
 		szWindowClass,
 		szTitle,
@@ -85,15 +73,6 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	return (int)msg.wParam;
 }
 
-//
-//  FUNCTION: WndProc(HWND, UINT, WPARAM, LPARAM)
-//
-//  PURPOSE:  Processes messages for the main window.
-//
-//  WM_PAINT    - Paint the main window
-//  WM_DESTROY  - post a quit message and return
-//
-//
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)
@@ -112,7 +91,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_KEYUP:
 		//键盘松开事件
-		KeyUp(hWnd, wParam, lParam);
 		break;
 	case WM_LBUTTONDOWN:
 		//左鼠标事件
