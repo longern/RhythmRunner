@@ -3,9 +3,11 @@ const double PI = 3.1415926536;
 
 #include <windows.h>
 
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
+#include <cstdlib>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <string>
 #include <tchar.h>
 
 #include "resource.h"
@@ -27,7 +29,7 @@ typedef struct
 	SIZE	size;
 	int     curFrameIndex;
 	int     maxFrameSize;
-}Hero;
+} Hero;
 
 /*地形结构体，地形方块位图、屋顶位图、位置、大小、屋顶以及方块大小、方块个数*/
 typedef struct
@@ -41,7 +43,7 @@ typedef struct
 	int     blockWidth;
 	int     blockHeight;
 	int     blockNum;
-}Terrian;
+} Terrian;
 
 /*背景建筑结构体，建筑位图、位置、大小、类型*/
 typedef struct
@@ -49,7 +51,7 @@ typedef struct
 	HBITMAP	hBmp;
 	POINT	pos;
 	SIZE	size;
-}Building;
+} Building;
 
 /*游戏状态结构体*/
 typedef struct
@@ -59,19 +61,25 @@ typedef struct
 	SIZE	size;
 	BOOL	isPaused;
 	int     totalDist;
-}GameStatus;
+} GameStatus;
 
 typedef struct
 {
+	std::wstring wname;
 	WCHAR name[40];
 	WCHAR osuFile[20];
 	WCHAR bgImgFile[20];
 } SONGINFO;
 
+typedef struct
+{
+	std::vector<int> timingPoints;
+} BEATSINFO;
+
 typedef struct 
 {
 	enum { GS_WELCOME = 0, GS_SONGSELECT, GS_OPTIONS, GS_PLAYING } status;
-	SONGINFO songs[1000];
+	std::vector<SONGINFO> songs;
 	UINT totalSongCount;
 	UINT currentSong;
 
@@ -89,13 +97,13 @@ extern HBITMAP m_hBackgroundBmp;
 extern HBITMAP m_hBuildingBmp;
 extern HBITMAP m_hHeroBmp;
 extern HBITMAP m_hGameStatusBmp;
-extern HBITMAP	m_hBlockBmp[BLOCK_COLOR_NUM];
-extern HBITMAP	m_hRoofkBmp[ROOF_COLOR_NUM];
+extern HBITMAP m_hBlockBmp[BLOCK_COLOR_NUM];
+extern HBITMAP m_hRoofkBmp[ROOF_COLOR_NUM];
 
 /*定义方块颜色数组，与m_hBlockBmp[BLOCK_COLOR_NUM]个数对应，0表示蓝色方块，1表示绿色方块，2表示橙色方块，3表示粉色方块*/
-extern int	m_blockBmpNames[];
+extern int m_blockBmpNames[];
 /*定义屋顶颜色数组，与m_hRoofkBmp[ROOF_COLOR_NUM]个数对应，0表示黑色屋顶，1表示灰色屋顶*/
-extern int	m_roofBmpNames[];
+extern int m_roofBmpNames[];
 
 /*声明英雄、建筑、地形、游戏状态*/
 extern Hero          m_hero;

@@ -19,6 +19,7 @@ VOID GameFolderInit()
 			WIN32_FIND_DATA fOsuInfo;
 			wsprintf(firstOsuFile, TEXT("%s/*.osu"), _T("*"));
 			findOsuFile = FindFirstFile(firstOsuFile, &fOsuInfo);
+			global.songs.push_back(SONGINFO());
 			if(findOsuFile != INVALID_HANDLE_VALUE)
 				wcscpy(global.songs[global.totalSongCount].osuFile, fOsuInfo.cFileName);
 

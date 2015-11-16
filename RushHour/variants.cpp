@@ -3,7 +3,7 @@
 GLOBAL global;
 
 TCHAR szWindowClass[] = _T("win32app");
-TCHAR szTitle[] = _T("Running Rhythm");
+TCHAR szTitle[] = _T("Rhythm Runner");
 
 /*ÉùÃ÷Î»Í¼¾ä±ú*/
 HBITMAP m_hBackgroundBmp;
