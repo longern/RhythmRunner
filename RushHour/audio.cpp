@@ -11,7 +11,7 @@ void AudioInit()
 	gAudio.path[0] = WCHAR(0);
 }
 
-MCIERROR AudioOpen(WCHAR *source)
+MCIERROR AudioOpen(const WCHAR *source)
 {
 	if(gAudio.ae.wDeviceID)
 		AudioClose();

@@ -71,7 +71,7 @@ VOID RenderSongSelect(HDC hdcBuffer, HDC hdcBmp)
 	{
 		if (i + 1 == global.currentSong)
 			SetTextColor(hdcBuffer, RGB(255, 0, 0));
-		TextOut(hdcBuffer, WNDWIDTH - 400, 15 + 25 * i, global.songs[i].name, wcslen(global.songs[i].name));
+		TextOut(hdcBuffer, WNDWIDTH - 400, 15 + 25 * i, global.songs[i].name.data(), global.songs[i].name.length());
 		if (i + 1 == global.currentSong)
 			SetTextColor(hdcBuffer, RGB(255, 255, 255));
 	}

@@ -1,5 +1,5 @@
-#include "main.h"
 #include "audio.h"
+#include "osureader.h"
 
 VOID GameFolderInit()
 {
@@ -15,15 +15,21 @@ VOID GameFolderInit()
 			continue;
 		else if(fNextInfo.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
 		{
+			SetCurrentDirectory(fNextInfo.cFileName);
 			HANDLE findOsuFile;
 			WIN32_FIND_DATA fOsuInfo;
-			wsprintf(firstOsuFile, TEXT("%s/*.osu"), _T("*"));
+			wsprintf(firstOsuFile, TEXT("%s.osu"), _T("*"));
 			findOsuFile = FindFirstFile(firstOsuFile, &fOsuInfo);
 			global.songs.push_back(SONGINFO());
 			if(findOsuFile != INVALID_HANDLE_VALUE)
-				wcscpy(global.songs[global.totalSongCount].osuFile, fOsuInfo.cFileName);
+			{
+				global.songs[global.totalSongCount].osuFile = fOsuInfo.cFileName;
+				readBasicInfo(global.songs[global.totalSongCount].osuFile.data(), &global.songs[global.totalSongCount]);
+			}
+			FindClose(findOsuFile);
+			SetCurrentDirectory(_T(".."));
 
-			wcscpy(global.songs[global.totalSongCount].name, fNextInfo.cFileName);
+			global.songs[global.totalSongCount].name = fNextInfo.cFileName;
 			global.totalSongCount++;
 		}
 	}

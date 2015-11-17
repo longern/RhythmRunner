@@ -1,3 +1,6 @@
+#ifndef MAIN_H
+#define MAIN_H
+
 #define _CRT_SECURE_NO_WARNINGS
 const double PI = 3.1415926536;
 
@@ -65,11 +68,19 @@ typedef struct
 
 typedef struct
 {
-	std::wstring wname;
-	WCHAR name[40];
-	WCHAR osuFile[20];
-	WCHAR bgImgFile[20];
+	std::wstring name;
+	std::wstring title;
+	std::wstring audioFilename;
+	std::wstring osuFile;
+	std::wstring bgImgFile;
 } SONGINFO;
+
+typedef struct
+{
+	UINT msecs;
+	UINT track;
+	UINT type;
+} BARRIERINFO;
 
 typedef struct
 {
@@ -80,8 +91,11 @@ typedef struct
 {
 	enum { GS_WELCOME = 0, GS_SONGSELECT, GS_OPTIONS, GS_PLAYING } status;
 	std::vector<SONGINFO> songs;
+	std::vector<BARRIERINFO> barriers;
 	UINT totalSongCount;
 	UINT currentSong;
+
+	SONGINFO &currSong() { return songs[currentSong - 1]; }
 
 	MCI_OPEN_PARMS ae; //Audio Engine
 } GLOBAL;
@@ -183,3 +197,5 @@ int ToWindowX(double rx);
 int ToWindowY(double ry);
 BOOL Circle(HDC hdc, int x, int y, int r);
 VOID SwitchSong();
+
+#endif //  MAIN_H

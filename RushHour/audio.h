@@ -13,6 +13,6 @@ typedef struct
 extern AUDIOENGINE gAudio;
 
 void AudioInit();
-MCIERROR AudioOpen(WCHAR *source);
+MCIERROR AudioOpen(const WCHAR *source);
 MCIERROR AudioPlay(DWORD time = 0);
 MCIERROR AudioClose();

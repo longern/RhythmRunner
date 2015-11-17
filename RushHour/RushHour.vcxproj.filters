@@ -24,6 +24,9 @@
     <ClInclude Include="audio.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="osureader.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">

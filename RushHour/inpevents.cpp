@@ -1,11 +1,12 @@
-#include "main.h"
 #include "audio.h"
+#include "osureader.h"
 
 VOID SongSelectKeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 {
 	switch (wParam)
 	{
 	case VK_RETURN:
+		readBeats((global.currSong().name + _T("/") + global.currSong().osuFile).data());
 		global.status = global.GS_PLAYING;
 		break;
 

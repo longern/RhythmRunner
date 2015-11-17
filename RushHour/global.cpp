@@ -18,14 +18,14 @@ BOOL Circle(HDC hdc, int x, int y, int r)
 
 VOID SwitchSong()
 {
+	SONGINFO &currSong = global.songs[global.currentSong - 1];
 	HANDLE findFile;
 	WIN32_FIND_DATA fNextInfo;
 	WCHAR firstMp3File[200];
-	wsprintf(firstMp3File, TEXT("%s/*.mp3"), global.songs[global.currentSong - 1].name);
-	findFile = FindFirstFile(firstMp3File, &fNextInfo);
+	findFile = FindFirstFile((currSong.name + _T("/") + currSong.audioFilename).data(), &fNextInfo);
 	if(findFile != INVALID_HANDLE_VALUE)
 	{
-		wsprintf(firstMp3File, TEXT("%s/%s"), global.songs[global.currentSong - 1].name, fNextInfo.cFileName);
+		wsprintf(firstMp3File, TEXT("%s/%s"), global.songs[global.currentSong - 1].name.data(), currSong.audioFilename.data());
 		UINT rs;
 		rs = AudioOpen(firstMp3File);
 		AudioPlay();

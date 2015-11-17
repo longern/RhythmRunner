@@ -1,13 +1,37 @@
 #include <fstream>
-#include <windows.h>
-#include "main.h"
+#include "osureader.h"
 
-VOID readTimeLines(const std::string &line)
+std::wstring strtowstr(const std::string &str)
 {
-	;
+	std::wstring wstr;
+	wstr.resize(str.length() + 1);
+	for(unsigned int i = 0; i < str.length(); i++)
+		wstr[i] = wchar_t(str[i]);
+	wstr[str.length()] = '\0';
+	return wstr;
 }
 
-VOID readBasicInfo(WCHAR *filePathName, SONGINFO *info)
+VOID readTimingPoints(const std::string &str)
+{
+	global.barriers.push_back(BARRIERINFO());
+	UINT comaCount = 0;
+	unsigned int i;
+	for(i = 0; i < str.length(); i++)
+	{
+		if(str[i] == ',')
+			comaCount++;
+		if(comaCount >= 2)
+		{
+			i++;
+			break;
+		}
+	}
+	global.barriers.back().msecs = std::atol(str.data() + i);
+	global.barriers.back().type = std::rand() % 4;
+	global.barriers.back().track = std::rand() % 4;
+}
+
+VOID readBasicInfo(const WCHAR *filePathName, SONGINFO *info)
 {
 	std::ifstream osuFileStream;
 	osuFileStream.open(filePathName);
@@ -20,16 +44,24 @@ VOID readBasicInfo(WCHAR *filePathName, SONGINFO *info)
 			continue;
 		if (line.front() == '[' && line.back() == ']')
 		{
-			state = line.substr(1, -1);
+			state = line.substr(1, line.length() - 2);
 			continue;
 		}
 
 		if (state == "General")
 		{
-			if (line.find_first_of("AudioFilename:") == 0)
+			if (line.find("AudioFilename:") != std::string::npos)
 			{
 				line = line.substr(14);
-				line = line.substr(line.find_first_not_of(" "));
+				global.songs[global.totalSongCount].audioFilename = strtowstr(line.substr(line.find_first_not_of(' ')));
+			}
+		}
+		else if (state == "Metadata")
+		{
+			if (line.find("Title:") != std::string::npos)
+			{
+				line = line.substr(6);
+				global.songs[global.totalSongCount].title = strtowstr(line.substr(line.find_first_not_of(' ')));
 			}
 		}
 		else
@@ -39,8 +71,9 @@ VOID readBasicInfo(WCHAR *filePathName, SONGINFO *info)
 	osuFileStream.close();
 }
 
-VOID readBeats(WCHAR *filePathName)
+VOID readBeats(const WCHAR *filePathName)
 {
+	global.barriers.clear();
 	std::ifstream osuFileStream;
 	osuFileStream.open(filePathName);
 	std::string line, state;
@@ -52,13 +85,13 @@ VOID readBeats(WCHAR *filePathName)
 			continue;
 		if (line.front() == '[' && line.back() == ']')
 		{
-			state = line.substr(1, -1);
+			state = line.substr(1, line.length() - 2);
 			continue;
 		}
 
-		if (state == "TimeLines")
+		if (state == "HitObjects")
 		{
-			readTimeLines(line);
+			readTimingPoints(line);
 		}
 		else
 			continue;
