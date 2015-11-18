@@ -84,6 +84,7 @@ VOID RenderOptions(HDC hdcBuffer, HDC hdcBmp)
 
 VOID RenderPlaying(HDC hdcBuffer, HDC hdcBmp)
 {
+	LONG gameTimePass = global.timePass();
 	UINT i;
 
 	//  Draw Background
@@ -99,14 +100,24 @@ VOID RenderPlaying(HDC hdcBuffer, HDC hdcBmp)
 		DOUBLE trackBottom = (i + 1) * 0.25 + ((i + 1) % 2) * 0.01;
 		Rectangle(hdcBuffer, 0, ToWindowY(trackBottom - 0.05) - 1, WNDWIDTH, ToWindowY(trackBottom) + 1);
 
+		//  Draw Barriers
+		for(UINT j = 0; j < global.barriers.size(); j++)
+		{
+			DOUBLE barrierX = 0.05 + (global.barriers[j].msecs - gameTimePass) / 1500.;
+			if(barrierX < 0)
+				continue;
+			if(barrierX > 1)
+				break;
+			if(global.barriers[j].track == i)
+				Rectangle(hdcBuffer, ToWindowX(barrierX), ToWindowY(trackTop), ToWindowX(barrierX) + 2, ToWindowY(trackBottom) + 1);
+		}
+
 		//  Draw StickMan
 		if(i % 2)
 			SelectObject(hdcBuffer, GetStockObject(WHITE_BRUSH));
 		else
 			SelectObject(hdcBuffer, GetStockObject(BLACK_BRUSH));
 		Circle(hdcBuffer, ToWindowX(0.05), ToWindowY(trackBottom - 0.1), 7);
-
-		//  Draw Barriers
 	}
 
 }

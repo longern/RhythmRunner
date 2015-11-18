@@ -38,6 +38,8 @@ VOID GameFolderInit()
 
 VOID GlobalInit()
 {
+	QueryPerformanceFrequency(&global.clockFrequency);
+
 	GameFolderInit();
 	AudioInit();
 	SwitchSong();
@@ -89,7 +91,15 @@ VOID WindowInit(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	m_gameStatus = CreateGameStatus(0, 0, 40, 30, m_hGameStatusBmp);
 
 	//Æô¶¯¼ÆÊ±Æ÷
-	SetTimer(hWnd, TIMER, 30, NULL);
+	SetTimer(hWnd, TIMER, 20, NULL);
+}
+
+VOID GameInit()
+{
+	SwitchSong();
+	readBeats((global.currSong().name + _T("/") + global.currSong().osuFile).data());
+	QueryPerformanceCounter(&global.beginTime);
+	global.status = global.GS_PLAYING;
 }
 
 Hero CreateHero(LONG posX, LONG posY, LONG sizeX, LONG sizeY, HBITMAP hBmp, int curFrameIndex, int maxFrameSize)

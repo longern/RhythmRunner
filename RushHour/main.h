@@ -77,7 +77,7 @@ typedef struct
 
 typedef struct
 {
-	UINT msecs;
+	LONG msecs;
 	UINT track;
 	UINT type;
 } BARRIERINFO;
@@ -91,13 +91,24 @@ typedef struct
 {
 	enum { GS_WELCOME = 0, GS_SONGSELECT, GS_OPTIONS, GS_PLAYING } status;
 	std::vector<SONGINFO> songs;
+	LARGE_INTEGER beginTime;
+	LARGE_INTEGER clockFrequency;
 	std::vector<BARRIERINFO> barriers;
 	UINT totalSongCount;
 	UINT currentSong;
 
-	SONGINFO &currSong() { return songs[currentSong - 1]; }
-
 	MCI_OPEN_PARMS ae; //Audio Engine
+
+	SONGINFO &currSong() {
+		return songs[currentSong - 1];
+	}
+
+	LONG timePass()
+	{
+		LARGE_INTEGER ct;
+		QueryPerformanceCounter(&ct);
+		return (long)((ct.QuadPart - beginTime.QuadPart) / (double)clockFrequency.QuadPart * 1000);
+	}
 } GLOBAL;
 
 /*全局变量*/
@@ -128,6 +139,7 @@ extern GameStatus    m_gameStatus;
 /*全局函数*/
 
 VOID GlobalInit();
+VOID GameInit();
 
 //窗体过程函数
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);

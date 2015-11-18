@@ -33,3 +33,8 @@ MCIERROR AudioClose()
 {
 	return mciSendCommand(gAudio.ae.wDeviceID, MCI_CLOSE, MCI_NOTIFY, NULL);
 }
+
+MCIERROR AudioSeekToStart()
+{
+	return 0;
+}

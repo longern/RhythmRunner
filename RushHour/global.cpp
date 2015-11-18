@@ -13,7 +13,7 @@ int ToWindowY(double ry)
 
 BOOL Circle(HDC hdc, int x, int y, int r)
 {
-	return Ellipse(hdc, x - r, y - r, x + r, y + r); 
+	return Ellipse(hdc, x - r, y - r, x + r, y + r);
 }
 
 VOID SwitchSong()
