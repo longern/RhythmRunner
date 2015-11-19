@@ -84,15 +84,24 @@ typedef struct
 	UINT type;
 } BARRIERINFO;
 
+typedef struct
+{
+	INT h;
+	INT jpTime;
+	UINT jpCount;
+} HERO;
+
 typedef struct 
 {
 	enum { GS_WELCOME = 0, GS_SONGSELECT, GS_OPTIONS, GS_PLAYING } status;
 	std::vector<SONGINFO> songs;
+	UINT totalSongCount;
+	UINT currentSong;
+
 	LARGE_INTEGER beginTime;
 	LARGE_INTEGER clockFrequency;
 	std::vector<BARRIERINFO> barriers;
-	UINT totalSongCount;
-	UINT currentSong;
+	HERO heroes[4];
 
 	MCI_OPEN_PARMS ae; //Audio Engine
 
