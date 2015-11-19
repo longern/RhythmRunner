@@ -92,7 +92,7 @@ VOID RenderPlaying(HDC hdcBuffer, HDC hdcBmp)
 	Rectangle(hdcBuffer, 0, 0, WNDWIDTH, (int)(WNDHEIGHT * 0.26));
 	Rectangle(hdcBuffer, 0, (int)(WNDHEIGHT * 0.5), WNDWIDTH, (int)(WNDHEIGHT * 0.76));
 
-	for (i = 0; i < 4; i++) //  Four tracks
+	for (i = 0; i < 4; i++) //  Four tracks. Want more?
 	{
 		//  Draw Floor
 		SelectObject(hdcBuffer, GetStockObject(GRAY_BRUSH));
@@ -101,32 +101,43 @@ VOID RenderPlaying(HDC hdcBuffer, HDC hdcBmp)
 		Rectangle(hdcBuffer, 0, ToWindowY(trackBottom - 0.05) - 1, WNDWIDTH, ToWindowY(trackBottom) + 1);
 
 		//  Draw Barriers
+		HBRUSH redBrush = CreateSolidBrush(RGB(255, 0, 0));
+		SelectObject(hdcBuffer, redBrush);
 		for(UINT j = 0; j < global.barriers.size(); j++)
 		{
-			DOUBLE barrierX = 0.05 + (global.barriers[j].msecs - gameTimePass) / 1500.;
-			if(barrierX < 0)
+			DOUBLE barrierX = 0.05 + (global.barriers[j].msecs - gameTimePass) / 3000. + 0.005;
+			if(barrierX < -0.2)
 				continue;
 			if(barrierX > 1)
 				break;
+
 			if(global.barriers[j].track == i)
-				Rectangle(hdcBuffer, ToWindowX(barrierX), ToWindowY(trackTop), ToWindowX(barrierX) + 2, ToWindowY(trackBottom) + 1);
+				Rectangle(hdcBuffer, ToWindowX(barrierX), ToWindowY(trackBottom - 0.05) - 1,
+									 ToWindowX(barrierX + 0.025), ToWindowY(trackBottom) + 1);
 		}
+		DeleteObject(redBrush);
 
 		//  Draw StickMan
-		if(i % 2)
-			SelectObject(hdcBuffer, GetStockObject(WHITE_BRUSH));
-		else
-			SelectObject(hdcBuffer, GetStockObject(BLACK_BRUSH));
-		Circle(hdcBuffer, ToWindowX(0.05), ToWindowY(trackBottom - 0.1), 7);
+		UINT heroFrame = (int)(gameTimePass / global.currSong().msPerBeat * 8 + 3) % 8 + 1;
+		if(heroFrame >= 7)
+			heroFrame++;
+		SelectObject(hdcBmp, resource.hero[heroFrame]);
+		TransparentBlt(
+			hdcBuffer,
+			ToWindowX(0.05) + 14, ToWindowY(trackBottom - 0.1) - 8, 38, 45,
+			hdcBmp,
+			0, 0, 420, 504,
+			RGB(255, 255, 255)
+		);
 	}
 
 }
 
-VOID Render(HWND hWnd)
+VOID Render(HWND hWnd)                                                                                    
 {
 	PAINTSTRUCT ps;
 	HDC hdc;
-	//开始绘制
+
 	hdc = BeginPaint(hWnd, &ps);
 
 	HDC	hdcBmp, hdcBuffer;
@@ -155,14 +166,11 @@ VOID Render(HWND hWnd)
 		break;
 	}
 
-	//最后将所有的信息绘制到屏幕上
 	BitBlt(hdc, 0, 0, WNDWIDTH, WNDHEIGHT, hdcBuffer, 0, 0, SRCCOPY);
 
-	//回收资源所占的内存
 	DeleteObject(cptBmp);
 	DeleteDC(hdcBuffer);
 	DeleteDC(hdcBmp);
 
-	//结束绘制
 	EndPaint(hWnd, &ps);
 }

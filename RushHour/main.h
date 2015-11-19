@@ -73,6 +73,8 @@ typedef struct
 	std::wstring audioFilename;
 	std::wstring osuFile;
 	std::wstring bgImgFile;
+	DOUBLE msPerBeat;
+	INT audioLeadIn;
 } SONGINFO;
 
 typedef struct
@@ -81,11 +83,6 @@ typedef struct
 	UINT track;
 	UINT type;
 } BARRIERINFO;
-
-typedef struct
-{
-	std::vector<int> timingPoints;
-} BEATSINFO;
 
 typedef struct 
 {
@@ -103,32 +100,20 @@ typedef struct
 		return songs[currentSong - 1];
 	}
 
-	LONG timePass()
-	{
-		LARGE_INTEGER ct;
-		QueryPerformanceCounter(&ct);
-		return (long)((ct.QuadPart - beginTime.QuadPart) / (double)clockFrequency.QuadPart * 1000);
-	}
+	LONG timePass();
 } GLOBAL;
+
+typedef struct
+{
+	HBITMAP hero[9];
+} GAMERESOURCE;
 
 /*全局变量*/
 extern GLOBAL global;
+extern GAMERESOURCE resource;
 
 extern TCHAR szWindowClass[];
 extern TCHAR szTitle[];
-
-/*声明位图句柄*/
-extern HBITMAP m_hBackgroundBmp;
-extern HBITMAP m_hBuildingBmp;
-extern HBITMAP m_hHeroBmp;
-extern HBITMAP m_hGameStatusBmp;
-extern HBITMAP m_hBlockBmp[BLOCK_COLOR_NUM];
-extern HBITMAP m_hRoofkBmp[ROOF_COLOR_NUM];
-
-/*定义方块颜色数组，与m_hBlockBmp[BLOCK_COLOR_NUM]个数对应，0表示蓝色方块，1表示绿色方块，2表示橙色方块，3表示粉色方块*/
-extern int m_blockBmpNames[];
-/*定义屋顶颜色数组，与m_hRoofkBmp[ROOF_COLOR_NUM]个数对应，0表示黑色屋顶，1表示灰色屋顶*/
-extern int m_roofBmpNames[];
 
 /*声明英雄、建筑、地形、游戏状态*/
 extern Hero          m_hero;
@@ -145,47 +130,6 @@ VOID GameInit();
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 //初始化
 VOID WindowInit(HWND hWnd, WPARAM wParam, LPARAM lParam);
-
-/*************************************************
-Fucntion : 创建英雄
-Parameter:
-	posX、posY表示矩形左上角的坐标
-	sizeX、sizeY表示矩形的size
-	hBmp表示位图句柄
-	curFrameIndex当前帧
-	maxFrameSize最大帧率
-*************************************************/ 
-Hero CreateHero(LONG posX, LONG posY, LONG sizeX, LONG sizeY, HBITMAP hBmp, int curFrameIndex, int maxFrameSize);
-
-/*************************************************
-Fucntion : 创建背景建筑
-Parameter:
-	posX、posY表示矩形左上角的坐标
-	sizeX、sizeY表示矩形的size
-	hBmp表示位图句柄
-*************************************************/ 
-Building CreateBuilding(LONG posX, LONG posY, LONG sizeX, LONG sizeY, HBITMAP hBmp);
-
-/*************************************************
-Fucntion : 创建游戏状态
-Parameter:
-	posX、posY表示矩形左上角的坐标
-	sizeX、sizeY表示矩形的size
-	hBmp表示位图句柄
-*************************************************/ 
-GameStatus CreateGameStatus(LONG posX, LONG posY, LONG sizeX, LONG sizeY, HBITMAP hBmp);
-
-/*************************************************
-Fucntion : 创建英雄飞机
-Parameter:
-	posX、posY表示矩形左上角的坐标
-	sizeX、sizeY表示矩形的size
-	hBlockBmp表示方块位图句柄
-	hRoofBmp表示屋顶位图句柄
-	roofWidth、roofHeight屋顶宽度和高度
-	blockWidth、blockHeight方块宽度和高度
-*************************************************/ 
-VOID CreateTerrian();
 
 //双缓冲绘制
 VOID Render(HWND hWnd);

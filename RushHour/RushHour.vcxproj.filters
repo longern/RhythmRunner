@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="resource.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="main.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -25,6 +22,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="osureader.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -55,43 +55,37 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="RushHour.rc">
+    <Image Include="res\ui\1.bmp">
       <Filter>资源文件</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
+    </Image>
+    <Image Include="res\ui\2.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\ui\3.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\ui\4.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\ui\5.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\ui\6.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\ui\8.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\ui\9.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
     <Image Include="res\ui\run.ico">
       <Filter>资源文件</Filter>
     </Image>
-    <Image Include="res\ui\background.bmp">
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="RushHour.rc">
       <Filter>资源文件</Filter>
-    </Image>
-    <Image Include="res\ui\black_roof.bmp">
-      <Filter>资源文件</Filter>
-    </Image>
-    <Image Include="res\ui\blue_block.bmp">
-      <Filter>资源文件</Filter>
-    </Image>
-    <Image Include="res\ui\building.bmp">
-      <Filter>资源文件</Filter>
-    </Image>
-    <Image Include="res\ui\green_block.bmp">
-      <Filter>资源文件</Filter>
-    </Image>
-    <Image Include="res\ui\grey_roof.bmp">
-      <Filter>资源文件</Filter>
-    </Image>
-    <Image Include="res\ui\hero.bmp">
-      <Filter>资源文件</Filter>
-    </Image>
-    <Image Include="res\ui\orange_block.bmp">
-      <Filter>资源文件</Filter>
-    </Image>
-    <Image Include="res\ui\pink_block.bmp">
-      <Filter>资源文件</Filter>
-    </Image>
-    <Image Include="res\ui\game_status.bmp">
-      <Filter>资源文件</Filter>
-    </Image>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

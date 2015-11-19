@@ -85,8 +85,8 @@
   <ItemGroup>
     <ClInclude Include="audio.h" />
     <ClInclude Include="osureader.h" />
-    <ClInclude Include="resource.h" />
     <ClInclude Include="main.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="audio.cpp" />
@@ -99,20 +99,18 @@
     <ClCompile Include="variants.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="RushHour.rc" />
+    <Image Include="res\ui\1.bmp" />
+    <Image Include="res\ui\2.bmp" />
+    <Image Include="res\ui\3.bmp" />
+    <Image Include="res\ui\4.bmp" />
+    <Image Include="res\ui\5.bmp" />
+    <Image Include="res\ui\6.bmp" />
+    <Image Include="res\ui\8.bmp" />
+    <Image Include="res\ui\9.bmp" />
+    <Image Include="res\ui\run.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="res\ui\background.bmp" />
-    <Image Include="res\ui\black_roof.bmp" />
-    <Image Include="res\ui\blue_block.bmp" />
-    <Image Include="res\ui\building.bmp" />
-    <Image Include="res\ui\game_status.bmp" />
-    <Image Include="res\ui\green_block.bmp" />
-    <Image Include="res\ui\grey_roof.bmp" />
-    <Image Include="res\ui\hero.bmp" />
-    <Image Include="res\ui\orange_block.bmp" />
-    <Image Include="res\ui\pink_block.bmp" />
-    <Image Include="res\ui\run.ico" />
+    <ResourceCompile Include="RushHour.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
