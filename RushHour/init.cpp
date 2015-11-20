@@ -50,23 +50,23 @@ VOID GlobalInit()
 VOID WindowInit(HWND hWnd, WPARAM wParam, LPARAM lParam)
 {
 	//加载Hero位图
-	resource.hero[1] = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
+	resource.hero[0] = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
 		MAKEINTRESOURCE(IDB_HERO1));
-	resource.hero[2] = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
+	resource.hero[1] = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
 		MAKEINTRESOURCE(IDB_HERO2));
-	resource.hero[3] = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
+	resource.hero[2] = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
 		MAKEINTRESOURCE(IDB_HERO3));
-	resource.hero[4] = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
+	resource.hero[3] = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
 		MAKEINTRESOURCE(IDB_HERO4));
-	resource.hero[5] = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
+	resource.hero[4] = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
 		MAKEINTRESOURCE(IDB_HERO5));
-	resource.hero[6] = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
+	resource.hero[5] = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
 		MAKEINTRESOURCE(IDB_HERO6));
-	resource.hero[7] = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
+	resource.hero[6] = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
 		MAKEINTRESOURCE(IDB_HERO7));
-	resource.hero[8] = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
+	resource.hero[7] = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
 		MAKEINTRESOURCE(IDB_HERO8));
-	resource.hero[9] = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
+	resource.hero[8] = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
 		MAKEINTRESOURCE(IDB_HERO9));
 
 	//启动计时器

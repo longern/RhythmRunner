@@ -118,8 +118,8 @@ VOID RenderPlaying(HDC hdcBuffer, HDC hdcBmp)
 		DeleteObject(redBrush);
 
 		//  Draw StickMan
-		UINT heroFrame = (int)(gameTimePass / (global.currSong().msPerBeat / 2) * 8 + 3) % 8 + 1;
-		if(heroFrame >= 7)
+		UINT heroFrame = (int)(gameTimePass / (global.currSong().msPerBeat / 2) * 8 + 3) % 8;
+		if(heroFrame >= 6)
 			heroFrame++;
 		SelectObject(hdcBmp, resource.hero[heroFrame]);
 		TransparentBlt(
