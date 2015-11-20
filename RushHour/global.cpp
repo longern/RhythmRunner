@@ -23,7 +23,7 @@ VOID SwitchSong()
 	WIN32_FIND_DATA fNextInfo;
 	WCHAR firstMp3File[200];
 	findFile = FindFirstFile((currSong.name + _T("/") + currSong.audioFilename).data(), &fNextInfo);
-	if(findFile != INVALID_HANDLE_VALUE)
+	if (findFile != INVALID_HANDLE_VALUE)
 	{
 		wsprintf(firstMp3File, TEXT("%s/%s"), global.songs[global.currentSong - 1].name.data(), currSong.audioFilename.data());
 		UINT rs;

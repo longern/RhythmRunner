@@ -3,9 +3,9 @@
 #pragma comment(lib, "winmm.lib")
 
 int WINAPI WinMain(HINSTANCE hInstance,
-				   HINSTANCE hPrevInstance,
-				   LPSTR lpCmdLine,
-				   int nCmdShow)
+	HINSTANCE hPrevInstance,
+	LPSTR lpCmdLine,
+	int nCmdShow)
 {
 	SetCurrentDirectory(_T("../Release"));
 
@@ -27,7 +27,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	wcex.lpszMenuName = NULL;
 	wcex.lpszClassName = szWindowClass;
 	wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_APPLICATION));
-	
+
 	if (!RegisterClassEx(&wcex))
 	{
 		MessageBox(NULL,

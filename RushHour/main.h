@@ -86,12 +86,12 @@ typedef struct
 
 typedef struct
 {
-	INT h;
-	INT jpTime;
+	DOUBLE height;
+	INT jpStartTime;
 	UINT jpCount;
 } HERO;
 
-typedef struct 
+struct GLOBAL
 {
 	enum { GS_WELCOME = 0, GS_SONGSELECT, GS_OPTIONS, GS_PLAYING } status;
 	std::vector<SONGINFO> songs;
@@ -105,12 +105,10 @@ typedef struct
 
 	MCI_OPEN_PARMS ae; //Audio Engine
 
-	SONGINFO &currSong() {
-		return songs[currentSong - 1];
-	}
+	SONGINFO &currSong() { return songs[currentSong - 1]; }
 
 	LONG timePass();
-} GLOBAL;
+};
 
 typedef struct
 {

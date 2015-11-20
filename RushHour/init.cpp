@@ -9,11 +9,11 @@ VOID GameFolderInit()
 	WIN32_FIND_DATA fNextInfo;
 	findFile = FindFirstFile(_T("*"), &fNextInfo);
 	WCHAR firstOsuFile[60];
-	while(FindNextFile(findFile, &fNextInfo))
+	while (FindNextFile(findFile, &fNextInfo))
 	{
-		if(fNextInfo.cFileName[0] == '.')
+		if (fNextInfo.cFileName[0] == '.')
 			continue;
-		else if(fNextInfo.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+		else if (fNextInfo.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
 		{
 			SetCurrentDirectory(fNextInfo.cFileName);
 			HANDLE findOsuFile;
@@ -21,7 +21,7 @@ VOID GameFolderInit()
 			wsprintf(firstOsuFile, TEXT("%s.osu"), _T("*"));
 			findOsuFile = FindFirstFile(firstOsuFile, &fOsuInfo);
 			global.songs.push_back(SONGINFO());
-			if(findOsuFile != INVALID_HANDLE_VALUE)
+			if (findOsuFile != INVALID_HANDLE_VALUE)
 			{
 				global.songs[global.totalSongCount].osuFile = fOsuInfo.cFileName;
 				readBasicInfo(global.songs[global.totalSongCount].osuFile.data(), &global.songs[global.totalSongCount]);
@@ -75,8 +75,8 @@ VOID WindowInit(HWND hWnd, WPARAM wParam, LPARAM lParam)
 
 VOID GameInit()
 {
-	SwitchSong();
 	readBeats((global.currSong().name + _T("/") + global.currSong().osuFile).data());
 	QueryPerformanceCounter(&global.beginTime);
+	SwitchSong();
 	global.status = global.GS_PLAYING;
 }
