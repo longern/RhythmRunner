@@ -31,3 +31,10 @@ VOID SwitchSong()
 		AudioPlay();
 	}
 }
+
+LONG GLOBAL::timePass()
+{
+	LARGE_INTEGER ct;
+	QueryPerformanceCounter(&ct);
+	return (long)((ct.QuadPart - beginTime.QuadPart) / (double)clockFrequency.QuadPart * 1000);
+}

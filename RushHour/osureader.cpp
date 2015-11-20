@@ -14,6 +14,7 @@ std::wstring strtowstr(const std::string &str)
 VOID readTimingPoints(const std::string &str)
 {
 	global.barriers.push_back(BARRIERINFO());
+	UINT barrierLast = global.barriers.size() - 1;
 	UINT comaCount = 0;
 	unsigned int i;
 	for(i = 0; i < str.length(); i++)
@@ -29,6 +30,10 @@ VOID readTimingPoints(const std::string &str)
 	global.barriers.back().msecs = std::atol(str.data() + i);
 	global.barriers.back().type = std::rand() % 4;
 	global.barriers.back().track = std::rand() % 4;
+	if(barrierLast >= 2)
+		while(global.barriers[barrierLast - 1].track == global.barriers[barrierLast].track
+		   && global.barriers[barrierLast - 2].track == global.barriers[barrierLast].track)
+			global.barriers.back().track = std::rand() % 4;
 }
 
 VOID readBasicInfo(const WCHAR *filePathName, SONGINFO *info)
@@ -55,6 +60,11 @@ VOID readBasicInfo(const WCHAR *filePathName, SONGINFO *info)
 				line = line.substr(14);
 				global.songs[global.totalSongCount].audioFilename = strtowstr(line.substr(line.find_first_not_of(' ')));
 			}
+			else if (line.find("AudioLeadIn:") != std::string::npos)
+			{
+				line = line.substr(12);
+				global.songs[global.totalSongCount].audioLeadIn = std::atoi(line.substr(line.find_first_not_of(' ')).data());
+			}
 		}
 		else if (state == "Metadata")
 		{
@@ -63,6 +73,11 @@ VOID readBasicInfo(const WCHAR *filePathName, SONGINFO *info)
 				line = line.substr(6);
 				global.songs[global.totalSongCount].title = strtowstr(line.substr(line.find_first_not_of(' ')));
 			}
+		}
+		else if (state == "TimingPoints")
+		{
+			global.songs[global.totalSongCount].msPerBeat = std::atof(line.substr(line.find(",") + 1).data());
+			state = "";
 		}
 		else
 			continue;
