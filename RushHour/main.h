@@ -113,6 +113,7 @@ struct GLOBAL
 typedef struct
 {
 	HBITMAP hero[9];
+	HBITMAP wHero[9];
 } GAMERESOURCE;
 
 /*全局变量*/

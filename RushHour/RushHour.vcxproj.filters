@@ -82,6 +82,36 @@
     <Image Include="res\ui\run.ico">
       <Filter>资源文件</Filter>
     </Image>
+    <Image Include="res\ui\w1.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\ui\w2.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\ui\w3.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\ui\w4.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\ui\w5.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\ui\w6.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\ui\w7.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\ui\w8.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\ui\w9.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\ui\7.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="RushHour.rc">

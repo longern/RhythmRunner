@@ -69,6 +69,25 @@ VOID WindowInit(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	resource.hero[8] = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
 		MAKEINTRESOURCE(IDB_HERO9));
 
+	resource.wHero[0] = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
+		MAKEINTRESOURCE(IDB_WHITEHERO1));
+	resource.wHero[1] = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
+		MAKEINTRESOURCE(IDB_WHITEHERO2));
+	resource.wHero[2] = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
+		MAKEINTRESOURCE(IDB_WHITEHERO3));
+	resource.wHero[3] = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
+		MAKEINTRESOURCE(IDB_WHITEHERO4));
+	resource.wHero[4] = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
+		MAKEINTRESOURCE(IDB_WHITEHERO5));
+	resource.wHero[5] = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
+		MAKEINTRESOURCE(IDB_WHITEHERO6));
+	resource.wHero[6] = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
+		MAKEINTRESOURCE(IDB_WHITEHERO7));
+	resource.wHero[7] = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
+		MAKEINTRESOURCE(IDB_WHITEHERO8));
+	resource.wHero[8] = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
+		MAKEINTRESOURCE(IDB_WHITEHERO9));
+
 	//Æô¶¯¼ÆÊ±Æ÷
 	SetTimer(hWnd, TIMER, 20, NULL);
 }

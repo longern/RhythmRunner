@@ -23,18 +23,14 @@ VOID HeroUpdate()
 		if (!global.heroes[i].jpCount)
 			continue;
 		int jpTime = gameTimePass - global.heroes[i].jpStartTime;
-		if (jpTime > global.currSong().msPerBeat / 2)
+		if (jpTime > global.currSong().msPerBeat * 0.4)
 		{
 			global.heroes[i].height = global.heroes[i].jpCount = 0;
 			continue;
 		}
-		DOUBLE jpCent = jpTime / global.currSong().msPerBeat * 2;
+		DOUBLE jpCent = jpTime / global.currSong().msPerBeat / 0.4;
 		global.heroes[i].height = jpCent * (1 - jpCent);
 	}
-	//TODO
-	//更新动作
-	++m_hero.curFrameIndex;
-	m_hero.curFrameIndex = m_hero.curFrameIndex >= m_hero.maxFrameSize ? 0 : m_hero.curFrameIndex;
 }
 
 VOID TerrianUpdate()
@@ -121,7 +117,7 @@ VOID RenderPlaying(HDC hdcBuffer, HDC hdcBmp)
 		SelectObject(hdcBuffer, redBrush);
 		for (UINT j = 0; j < global.barriers.size(); j++)
 		{
-			DOUBLE barrierX = 0.05 + (global.barriers[j].msecs - gameTimePass) / 3000.;
+			DOUBLE barrierX = 0.05 + (global.barriers[j].msecs - gameTimePass) / global.currSong().msPerBeat / 4.;
 			if (barrierX < -0.2)
 				continue;
 			if (barrierX > 1)
@@ -138,17 +134,31 @@ VOID RenderPlaying(HDC hdcBuffer, HDC hdcBmp)
 		DeleteObject(redBrush);
 
 		//  Draw StickMan
-		UINT heroFrame = (int)(gameTimePass / (global.currSong().msPerBeat / 2) * 8 + 3) % 8;
+		UINT heroFrame = (int)(gameTimePass / (global.currSong().msPerBeat * 0.4) * 8 + 3) % 8;
 		if (heroFrame >= 6)
 			heroFrame++;
-		SelectObject(hdcBmp, resource.hero[heroFrame]);
-		TransparentBlt(
-			hdcBuffer,
-			ToWindowX(0.05) - 21, ToWindowY(trackBottom - 0.1) - 8 - global.heroes[i].height * 200, 38, 45,
-			hdcBmp,
-			0, 0, 420, 504,
-			RGB(255, 255, 255)
-			)
+		if (i % 2)
+		{
+			SelectObject(hdcBmp, resource.wHero[heroFrame]);
+			TransparentBlt(
+				hdcBuffer,
+				ToWindowX(0.05) - 21, ToWindowY(trackBottom - 0.1) - 8 - (int)(global.heroes[i].height * 200), 38, 45,
+				hdcBmp,
+				0, 0, 420, 504,
+				RGB(0, 0, 0)
+				);
+		}
+		else
+		{
+			SelectObject(hdcBmp, resource.hero[heroFrame]);
+			TransparentBlt(
+				hdcBuffer,
+				ToWindowX(0.05) - 21, ToWindowY(trackBottom - 0.1) - 8 - (int)(global.heroes[i].height * 200), 38, 45,
+				hdcBmp,
+				0, 0, 420, 504,
+				RGB(255, 255, 255)
+				);
+		}
 	}
 
 	WCHAR timeText[10];
