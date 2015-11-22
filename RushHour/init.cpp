@@ -45,6 +45,8 @@ VOID GlobalInit()
 	SwitchSong();
 
 	global.status = global.GS_SONGSELECT;
+	global.heroWidth = 38;
+	global.heroHeight = 45;
 }
 
 VOID WindowInit(HWND hWnd, WPARAM wParam, LPARAM lParam)

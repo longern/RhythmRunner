@@ -23,13 +23,10 @@ VOID HeroUpdate()
 		if (!global.heroes[i].jpCount)
 			continue;
 		int jpTime = gameTimePass - global.heroes[i].jpStartTime;
-		if (jpTime > global.currSong().msPerBeat * 0.4)
-		{
-			global.heroes[i].height = global.heroes[i].jpCount = 0;
-			continue;
-		}
 		DOUBLE jpCent = jpTime / global.currSong().msPerBeat / 0.4;
-		global.heroes[i].height = jpCent * (1 - jpCent);
+		global.heroes[i].height = jpCent * (1 - jpCent) + global.heroes[i].startHeight;
+		if (global.heroes[i].height <= 0)
+			global.heroes[i].height = global.heroes[i].jpCount = 0;
 	}
 }
 
@@ -74,8 +71,7 @@ VOID RenderSongSelect(HDC hdcBuffer, HDC hdcBmp)
 {
 	UINT i;
 
-	Rectangle(hdcBuffer, 0, 0, WNDWIDTH, (int)(WNDHEIGHT * 0.26));
-	Rectangle(hdcBuffer, 0, WNDHEIGHT / 2, WNDWIDTH, (int)(WNDHEIGHT * 0.76));
+	Rectangle(hdcBuffer, 0, 0, WNDWIDTH, WNDHEIGHT);
 
 	SetTextColor(hdcBuffer, RGB(255, 255, 255));
 	SetBkMode(hdcBuffer, TRANSPARENT);
@@ -92,6 +88,37 @@ VOID RenderSongSelect(HDC hdcBuffer, HDC hdcBmp)
 VOID RenderOptions(HDC hdcBuffer, HDC hdcBmp)
 {
 
+}
+
+VOID DrawBarriers(HDC hdcBuffer, int i)
+{
+	DOUBLE trackTop = i * 0.25 + (i % 2) * 0.01;
+	DOUBLE trackBottom = (i + 1) * 0.25 + ((i + 1) % 2) * 0.01;
+
+	HBRUSH redBrush = CreateSolidBrush(RGB(200, 0, 0));
+	for (UINT j = 0; j < global.barriers.size(); j++)
+	{
+		DOUBLE barrierX = 0.05 + (global.barriers[j].msecs - gameTimePass) / global.currSong().msPerBeat / 4.;
+		if (barrierX < -0.2)
+			continue;
+		if (barrierX > 1)
+			break;
+
+		if (global.barriers[j].track == i)
+		{
+			SelectObject(hdcBuffer, GetStockObject(GRAY_BRUSH));
+			Rectangle(hdcBuffer, ToWindowX(barrierX), ToWindowY(trackTop) - 1,
+				ToWindowX(barrierX) + 2, ToWindowY(trackBottom) + 1);
+
+			if (i & 1)
+				SelectObject(hdcBuffer, GetStockObject(BLACK_BRUSH));
+			else
+				SelectObject(hdcBuffer, GetStockObject(WHITE_BRUSH));
+			Rectangle(hdcBuffer, ToWindowX(barrierX) + global.heroWidth / 2, ToWindowY(trackBottom - 0.05) - 1,
+				ToWindowX(barrierX + 0.8 / 8) - global.heroWidth / 2, ToWindowY(trackBottom) + 1);
+		}
+	}
+	DeleteObject(redBrush);
 }
 
 VOID RenderPlaying(HDC hdcBuffer, HDC hdcBmp)
@@ -113,36 +140,18 @@ VOID RenderPlaying(HDC hdcBuffer, HDC hdcBmp)
 		Rectangle(hdcBuffer, 0, ToWindowY(trackBottom - 0.05) - 1, WNDWIDTH, ToWindowY(trackBottom) + 1);
 
 		//  Draw Barriers
-		HBRUSH redBrush = CreateSolidBrush(RGB(200, 0, 0));
-		SelectObject(hdcBuffer, redBrush);
-		for (UINT j = 0; j < global.barriers.size(); j++)
-		{
-			DOUBLE barrierX = 0.05 + (global.barriers[j].msecs - gameTimePass) / global.currSong().msPerBeat / 4.;
-			if (barrierX < -0.2)
-				continue;
-			if (barrierX > 1)
-				break;
-
-			if (global.barriers[j].track == i)
-			{
-				Rectangle(hdcBuffer, ToWindowX(barrierX) + 19, ToWindowY(trackBottom - 0.05) - 1,
-					ToWindowX(barrierX + 0.025) + 19, ToWindowY(trackBottom) + 1);
-				Rectangle(hdcBuffer, ToWindowX(barrierX), ToWindowY(trackTop) - 1,
-					ToWindowX(barrierX) + 2, ToWindowY(trackBottom) + 1);
-			}
-		}
-		DeleteObject(redBrush);
+		DrawBarriers(hdcBuffer, i);
 
 		//  Draw StickMan
 		UINT heroFrame = (int)(gameTimePass / (global.currSong().msPerBeat * 0.4) * 8 + 3) % 8;
 		if (heroFrame >= 6)
 			heroFrame++;
-		if (i % 2)
+		if (i & 1)
 		{
 			SelectObject(hdcBmp, resource.wHero[heroFrame]);
 			TransparentBlt(
 				hdcBuffer,
-				ToWindowX(0.05) - 21, ToWindowY(trackBottom - 0.1) - 8 - (int)(global.heroes[i].height * 200), 38, 45,
+				ToWindowX(0.05) - 21, ToWindowY(trackBottom - 0.1) - 8 - (int)(global.heroes[i].height * 200), global.heroWidth, global.heroHeight,
 				hdcBmp,
 				0, 0, 420, 504,
 				RGB(0, 0, 0)

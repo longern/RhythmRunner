@@ -16,7 +16,7 @@ VOID readTimingPoints(const std::string &str)
 	global.barriers.push_back(BARRIERINFO());
 	UINT barrierLast = global.barriers.size() - 1;
 	UINT comaCount = 0;
-	unsigned int i;
+	UINT i;
 	for (i = 0; i < str.length(); i++)
 	{
 		if (str[i] == ',')
@@ -28,7 +28,7 @@ VOID readTimingPoints(const std::string &str)
 		}
 	}
 	global.barriers.back().msecs = std::atol(str.data() + i);
-	global.barriers.back().type = std::rand() % 4;
+	global.barriers.back().type = std::rand() % 2;
 	global.barriers.back().track = std::rand() % 4;
 	if (barrierLast >= 2)
 		while (global.barriers[barrierLast - 1].track == global.barriers[barrierLast].track

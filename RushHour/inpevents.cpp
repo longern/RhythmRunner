@@ -34,44 +34,42 @@ VOID SongSelectKeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	}
 }
 
+VOID DoJump(int track)
+{
+	HERO *currHero = &global.heroes[track];
+	if (currHero->jpCount <= 1)
+	{
+		currHero->jpStartTime = global.timePass();
+		currHero->startHeight = currHero->height;
+		currHero->jpCount++;
+	}
+}
+
 VOID GamePlayKeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 {
 	switch (wParam)
 	{
 	case 'D':
-		if (global.heroes[0].jpCount <= 0)
-		{
-			global.heroes[0].jpStartTime = global.timePass();
-			global.heroes[0].jpCount++;
-		}
+		DoJump(0);
 		InvalidateRect(hWnd, NULL, FALSE);
 		break;
 
 	case 'F':
-		if (global.heroes[1].jpCount <= 0)
-		{
-			global.heroes[1].jpStartTime = global.timePass();
-			global.heroes[1].jpCount++;
-		}
+		DoJump(1);
 		InvalidateRect(hWnd, NULL, FALSE);
 		break;
 
 	case 'J':
-		if (global.heroes[2].jpCount <= 0)
-		{
-			global.heroes[2].jpStartTime = global.timePass();
-			global.heroes[2].jpCount++;
-		}
+		DoJump(2);
 		InvalidateRect(hWnd, NULL, FALSE);
 		break;
 
 	case 'K':
-		if (global.heroes[3].jpCount <= 0)
-		{
-			global.heroes[3].jpStartTime = global.timePass();
-			global.heroes[3].jpCount++;
-		}
+		DoJump(3);
 		InvalidateRect(hWnd, NULL, FALSE);
+		break;
+
+	case VK_ESCAPE:
 		break;
 
 	default:

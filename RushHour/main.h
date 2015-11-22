@@ -82,6 +82,7 @@ typedef struct
 	LONG msecs;
 	UINT track;
 	UINT type;
+	DOUBLE height;
 } BARRIERINFO;
 
 typedef struct
@@ -89,6 +90,7 @@ typedef struct
 	DOUBLE height;
 	INT jpStartTime;
 	UINT jpCount;
+	DOUBLE startHeight;
 } HERO;
 
 struct GLOBAL
@@ -108,6 +110,9 @@ struct GLOBAL
 	SONGINFO &currSong() { return songs[currentSong - 1]; }
 
 	LONG timePass();
+
+	UINT heroWidth;
+	UINT heroHeight;
 };
 
 typedef struct
