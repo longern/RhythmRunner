@@ -42,7 +42,7 @@ VOID GlobalInit()
 
 	GameFolderInit();
 	AudioInit();
-	SwitchSong();
+	PreviewSong();
 
 	global.status = global.GS_SONGSELECT;
 	global.heroWidth = 38;
@@ -51,7 +51,7 @@ VOID GlobalInit()
 
 VOID WindowInit(HWND hWnd, WPARAM wParam, LPARAM lParam)
 {
-	//加载Hero位图
+	//  Load Hero Bitmap
 	resource.hero[0] = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
 		MAKEINTRESOURCE(IDB_HERO1));
 	resource.hero[1] = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
@@ -90,7 +90,7 @@ VOID WindowInit(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	resource.wHero[8] = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
 		MAKEINTRESOURCE(IDB_WHITEHERO9));
 
-	//启动计时器
+	//  Start Timer
 	SetTimer(hWnd, TIMER, 20, NULL);
 }
 

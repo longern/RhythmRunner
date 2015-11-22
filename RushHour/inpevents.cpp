@@ -14,7 +14,7 @@ VOID SongSelectKeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 			global.currentSong = global.totalSongCount;
 		else
 			global.currentSong--;
-		SwitchSong();
+		PreviewSong();
 		break;
 
 	case VK_DOWN:
@@ -22,7 +22,7 @@ VOID SongSelectKeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 			global.currentSong = 1;
 		else
 			global.currentSong++;
-		SwitchSong();
+		PreviewSong();
 		break;
 
 	case VK_ESCAPE:
@@ -49,22 +49,22 @@ VOID GamePlayKeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 {
 	switch (wParam)
 	{
-	case 'D':
+	case '5':
 		DoJump(0);
 		InvalidateRect(hWnd, NULL, FALSE);
 		break;
 
-	case 'F':
+	case 'T':
 		DoJump(1);
 		InvalidateRect(hWnd, NULL, FALSE);
 		break;
 
-	case 'J':
+	case 'G':
 		DoJump(2);
 		InvalidateRect(hWnd, NULL, FALSE);
 		break;
 
-	case 'K':
+	case 'B':
 		DoJump(3);
 		InvalidateRect(hWnd, NULL, FALSE);
 		break;

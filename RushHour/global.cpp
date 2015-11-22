@@ -16,20 +16,20 @@ BOOL Circle(HDC hdc, int x, int y, int r)
 	return Ellipse(hdc, x - r, y - r, x + r, y + r);
 }
 
+VOID PreviewSong()
+{
+	WCHAR firstMp3File[200];
+	wsprintf(firstMp3File, TEXT("%s/%s"), global.currSong().name.data(), global.currSong().audioFilename.data());
+	AudioOpen(firstMp3File);
+	AudioPlay(global.currSong().previewTime);
+}
+
 VOID SwitchSong()
 {
-	SONGINFO &currSong = global.songs[global.currentSong - 1];
-	HANDLE findFile;
-	WIN32_FIND_DATA fNextInfo;
 	WCHAR firstMp3File[200];
-	findFile = FindFirstFile((currSong.name + _T("/") + currSong.audioFilename).data(), &fNextInfo);
-	if (findFile != INVALID_HANDLE_VALUE)
-	{
-		wsprintf(firstMp3File, TEXT("%s/%s"), global.songs[global.currentSong - 1].name.data(), currSong.audioFilename.data());
-		UINT rs;
-		rs = AudioOpen(firstMp3File);
-		AudioPlay();
-	}
+	wsprintf(firstMp3File, TEXT("%s/%s"), global.currSong().name.data(), global.currSong().audioFilename.data());
+	AudioOpen(firstMp3File);
+	AudioPlayOnce();
 }
 
 LONG GLOBAL::timePass()

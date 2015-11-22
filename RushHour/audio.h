@@ -15,6 +15,7 @@ extern AUDIOENGINE gAudio;
 void AudioInit();
 MCIERROR AudioOpen(const WCHAR *source);
 MCIERROR AudioPlay(DWORD time = 0);
+MCIERROR AudioPlayOnce(DWORD time = 0);
 MCIERROR AudioClose();
 LONG AudioCurrTime();
 MCIERROR AudioSeekToStart();

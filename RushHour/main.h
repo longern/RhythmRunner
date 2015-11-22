@@ -75,6 +75,8 @@ typedef struct
 	std::wstring bgImgFile;
 	DOUBLE msPerBeat;
 	INT audioLeadIn;
+	UINT previewTime;
+	DOUBLE sliderMultiplier;
 } SONGINFO;
 
 typedef struct
@@ -165,6 +167,7 @@ VOID LButtonDown(HWND hWnd, WPARAM wParam, LPARAM lParam);
 int ToWindowX(double rx);
 int ToWindowY(double ry);
 BOOL Circle(HDC hdc, int x, int y, int r);
+VOID PreviewSong();
 VOID SwitchSong();
 
 #endif //  MAIN_H
