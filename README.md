@@ -1,2 +1,2 @@
 # RhythmRunner
-Mr. Zhou told us, "Running should be to some rhythm."
+Mr. Zhou told us, "Running should be with rhythm."
