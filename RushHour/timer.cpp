@@ -16,6 +16,7 @@ VOID HeroUpdate()
 			continue;
 		int jpTime = gameTimePass - global.heroes[i].jpStartTime;
 		DOUBLE jpCent = jpTime / global.currSong().msPerBeat / 0.4;
+		//  Jump will last for 0.4 Beats
 		global.heroes[i].height = jpCent * (1 - jpCent) + global.heroes[i].startHeight;
 		if (global.heroes[i].height <= 0)
 			global.heroes[i].height = global.heroes[i].jpCount = 0;
@@ -57,7 +58,7 @@ VOID RenderSongSelect(HDC hdcBuffer, HDC hdcBmp)
 	{
 		if (i + 1 == global.currentSong)
 			SetTextColor(hdcBuffer, RGB(255, 0, 0));
-		TextOut(hdcBuffer, WNDWIDTH - 400, 15 + 25 * i, global.songs[i].name.data(), global.songs[i].name.length());
+		TextOut(hdcBuffer, WNDWIDTH - 500, 15 + 25 * i, global.songs[i].name.data(), global.songs[i].name.length());
 		if (i + 1 == global.currentSong)
 			SetTextColor(hdcBuffer, RGB(255, 255, 255));
 	}
@@ -68,12 +69,29 @@ VOID RenderOptions(HDC hdcBuffer, HDC hdcBmp)
 
 }
 
+VOID DrawSpikes(HDC hdcBuffer, double x, double bottom)
+{
+	INT pitWidth = ToWindowX(0.8 / 8) - global.heroWidth;
+	INT spikeWidth = pitWidth / 3;
+	POINT spike[3];
+	for (int i = 0; i < 3; i++) {
+		spike[0].x = ToWindowX(x) + global.heroWidth / 2 + i * spikeWidth;
+		spike[1].x = ToWindowX(x) + global.heroWidth / 2 + i * spikeWidth + spikeWidth / 2;
+		spike[2].x = ToWindowX(x) + global.heroWidth / 2 + (i + 1) * spikeWidth;
+		spike[0].y = ToWindowY(bottom);
+		spike[1].y = ToWindowY(bottom - 0.05);
+		spike[2].y = ToWindowY(bottom);
+		Polygon(hdcBuffer, spike, 3);
+	}
+}
+
 VOID DrawBarriers(HDC hdcBuffer, int i)
 {
 	DOUBLE trackTop = i * 0.25 + (i % 2) * 0.01;
 	DOUBLE trackBottom = (i + 1) * 0.25 + ((i + 1) % 2) * 0.01;
 
-	HBRUSH redBrush = CreateSolidBrush(RGB(200, 0, 0));
+	HGDIOBJ backBrush;
+
 	for (UINT j = 0; j < global.barriers.size(); j++)
 	{
 		DOUBLE barrierX = 0.05 + (global.barriers[j].msecs - gameTimePass) / global.currSong().msPerBeat / 4.;
@@ -82,21 +100,30 @@ VOID DrawBarriers(HDC hdcBuffer, int i)
 		if (barrierX > 1)
 			break;
 
+		if (i & 1)
+			backBrush = GetStockObject(BLACK_BRUSH);
+		else
+			backBrush = GetStockObject(WHITE_BRUSH);
+
 		if (global.barriers[j].track == i)
 		{
 			SelectObject(hdcBuffer, GetStockObject(GRAY_BRUSH));
 			Rectangle(hdcBuffer, ToWindowX(barrierX), ToWindowY(trackTop) - 1,
 				ToWindowX(barrierX) + 2, ToWindowY(trackBottom) + 1);
 
-			if (i & 1)
-				SelectObject(hdcBuffer, GetStockObject(BLACK_BRUSH));
-			else
-				SelectObject(hdcBuffer, GetStockObject(WHITE_BRUSH));
+			SelectObject(hdcBuffer, backBrush);
 			Rectangle(hdcBuffer, ToWindowX(barrierX) + global.heroWidth / 2, ToWindowY(trackBottom - 0.05) - 1,
 				ToWindowX(barrierX + 0.8 / 8) - global.heroWidth / 2, ToWindowY(trackBottom) + 1);
+
+			SelectObject(hdcBuffer, GetStockObject(GRAY_BRUSH));
+			switch (global.barriers[j].type)
+			{
+			default:
+				DrawSpikes(hdcBuffer, barrierX, trackBottom);
+				break;
+			}
 		}
 	}
-	DeleteObject(redBrush);
 }
 
 VOID RenderPlaying(HDC hdcBuffer, HDC hdcBmp)

@@ -70,6 +70,9 @@ VOID GamePlayKeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 		break;
 
 	case VK_ESCAPE:
+		global.barriers.clear();
+		AudioClose();
+		global.status = global.GS_SONGSELECT;
 		break;
 
 	default:
