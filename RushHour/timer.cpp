@@ -3,17 +3,9 @@
 
 static LONG gameTimePass;
 
-VOID TimerUpdate(HWND hWnd, WPARAM wParam, LPARAM lParam)
+VOID GameStatusUpdate()
 {
-	switch (global.status)
-	{
-	case global.GS_PLAYING:
-		HeroUpdate();
-		TerrianUpdate();
-		GameStatusUpdate();
-		break;
-	}
-	InvalidateRect(hWnd, NULL, FALSE);
+	gameTimePass = global.timePass();
 }
 
 VOID HeroUpdate()
@@ -30,36 +22,22 @@ VOID HeroUpdate()
 	}
 }
 
-VOID TerrianUpdate()
+VOID DetectCollision()
 {
-	//TODO
-	int k;
-	for (k = 0; k < MAX_TERRIAN_NUM; ++k)
+
+}
+
+VOID TimerUpdate(HWND hWnd, WPARAM wParam, LPARAM lParam)
+{
+	switch (global.status)
 	{
-		m_terrian[k].pos.x -= 5;
-		if (m_terrian[k].pos.x + m_terrian[k].size.cx < 0)
-		{
-			m_terrian[k].pos.x += MAX_TERRIAN_NUM * m_terrian[k].size.cx;
-		}
+	case global.GS_PLAYING:
+		GameStatusUpdate();
+		HeroUpdate();
+		DetectCollision();
+		break;
 	}
-}
-
-VOID GameStatusUpdate()
-{
-	//TODO
-	++m_gameStatus.totalDist;
-}
-
-BOOL Paused(POINT ptMouse)
-{
-	RECT rPause;
-
-	rPause.left = m_gameStatus.pos.x;
-	rPause.top = m_gameStatus.pos.y;
-	rPause.right = m_gameStatus.size.cx;
-	rPause.bottom = m_gameStatus.size.cy;
-
-	return PtInRect(&rPause, ptMouse);
+	InvalidateRect(hWnd, NULL, FALSE);
 }
 
 VOID RenderWelcome(HDC hdcBuffer, HDC hdcBmp)
@@ -123,7 +101,6 @@ VOID DrawBarriers(HDC hdcBuffer, int i)
 
 VOID RenderPlaying(HDC hdcBuffer, HDC hdcBmp)
 {
-	gameTimePass = global.timePass();
 	UINT i;
 
 	//  Draw Background
@@ -151,7 +128,7 @@ VOID RenderPlaying(HDC hdcBuffer, HDC hdcBmp)
 			SelectObject(hdcBmp, resource.wHero[heroFrame]);
 			TransparentBlt(
 				hdcBuffer,
-				ToWindowX(0.05) - 21, ToWindowY(trackBottom - 0.1) - 8 - (int)(global.heroes[i].height * 200), global.heroWidth, global.heroHeight,
+				ToWindowX(0.05) - 21, ToWindowY(trackBottom - 0.1 - global.heroes[i].height / 4) - 8, global.heroWidth, global.heroHeight,
 				hdcBmp,
 				0, 0, 420, 504,
 				RGB(0, 0, 0)
@@ -162,7 +139,7 @@ VOID RenderPlaying(HDC hdcBuffer, HDC hdcBmp)
 			SelectObject(hdcBmp, resource.hero[heroFrame]);
 			TransparentBlt(
 				hdcBuffer,
-				ToWindowX(0.05) - 21, ToWindowY(trackBottom - 0.1) - 8 - (int)(global.heroes[i].height * 200), 38, 45,
+				ToWindowX(0.05) - 21, ToWindowY(trackBottom - 0.1 - global.heroes[i].height / 4) - 8, global.heroWidth, global.heroHeight,
 				hdcBmp,
 				0, 0, 420, 504,
 				RGB(255, 255, 255)

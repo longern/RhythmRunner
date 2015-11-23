@@ -130,14 +130,7 @@ extern GAMERESOURCE resource;
 extern TCHAR szWindowClass[];
 extern TCHAR szTitle[];
 
-/*声明英雄、建筑、地形、游戏状态*/
-extern Hero          m_hero;
-extern Building      m_building;
-extern Terrian       m_terrian[MAX_TERRIAN_NUM];
-extern GameStatus    m_gameStatus;
-
 /*全局函数*/
-
 VOID GlobalInit();
 VOID GameInit();
 
@@ -150,14 +143,6 @@ VOID WindowInit(HWND hWnd, WPARAM wParam, LPARAM lParam);
 VOID Render(HWND hWnd);
 //定时器事件
 VOID TimerUpdate(HWND hWnd, WPARAM wParam, LPARAM lParam);
-//hero更新
-VOID HeroUpdate();
-//地形更新
-VOID TerrianUpdate();
-//游戏状态更新
-VOID GameStatusUpdate();
-//判断是否点击暂停
-BOOL Paused(POINT);
 //键盘按下事件处理
 VOID KeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam);
 //左鼠标点击事件

@@ -41,13 +41,13 @@ VOID readHitObjects(std::string str)
 		repeatTimes = std::atoi(str.data());
 		str = str.substr(str.find_first_of(',') + 1);
 		pixelLength = std::atof(str.data());
-		double sliderDuration = pixelLength / global.currSong().sliderMultiplier / 100 * global.currSong().msPerBeat;
+		double sliderDuration = pixelLength / global.currSong().sliderMultiplier / 100. * global.currSong().msPerBeat;
 		for (i = 1; i <= repeatTimes; i++)
 		{
 			global.barriers.push_back(BARRIERINFO());
 			barrierLast = global.barriers.size() - 1;
-			global.barriers.back().msecs = barrierTime + i * sliderDuration;
-			global.barriers.back().type = std::rand() % 2;
+			global.barriers.back().msecs = (LONG)(barrierTime + i * sliderDuration);
+			global.barriers.back().type = std::rand() % 3;
 			global.barriers.back().track = std::rand() % 4;
 			if (barrierLast >= 2)
 				while (global.barriers[barrierLast - 1].track == global.barriers[barrierLast].track
