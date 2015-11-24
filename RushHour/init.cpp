@@ -99,5 +99,7 @@ VOID GameInit()
 	readBeats((global.currSong().name + _T("/") + global.currSong().osuFile).data());
 	QueryPerformanceCounter(&global.beginTime);
 	SwitchSong();
+
+	global.blood = 100.;
 	global.status = global.GS_PLAYING;
 }

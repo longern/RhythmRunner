@@ -2,6 +2,8 @@
 #include "audio.h"
 
 static LONG gameTimePass;
+static DOUBLE barrierX;
+static HDC hdcBuffer;
 
 VOID GameStatusUpdate()
 {
@@ -25,7 +27,23 @@ VOID HeroUpdate()
 
 VOID DetectCollision()
 {
-
+	double x;
+	int track;
+	for (UINT j = 0; j < global.barriers.size(); j++)
+	{
+		x = (global.barriers[j].msecs - gameTimePass) / global.currSong().msPerBeat / 4.;
+		track = global.barriers[j].track;
+		if (global.barriers[j].type == 0 && global.heroes[track].height <= 0)
+		{
+			if (x >= 0 && x <= 0.1 / 3 || x > 0.2 / 3 && x <= 0.1)
+				global.blood += 0.1;
+			else if (x > 0.1 / 3 && x <= 0.2 / 3)
+				global.blood -= 2;
+		}
+	}
+	global.blood += 0.1;
+	if (global.blood > 100)
+		global.blood = 100;
 }
 
 VOID TimerUpdate(HWND hWnd, WPARAM wParam, LPARAM lParam)
@@ -41,12 +59,12 @@ VOID TimerUpdate(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	InvalidateRect(hWnd, NULL, FALSE);
 }
 
-VOID RenderWelcome(HDC hdcBuffer, HDC hdcBmp)
+VOID RenderWelcome(HDC hdcBmp)
 {
 
 }
 
-VOID RenderSongSelect(HDC hdcBuffer, HDC hdcBmp)
+VOID RenderSongSelect(HDC hdcBmp)
 {
 	UINT i;
 
@@ -64,20 +82,20 @@ VOID RenderSongSelect(HDC hdcBuffer, HDC hdcBmp)
 	}
 }
 
-VOID RenderOptions(HDC hdcBuffer, HDC hdcBmp)
+VOID RenderOptions(HDC hdcBmp)
 {
 
 }
 
-VOID DrawSpikes(HDC hdcBuffer, double x, double bottom)
+VOID DrawSpikes(double bottom)
 {
 	INT pitWidth = ToWindowX(0.8 / 8) - global.heroWidth;
-	INT spikeWidth = pitWidth / 3;
+	INT spikeWidth = pitWidth / 4;
 	POINT spike[3];
-	for (int i = 0; i < 3; i++) {
-		spike[0].x = ToWindowX(x) + global.heroWidth / 2 + i * spikeWidth;
-		spike[1].x = ToWindowX(x) + global.heroWidth / 2 + i * spikeWidth + spikeWidth / 2;
-		spike[2].x = ToWindowX(x) + global.heroWidth / 2 + (i + 1) * spikeWidth;
+	for (int i = 0; i < 4; i++) {
+		spike[0].x = ToWindowX(barrierX) + global.heroWidth / 2 + i * spikeWidth;
+		spike[1].x = ToWindowX(barrierX) + global.heroWidth / 2 + i * spikeWidth + spikeWidth / 2;
+		spike[2].x = ToWindowX(barrierX) + global.heroWidth / 2 + (i + 1) * spikeWidth;
 		spike[0].y = ToWindowY(bottom);
 		spike[1].y = ToWindowY(bottom - 0.05);
 		spike[2].y = ToWindowY(bottom);
@@ -85,7 +103,17 @@ VOID DrawSpikes(HDC hdcBuffer, double x, double bottom)
 	}
 }
 
-VOID DrawBarriers(HDC hdcBuffer, int i)
+VOID DrawCliff(int j)
+{
+	int track = global.barriers[j].track;
+	DOUBLE trackBottom = (track + 1) * 0.25 + ((track + 1) % 2) * 0.01;
+	Rectangle(hdcBuffer, ToWindowX(barrierX), ToWindowY(trackBottom - 0.05) - 1,
+		ToWindowX(barrierX + 0.8 / 8), ToWindowY(trackBottom) + 1);
+	//Rectangle(hdcBuffer, ToWindowX(barrierX + 0.8 / 8 / 2) - 1, ToWindowY(trackBottom - 0.05) - 1,
+	//	ToWindowX(barrierX + 0.8 / 8), ToWindowY(trackBottom) + 1);
+}
+
+VOID DrawBarriers(int i)
 {
 	DOUBLE trackTop = i * 0.25 + (i % 2) * 0.01;
 	DOUBLE trackBottom = (i + 1) * 0.25 + ((i + 1) % 2) * 0.01;
@@ -94,7 +122,7 @@ VOID DrawBarriers(HDC hdcBuffer, int i)
 
 	for (UINT j = 0; j < global.barriers.size(); j++)
 	{
-		DOUBLE barrierX = 0.05 + (global.barriers[j].msecs - gameTimePass) / global.currSong().msPerBeat / 4.;
+		barrierX = 0.05 + (global.barriers[j].msecs - gameTimePass) / global.currSong().msPerBeat / 4.;
 		if (barrierX < -0.2)
 			continue;
 		if (barrierX > 1)
@@ -112,21 +140,27 @@ VOID DrawBarriers(HDC hdcBuffer, int i)
 				ToWindowX(barrierX) + 2, ToWindowY(trackBottom) + 1);
 
 			SelectObject(hdcBuffer, backBrush);
-			Rectangle(hdcBuffer, ToWindowX(barrierX) + global.heroWidth / 2, ToWindowY(trackBottom - 0.05) - 1,
+			Rectangle(hdcBuffer, ToWindowX(barrierX) + global.heroWidth / 2, ToWindowY(trackTop),
 				ToWindowX(barrierX + 0.8 / 8) - global.heroWidth / 2, ToWindowY(trackBottom) + 1);
 
 			SelectObject(hdcBuffer, GetStockObject(GRAY_BRUSH));
 			switch (global.barriers[j].type)
 			{
+			case 0:
+				DrawSpikes(trackBottom);
+				break;
+			case 1:
+				DrawCliff(j);
+				break;
 			default:
-				DrawSpikes(hdcBuffer, barrierX, trackBottom);
+				DrawSpikes(trackBottom);
 				break;
 			}
 		}
 	}
 }
 
-VOID RenderPlaying(HDC hdcBuffer, HDC hdcBmp)
+VOID RenderPlaying(HDC hdcBmp)
 {
 	UINT i;
 
@@ -144,7 +178,7 @@ VOID RenderPlaying(HDC hdcBuffer, HDC hdcBmp)
 		Rectangle(hdcBuffer, 0, ToWindowY(trackBottom - 0.05) - 1, WNDWIDTH, ToWindowY(trackBottom) + 1);
 
 		//  Draw Barriers
-		DrawBarriers(hdcBuffer, i);
+		DrawBarriers(i);
 
 		//  Draw StickMan
 		UINT heroFrame = (int)(gameTimePass / (global.currSong().msPerBeat * 0.4) * 8 + 3) % 8;
@@ -174,8 +208,8 @@ VOID RenderPlaying(HDC hdcBuffer, HDC hdcBmp)
 		}
 	}
 
-	WCHAR timeText[10];
-	wsprintf(timeText, _T("%d"), gameTimePass);
+	WCHAR timeText[20];
+	wsprintf(timeText, _T("%d %d"), gameTimePass, (int)global.blood);
 	SetTextColor(hdcBuffer, RGB(0, 0, 0));
 	TextOut(hdcBuffer, ToWindowX(0.8), ToWindowY(0.05), timeText, wcslen(timeText));
 }
@@ -187,7 +221,7 @@ VOID Render(HWND hWnd)
 
 	hdc = BeginPaint(hWnd, &ps);
 
-	HDC	hdcBmp, hdcBuffer;
+	HDC	hdcBmp;
 	HBITMAP	cptBmp;
 
 	cptBmp = CreateCompatibleBitmap(hdc, WNDWIDTH, WNDHEIGHT);
@@ -198,16 +232,16 @@ VOID Render(HWND hWnd)
 	switch (global.status)
 	{
 	case global.GS_WELCOME:
-		RenderWelcome(hdcBuffer, hdcBmp);
+		RenderWelcome(hdcBmp);
 		break;
 	case global.GS_SONGSELECT:
-		RenderSongSelect(hdcBuffer, hdcBmp);
+		RenderSongSelect(hdcBmp);
 		break;
 	case global.GS_OPTIONS:
-		RenderOptions(hdcBuffer, hdcBmp);
+		RenderOptions(hdcBmp);
 		break;
 	case global.GS_PLAYING:
-		RenderPlaying(hdcBuffer, hdcBmp);
+		RenderPlaying(hdcBmp);
 		break;
 	default:
 		break;

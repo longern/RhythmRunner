@@ -11,30 +11,59 @@ std::wstring strtowstr(const std::string &str)
 	return wstr;
 }
 
-VOID readHitObjects(std::string str)
+VOID produceHitObject(int t, bool includeItem)
 {
 	global.barriers.push_back(BARRIERINFO());
 	UINT barrierLast = global.barriers.size() - 1;
-	UINT comaCount = 0;
-	UINT i;
-	//  Find the second coma
-	for (i = 0; i < 2; i++)
-		str = str.substr(str.find_first_of(',') + 1);
-	int barrierTime = std::atol(str.data());
-	global.barriers.back().msecs = barrierTime;
-	global.barriers.back().type = std::rand() % 2;
+	global.barriers.back().msecs = t;
+	if (includeItem)
+	{
+		global.barriers.back().type = std::rand() % 6;
+		if (global.barriers.back().type >= 3)
+			global.barriers.back().type = 0;
+	}
+	else
+	{
+		global.barriers.back().type = std::rand() % 5;
+		if (global.barriers.back().type >= 2)
+			global.barriers.back().type = 0;
+	}
 	global.barriers.back().track = std::rand() % 4;
+
+	//  Change the height
+	if (global.barriers.back().type == 1)
+	{
+		int i;
+		for (i = global.barriers.size() - 2; i >= 0; i--)
+			if (global.barriers[i].track == global.barriers.back().track)
+			{
+				global.barriers.back().height = 1 - global.barriers[i].height;
+			}
+	}
 
 	//  Reproduce when too dense
 	if (barrierLast >= 2)
 		while (global.barriers[barrierLast - 1].track == global.barriers[barrierLast].track
 			&& global.barriers[barrierLast - 2].track == global.barriers[barrierLast].track)
 			global.barriers.back().track = std::rand() % 4;
+}
+
+VOID readHitObjects(std::string str)
+{
+	UINT barrierLast = global.barriers.size() - 1;
+	UINT comaCount = 0;
+	UINT i;
+
+	//  Find the second coma
+	for (i = 0; i < 2; i++)
+		str = str.substr(str.find_first_of(',') + 1);
+	int barrierTime = std::atol(str.data());
+	produceHitObject(barrierTime, false);
 
 	//  Transform sliders into barriers
 	if (str.find_first_of('|') != std::string::npos)
 	{
-		UINT repeatTimes;
+		UINT repeatTimes;  //  Calc the how many barriers will a slider produce
 		double pixelLength;
 		str = str.substr(str.find_first_of('|') + 1);
 		str = str.substr(str.find_first_of(',') + 1);
@@ -42,18 +71,11 @@ VOID readHitObjects(std::string str)
 		str = str.substr(str.find_first_of(',') + 1);
 		pixelLength = std::atof(str.data());
 		double sliderDuration = pixelLength / global.currSong().sliderMultiplier / 100. * global.currSong().msPerBeat;
+		//  Calc How many milliseconds is between two barriers
+
+		//  Repeatly produce barriers
 		for (i = 1; i <= repeatTimes; i++)
-		{
-			global.barriers.push_back(BARRIERINFO());
-			barrierLast = global.barriers.size() - 1;
-			global.barriers.back().msecs = (LONG)(barrierTime + i * sliderDuration);
-			global.barriers.back().type = std::rand() % 3;
-			global.barriers.back().track = std::rand() % 4;
-			if (barrierLast >= 2)
-				while (global.barriers[barrierLast - 1].track == global.barriers[barrierLast].track
-					&& global.barriers[barrierLast - 2].track == global.barriers[barrierLast].track)
-					global.barriers.back().track = std::rand() % 4;
-		}
+			produceHitObject((LONG)(barrierTime + i * sliderDuration), true);
 	}
 }
 

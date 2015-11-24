@@ -84,7 +84,7 @@ typedef struct
 	LONG msecs;
 	UINT track;
 	UINT type;
-	DOUBLE height;
+	INT height;
 } BARRIERINFO;
 
 typedef struct
@@ -106,6 +106,7 @@ struct GLOBAL
 	LARGE_INTEGER clockFrequency;
 	std::vector<BARRIERINFO> barriers;
 	HERO heroes[4];
+	DOUBLE blood;
 
 	MCI_OPEN_PARMS ae; //Audio Engine
 

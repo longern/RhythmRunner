@@ -99,4 +99,18 @@ VOID LButtonDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	POINT ptMouse;
 	ptMouse.x = LOWORD(lParam);
 	ptMouse.y = HIWORD(lParam);
+
+	switch (global.status)
+	{
+	case global.GS_PLAYING:
+		if (ptMouse.y <= ToWindowY(0.26))
+			DoJump(0);
+		else if (ptMouse.y <= ToWindowY(0.5))
+			DoJump(1);
+		else if (ptMouse.y <= ToWindowY(0.76))
+			DoJump(2);
+		else
+			DoJump(3);
+		break;
+	}
 }
