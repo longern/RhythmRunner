@@ -55,7 +55,7 @@ typedef struct
 
 struct GLOBAL
 {
-	enum { GS_WELCOME = 0, GS_SONGSELECT, GS_OPTIONS, GS_PLAYING } status;
+	enum { GS_WELCOME = 0, GS_SONGSELECT, GS_OPTIONS, GS_PLAYING, GS_GAMEOVER } status;
 	std::vector<SONGINFO> songs;
 	UINT totalSongCount;
 	UINT currentSong;
@@ -93,6 +93,7 @@ extern TCHAR szTitle[];
 /*全局函数*/
 VOID GlobalInit();
 VOID GameInit();
+VOID GameOverInit();
 
 //窗体过程函数
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);

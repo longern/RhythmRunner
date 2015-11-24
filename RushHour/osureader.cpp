@@ -19,13 +19,13 @@ VOID produceHitObject(int t, bool includeItem)
 	if (includeItem)
 	{
 		global.barriers.back().type = std::rand() % 6;
-		if (global.barriers.back().type >= 3)
+		if (global.barriers.back().type >= 1)
 			global.barriers.back().type = 0;
 	}
 	else
 	{
 		global.barriers.back().type = std::rand() % 5;
-		if (global.barriers.back().type >= 2)
+		if (global.barriers.back().type >= 1)
 			global.barriers.back().type = 0;
 	}
 	global.barriers.back().track = std::rand() % 4;

@@ -105,3 +105,9 @@ VOID GameInit()
 		global.fHeight[i] = 0.;
 	global.status = global.GS_PLAYING;
 }
+
+VOID GameOverInit()
+{
+	AudioClose();
+	global.status = global.GS_GAMEOVER;
+}

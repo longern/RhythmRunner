@@ -31,19 +31,28 @@ VOID DetectCollision()
 	int track;
 	for (UINT j = 0; j < global.barriers.size(); j++)
 	{
-		x = (global.barriers[j].msecs - gameTimePass) / global.currSong().msPerBeat / 4.;
+		x = (global.barriers[j].msecs - gameTimePass) / global.currSong().msPerBeat / 0.4;
 		track = global.barriers[j].track;
-		if (global.barriers[j].type == 0 && global.heroes[track].height <= 0)
+		if (global.barriers[j].type)
+			continue;
+		if (x < 0)
 		{
-			if (x >= 0 && x <= 0.1 / 3 || x > 0.2 / 3 && x <= 0.1)
-				global.blood += 0.1;
-			else if (x > 0.1 / 3 && x <= 0.2 / 3)
-				global.blood -= 2;
+			if (global.barriers[j].type == 0 && global.heroes[track].height <= 0)
+			{
+				if (x < 0 && x >= -1. / 3 || x < -2. / 3 && x >= -1)
+					global.blood -= 0.2;
+				else if (x < -1. / 3 && x >= -2. / 3)
+					global.blood -= 10;
+			}
 		}
+		else
+			break;
 	}
-	global.blood += 0.1;
+	global.blood += 0.05;
 	if (global.blood > 100)
 		global.blood = 100;
+	if (global.blood <= 0)
+		GameOverInit();
 }
 
 VOID TimerUpdate(HWND hWnd, WPARAM wParam, LPARAM lParam)
