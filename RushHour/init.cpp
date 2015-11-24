@@ -101,5 +101,7 @@ VOID GameInit()
 	SwitchSong();
 
 	global.blood = 100.;
+	for (int i = 0; i < 4; i++)
+		global.fHeight[i] = 0.;
 	global.status = global.GS_PLAYING;
 }

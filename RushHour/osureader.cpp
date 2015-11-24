@@ -36,9 +36,7 @@ VOID produceHitObject(int t, bool includeItem)
 		int i;
 		for (i = global.barriers.size() - 2; i >= 0; i--)
 			if (global.barriers[i].track == global.barriers.back().track)
-			{
 				global.barriers.back().height = 1 - global.barriers[i].height;
-			}
 	}
 
 	//  Reproduce when too dense

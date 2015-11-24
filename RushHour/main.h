@@ -24,48 +24,6 @@ const double PI = 3.1415926536;
 #define ROOF_COLOR_NUM       2
 #define MAX_TERRIAN_NUM      10
 
-/*英雄结构体，英雄位图、位置、大小*/
-typedef struct
-{
-	HBITMAP	hBmp;
-	POINT	pos;
-	SIZE	size;
-	int     curFrameIndex;
-	int     maxFrameSize;
-} Hero;
-
-/*地形结构体，地形方块位图、屋顶位图、位置、大小、屋顶以及方块大小、方块个数*/
-typedef struct
-{
-	HBITMAP hBlockBmp;
-	HBITMAP hRoofBmp;
-	POINT	pos;
-	SIZE    size;
-	int     roofWidth;
-	int     roofHeight;
-	int     blockWidth;
-	int     blockHeight;
-	int     blockNum;
-} Terrian;
-
-/*背景建筑结构体，建筑位图、位置、大小、类型*/
-typedef struct
-{
-	HBITMAP	hBmp;
-	POINT	pos;
-	SIZE	size;
-} Building;
-
-/*游戏状态结构体*/
-typedef struct
-{
-	HBITMAP	hBmp;
-	POINT   pos;
-	SIZE	size;
-	BOOL	isPaused;
-	int     totalDist;
-} GameStatus;
-
 typedef struct
 {
 	std::wstring name;
@@ -107,6 +65,7 @@ struct GLOBAL
 	std::vector<BARRIERINFO> barriers;
 	HERO heroes[4];
 	DOUBLE blood;
+	DOUBLE fHeight[4];
 
 	MCI_OPEN_PARMS ae; //Audio Engine
 
