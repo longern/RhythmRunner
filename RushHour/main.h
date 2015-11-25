@@ -86,31 +86,33 @@ typedef struct
 	HBITMAP wHero[9];
 } GAMERESOURCE;
 
-/*全局变量*/
+/*  Global Variants  */
 extern GLOBAL global;
 extern GAMERESOURCE resource;
 
 extern TCHAR szWindowClass[];
 extern TCHAR szTitle[];
 
-/*全局函数*/
+/*  Global Functions  */
 VOID GlobalInit();
 VOID GameInit();
 VOID GameOverInit();
 
-//窗体过程函数
+//  Process Events;
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
-//初始化
+//  Init window, load image resources
 VOID WindowInit(HWND hWnd, WPARAM wParam, LPARAM lParam);
 
-//双缓冲绘制
+//  Core Rendering Function
 VOID Render(HWND hWnd);
-//定时器事件
+//  Timer Triggered Event
 VOID TimerUpdate(HWND hWnd, WPARAM wParam, LPARAM lParam);
-//键盘按下事件处理
+//  Key Press Down Event
 VOID KeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam);
-//左鼠标点击事件
+//  Left Mouse Button Press Down Event
 VOID LButtonDown(HWND hWnd, WPARAM wParam, LPARAM lParam);
+//  Touch Screen Event
+VOID TouchEvent(HWND hWnd, WPARAM wParam, LPARAM lParam);
 
 //Global Functions
 int ToWindowX(double rx);

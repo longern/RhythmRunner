@@ -83,12 +83,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="animator.h" />
     <ClInclude Include="audio.h" />
     <ClInclude Include="osureader.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="animator.cpp" />
     <ClCompile Include="audio.cpp" />
     <ClCompile Include="global.cpp" />
     <ClCompile Include="init.cpp" />

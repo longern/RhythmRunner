@@ -27,6 +27,9 @@
     <ClInclude Include="resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="animator.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -51,6 +54,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="osureader.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="animator.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

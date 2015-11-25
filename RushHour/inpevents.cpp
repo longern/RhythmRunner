@@ -78,9 +78,12 @@ VOID GamePlayKeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 		}
 		else
 		{
-			global.isGamePaused = true;
-			AudioPause();
-			global.accummulatedTime = global.timePass();
+			if (global.accummulatedTime == 0 || global.timePass() - global.accummulatedTime >= 3000)
+			{
+				global.isGamePaused = true;
+				AudioPause();
+				global.accummulatedTime = global.timePass();
+			}
 		}
 		break;
 
@@ -115,6 +118,7 @@ VOID KeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	case global.GS_PLAYING:
 		GamePlayKeyDown(hWnd, wParam, lParam);
 		break;
+
 	case global.GS_GAMEOVER:
 		GameOverKeyDown(hWnd, wParam, lParam);
 		break;
@@ -129,6 +133,26 @@ VOID LButtonDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 
 	switch (global.status)
 	{
+	case global.GS_SONGSELECT:
+		if (ptMouse.y <= ToWindowY(0.33))
+		{
+			if (global.currentSong <= 1)
+				global.currentSong = global.totalSongCount;
+			else
+				global.currentSong--;
+			PreviewSong();
+		}
+		else if (ptMouse.y < ToWindowY(0.67))
+			GameInit();
+		else
+		{
+			if (global.currentSong >= global.totalSongCount)
+				global.currentSong = 1;
+			else
+				global.currentSong++;
+			PreviewSong();
+		}
+		break;
 	case global.GS_PLAYING:
 		if (ptMouse.y <= ToWindowY(0.26))
 			DoJump(0);
@@ -140,4 +164,9 @@ VOID LButtonDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 			DoJump(3);
 		break;
 	}
+}
+
+VOID TouchEvent(HWND hWnd, WPARAM wParam, LPARAM lParam)
+{
+	;
 }

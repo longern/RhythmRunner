@@ -96,6 +96,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		//左鼠标事件
 		LButtonDown(hWnd, wParam, lParam);
 		break;
+	case WM_TOUCH:
+		TouchEvent(hWnd, wParam, lParam);
+		break;
 	case WM_TIMER:
 		//定时器事件
 		TimerUpdate(hWnd, wParam, lParam);

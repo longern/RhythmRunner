@@ -8,7 +8,7 @@ static HDC hdcBuffer;
 VOID GameStatusUpdate()
 {
 	gameTimePass = global.timePass();
-	if ((gameTimePass - global.barriers.back().msecs) / global.currSong().msPerBeat >= 1)
+	if ((gameTimePass - global.barriers.back().msecs) / global.currSong().msPerBeat >= 8)
 		GameOverInit();
 }
 
