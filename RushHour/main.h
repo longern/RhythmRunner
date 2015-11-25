@@ -55,7 +55,7 @@ typedef struct
 
 struct GLOBAL
 {
-	enum { GS_WELCOME = 0, GS_SONGSELECT, GS_OPTIONS, GS_PLAYING, GS_GAMEOVER } status;
+	enum { GS_NOSONG = 0, GS_WELCOME, GS_SONGSELECT, GS_OPTIONS, GS_PLAYING, GS_GAMEOVER } status;
 	std::vector<SONGINFO> songs;
 	UINT totalSongCount;
 	UINT currentSong;
@@ -66,6 +66,7 @@ struct GLOBAL
 	HERO heroes[4];
 	DOUBLE blood;
 	DOUBLE fHeight[4];
+	UINT finalScore;
 
 	MCI_OPEN_PARMS ae; //Audio Engine
 

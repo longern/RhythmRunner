@@ -8,6 +8,8 @@ static HDC hdcBuffer;
 VOID GameStatusUpdate()
 {
 	gameTimePass = global.timePass();
+	if ((gameTimePass - global.barriers.back().msecs) / global.currSong().msPerBeat >= 1)
+		GameOverInit();
 }
 
 VOID HeroUpdate()
@@ -39,10 +41,10 @@ VOID DetectCollision()
 		{
 			if (global.barriers[j].type == 0 && global.heroes[track].height <= 0)
 			{
-				if (x < 0 && x >= -1. / 3 || x < -2. / 3 && x >= -1)
+				if (x < 0 && x >= -1. / 4 || x < -3. / 4 && x >= -1)
 					global.blood -= 0.2;
-				else if (x < -1. / 3 && x >= -2. / 3)
-					global.blood -= 10;
+				else if (x < -1. / 4 && x >= -3. / 4)
+					global.blood -= 6;
 			}
 		}
 		else
@@ -66,6 +68,14 @@ VOID TimerUpdate(HWND hWnd, WPARAM wParam, LPARAM lParam)
 		break;
 	}
 	InvalidateRect(hWnd, NULL, FALSE);
+}
+
+VOID RenderNoSong()
+{
+	Rectangle(hdcBuffer, 0, 0, WNDWIDTH, WNDHEIGHT);
+
+	TextOut(hdcBuffer, ToWindowX(0.4), ToWindowY(0.4), _T("You don't have any songs."), 25);
+	TextOut(hdcBuffer, ToWindowX(0.4), ToWindowY(0.45), _T("Please download from http://osu.ppy.sh/"), 39);
 }
 
 VOID RenderWelcome(HDC hdcBmp)
@@ -223,6 +233,19 @@ VOID RenderPlaying(HDC hdcBmp)
 	TextOut(hdcBuffer, ToWindowX(0.8), ToWindowY(0.05), timeText, wcslen(timeText));
 }
 
+VOID RenderGameOver()
+{
+	Rectangle(hdcBuffer, 0, 0, WNDWIDTH, WNDHEIGHT);
+
+	if(global.blood <= 0)
+		TextOut(hdcBuffer, ToWindowX(0.4), ToWindowY(0.4), _T("Failed"), 6);
+	else
+		TextOut(hdcBuffer, ToWindowX(0.4), ToWindowY(0.4), _T("You won!"), 8);
+	WCHAR timeText[20];
+	wsprintf(timeText, _T("Your Score: %u"), global.finalScore);
+	TextOut(hdcBuffer, ToWindowX(0.4), ToWindowY(0.45), timeText, wcslen(timeText));
+}
+
 VOID Render(HWND hWnd)
 {
 	PAINTSTRUCT ps;
@@ -240,6 +263,9 @@ VOID Render(HWND hWnd)
 
 	switch (global.status)
 	{
+	case global.GS_NOSONG:
+		RenderNoSong();
+		break;
 	case global.GS_WELCOME:
 		RenderWelcome(hdcBmp);
 		break;
@@ -252,6 +278,8 @@ VOID Render(HWND hWnd)
 	case global.GS_PLAYING:
 		RenderPlaying(hdcBmp);
 		break;
+	case global.GS_GAMEOVER:
+		RenderGameOver();
 	default:
 		break;
 	}

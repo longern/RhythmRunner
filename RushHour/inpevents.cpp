@@ -1,6 +1,17 @@
 #include "audio.h"
 #include "osureader.h"
 
+VOID DoJump(int track)
+{
+	HERO *currHero = &global.heroes[track];
+	if (currHero->jpCount <= 1)
+	{
+		currHero->jpStartTime = global.timePass();
+		currHero->startHeight = currHero->height;
+		currHero->jpCount++;
+	}
+}
+
 VOID SongSelectKeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 {
 	switch (wParam)
@@ -34,17 +45,6 @@ VOID SongSelectKeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	}
 }
 
-VOID DoJump(int track)
-{
-	HERO *currHero = &global.heroes[track];
-	if (currHero->jpCount <= 1)
-	{
-		currHero->jpStartTime = global.timePass();
-		currHero->startHeight = currHero->height;
-		currHero->jpCount++;
-	}
-}
-
 VOID GamePlayKeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 {
 	switch (wParam)
@@ -70,12 +70,21 @@ VOID GamePlayKeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 		break;
 
 	case VK_ESCAPE:
-		global.barriers.clear();
 		AudioClose();
 		global.status = global.GS_SONGSELECT;
 		break;
 
 	default:
+		break;
+	}
+}
+
+VOID GameOverKeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
+{
+	switch (wParam)
+	{
+	case VK_ESCAPE:
+		global.status = global.GS_SONGSELECT;
 		break;
 	}
 }
@@ -90,6 +99,9 @@ VOID KeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 
 	case global.GS_PLAYING:
 		GamePlayKeyDown(hWnd, wParam, lParam);
+		break;
+	case global.GS_GAMEOVER:
+		GameOverKeyDown(hWnd, wParam, lParam);
 		break;
 	}
 }

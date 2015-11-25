@@ -41,6 +41,11 @@ VOID GlobalInit()
 	QueryPerformanceFrequency(&global.clockFrequency);
 
 	GameFolderInit();
+	if (global.songs.empty())
+	{
+		global.status = global.GS_NOSONG;
+		return;
+	}
 	AudioInit();
 	PreviewSong();
 
@@ -108,6 +113,7 @@ VOID GameInit()
 
 VOID GameOverInit()
 {
+	global.finalScore = global.timePass();
 	AudioClose();
 	global.status = global.GS_GAMEOVER;
 }
