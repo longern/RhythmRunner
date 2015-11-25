@@ -60,8 +60,10 @@ struct GLOBAL
 	UINT totalSongCount;
 	UINT currentSong;
 
+	LONG accummulatedTime;
 	LARGE_INTEGER beginTime;
 	LARGE_INTEGER clockFrequency;
+	BOOL isGamePaused;
 	std::vector<BARRIERINFO> barriers;
 	HERO heroes[4];
 	DOUBLE blood;

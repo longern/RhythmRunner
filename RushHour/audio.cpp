@@ -37,6 +37,11 @@ MCIERROR AudioPlayOnce(DWORD time)
 	return mciSendCommand(gAudio.ae.wDeviceID, MCI_PLAY, MCI_NOTIFY, (DWORD)&pp);
 }
 
+MCIERROR AudioPause()
+{
+	return mciSendCommand(gAudio.ae.wDeviceID, MCI_PAUSE, 0, NULL);
+}
+
 MCIERROR AudioClose()
 {
 	return mciSendCommand(gAudio.ae.wDeviceID, MCI_CLOSE, MCI_NOTIFY, NULL);

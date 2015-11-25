@@ -102,6 +102,8 @@ VOID WindowInit(HWND hWnd, WPARAM wParam, LPARAM lParam)
 VOID GameInit()
 {
 	readBeats((global.currSong().name + _T("/") + global.currSong().osuFile).data());
+	global.accummulatedTime = 0;
+	global.isGamePaused = false;
 	QueryPerformanceCounter(&global.beginTime);
 	SwitchSong();
 

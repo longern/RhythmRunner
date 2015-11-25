@@ -69,6 +69,21 @@ VOID GamePlayKeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 		InvalidateRect(hWnd, NULL, FALSE);
 		break;
 
+	case VK_SPACE:
+		if (global.isGamePaused)
+		{
+			QueryPerformanceCounter(&global.beginTime);
+			AudioPlay();
+			global.isGamePaused = false;
+		}
+		else
+		{
+			global.isGamePaused = true;
+			AudioPause();
+			global.accummulatedTime = global.timePass();
+		}
+		break;
+
 	case VK_ESCAPE:
 		AudioClose();
 		global.status = global.GS_SONGSELECT;

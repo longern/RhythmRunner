@@ -62,9 +62,12 @@ VOID TimerUpdate(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	switch (global.status)
 	{
 	case global.GS_PLAYING:
-		GameStatusUpdate();
-		HeroUpdate();
-		DetectCollision();
+		if (!global.isGamePaused)
+		{
+			GameStatusUpdate();
+			HeroUpdate();
+			DetectCollision();
+		}
 		break;
 	}
 	InvalidateRect(hWnd, NULL, FALSE);
