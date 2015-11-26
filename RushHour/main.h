@@ -2,7 +2,7 @@
 #define MAIN_H
 
 #define _CRT_SECURE_NO_WARNINGS
-const double PI = 3.1415926536;
+const double PI = 3.1415926535897932;
 
 #include <windows.h>
 
