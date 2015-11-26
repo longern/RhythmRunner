@@ -19,9 +19,9 @@ VOID HeroUpdate()
 		if (!global.heroes[i].jpCount)
 			continue;
 		int jpTime = gameTimePass - global.heroes[i].jpStartTime;
-		DOUBLE jpCent = jpTime / global.currSong().msPerBeat / 0.4;
+		DOUBLE jumpCent = jpTime / global.currSong().msPerBeat / 0.4;
 		//  Jump will last for 0.4 Beats
-		global.heroes[i].height = jpCent * (1 - jpCent) + global.heroes[i].startHeight;
+		global.heroes[i].height = jumpCent * (1 - jumpCent) + global.heroes[i].startHeight;
 		if (global.heroes[i].height <= 0)
 			global.heroes[i].height = global.heroes[i].jpCount = 0;
 	}

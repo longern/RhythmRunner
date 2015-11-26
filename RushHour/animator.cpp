@@ -1,6 +1,6 @@
 #include "animator.h"
 
-VOID animatorAdd()
+VOID aniAdd()
 {
 
 }

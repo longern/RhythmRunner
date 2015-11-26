@@ -16,6 +16,8 @@ VOID produceHitObject(int t, bool includeItem)
 	global.barriers.push_back(BARRIERINFO());
 	UINT barrierLast = global.barriers.size() - 1;
 	global.barriers.back().msecs = t;
+	if (barrierLast == 1)
+		srand(t);
 	if (includeItem)
 	{
 		global.barriers.back().type = std::rand() % 6;

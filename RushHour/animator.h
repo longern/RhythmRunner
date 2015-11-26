@@ -1,3 +1,3 @@
 #include "main.h"
 
-VOID animatorAdd();
+VOID aniAdd();

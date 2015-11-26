@@ -102,6 +102,7 @@ VOID GameOverKeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	switch (wParam)
 	{
 	case VK_ESCAPE:
+		PreviewSong();
 		global.status = global.GS_SONGSELECT;
 		break;
 	}
