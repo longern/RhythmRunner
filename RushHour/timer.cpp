@@ -1,5 +1,6 @@
 #include "main.h"
 #include "audio.h"
+#include "animator.h"
 
 static LONG gameTimePass;
 static DOUBLE barrierX;
@@ -70,6 +71,7 @@ VOID TimerUpdate(HWND hWnd, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 	}
+	refreshAnimations();
 	InvalidateRect(hWnd, NULL, FALSE);
 }
 

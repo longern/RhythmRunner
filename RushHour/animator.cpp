@@ -20,7 +20,7 @@ VOID refreshAnimations()
 	QueryPerformanceCounter(&ct);
 	LONG tp;
 
-	for (int i = 0; i < animations.size(); i++)
+	for (UINT i = 0; i < animations.size(); i++)
 	{
 		tp = (LONG)(ct.QuadPart - animations[i].begin.QuadPart);
 		if (tp <= animations[i].delay)
