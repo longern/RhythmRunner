@@ -11,6 +11,22 @@ std::wstring strtowstr(const std::string &str)
 	return wstr;
 }
 
+std::vector<std::string> strsplit(const std::string &str, char delimiter)
+{
+	std::vector<std::string> res;
+	size_t prevoff = 0, off;
+	if (str.length() == 0)
+		return res;
+
+	while ((off = str.find(delimiter, prevoff)) != std::string::npos)
+	{
+		res.push_back(str.substr(prevoff, off));
+		prevoff = off + 1;
+	}
+	res.push_back(str.substr(prevoff));
+	return res;
+}
+
 VOID produceHitObject(int t, bool includeItem)
 {
 	global.barriers.push_back(BARRIERINFO());
@@ -120,6 +136,18 @@ VOID readBasicInfo(const WCHAR *filePathName, SONGINFO *info)
 			{
 				line = line.substr(6);
 				info->title = strtowstr(line.substr(line.find_first_not_of(' ')));
+			}
+		}
+		else if (state == "Events")
+		{
+			if (line[0] == '0')
+			{
+				std::vector<std::string> res = strsplit(line, ',');
+				if (res.size() >= 3)
+				{
+					std::string fileWithQuote = res[2];
+					info->bgImgFile = strtowstr(fileWithQuote.substr(1, fileWithQuote.length() - 2));
+				}
 			}
 		}
 		else if (state == "TimingPoints")

@@ -3,7 +3,7 @@
 
 static std::vector<ANIMATION> animations;
 
-VOID aniAdd(DOUBLE *prop, DOUBLE finalValue, LONG lastTime, ANIMATION::CURVE curve, LONG delay)
+VOID aniAdd(DOUBLE *prop, DOUBLE finalValue, LONG lastTime, ANIMATION::CURVE curve, BOOL loop, LONG delay)
 {
 	animations.push_back(ANIMATION());;
 	QueryPerformanceCounter(&animations.back().begin);
@@ -11,6 +11,7 @@ VOID aniAdd(DOUBLE *prop, DOUBLE finalValue, LONG lastTime, ANIMATION::CURVE cur
 	animations.back().prop = prop;
 	animations.back().fromProperty = *prop;
 	animations.back().curve = curve;
+	animations.back().loop = loop;
 	animations.back().delay = delay;
 }
 
@@ -28,9 +29,17 @@ VOID refreshAnimations()
 		tp -= animations[i].delay;
 		if (tp >= animations[i].lastTime)
 		{
-			*animations[i].prop = animations[i].toProperty;
-			animations.erase(animations.begin() + i);
-			continue;
+			if (animations[i].loop)
+			{
+				animations[i].begin.QuadPart += tp / animations[i].lastTime * animations[i].lastTime;
+				tp %= animations[i].lastTime;
+			}
+			else
+			{
+				*animations[i].prop = animations[i].toProperty;
+				animations.erase(animations.begin() + i);
+				continue;
+			}
 		}
 		double x = tp / animations[i].lastTime;
 		switch (animations[i].curve)
@@ -45,4 +54,13 @@ VOID refreshAnimations()
 		}
 		*animations[i].prop = x * animations[i].toProperty - (1 - x) * animations[i].fromProperty;
 	}
+}
+
+VOID killAnimator(DOUBLE *prop)
+{
+	for (UINT i = 0; i < animations.size();)
+		if (animations[i].prop == prop)
+			animations.erase(animations.begin() + i);
+		else
+			i++;
 }

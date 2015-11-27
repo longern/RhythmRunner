@@ -105,7 +105,16 @@ VOID GameInit()
 	global.accummulatedTime = 0;
 	global.isGamePaused = false;
 	QueryPerformanceCounter(&global.beginTime);
-	SwitchSong();
+	if (global.currSong().audioLeadIn > 0)
+	{
+		global.accummulatedTime = -global.currSong().audioLeadIn;
+		AudioClose();
+		WCHAR firstMp3File[200];
+		wsprintf(firstMp3File, TEXT("%s/%s"), global.currSong().name.data(), global.currSong().audioFilename.data());
+		AudioOpen(firstMp3File);
+	}
+	else
+		SwitchSong();
 
 	global.blood = 100.;
 	for (int i = 0; i < 4; i++)

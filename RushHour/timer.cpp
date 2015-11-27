@@ -9,6 +9,12 @@ static HDC hdcBuffer;
 VOID GameStatusUpdate()
 {
 	gameTimePass = global.timePass();
+	if (global.accummulatedTime < 0 && gameTimePass >= 0)
+	{
+		AudioPlayOnce();
+		QueryPerformanceCounter(&global.beginTime);
+		global.accummulatedTime = gameTimePass;
+	}
 	if ((gameTimePass - global.barriers.back().msecs) / global.currSong().msPerBeat >= 8)
 		GameOverInit();
 }
@@ -45,7 +51,7 @@ VOID DetectCollision()
 				if (x < 0 && x >= -1. / 4 || x < -3. / 4 && x >= -1)
 					global.blood -= 0.2;
 				else if (x < -1. / 4 && x >= -3. / 4)
-					global.blood -= 6;
+					global.blood -= 4;
 			}
 		}
 		else
@@ -54,7 +60,7 @@ VOID DetectCollision()
 	global.blood += 0.05;
 	if (global.blood > 100)
 		global.blood = 100;
-	if (global.blood <= 0)
+	else if (global.blood <= 0)
 		GameOverInit();
 }
 
@@ -205,7 +211,7 @@ VOID RenderPlaying(HDC hdcBmp)
 		DrawBarriers(i);
 
 		//  Draw StickMan
-		UINT heroFrame = (int)(gameTimePass / (global.currSong().msPerBeat * 0.4) * 8 + 3) % 8;
+		UINT heroFrame = ((int)(gameTimePass / (global.currSong().msPerBeat * 0.4) * 8 + 3) % 8 + 8) % 8;
 		if (heroFrame >= 6)
 			heroFrame++;
 		if (i & 1)
