@@ -59,6 +59,9 @@
     <ClCompile Include="animator.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="render.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\ui\1.bmp">

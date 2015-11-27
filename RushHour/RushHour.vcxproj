@@ -97,6 +97,7 @@
     <ClCompile Include="inpevents.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="osureader.cpp" />
+    <ClCompile Include="render.cpp" />
     <ClCompile Include="timer.cpp" />
     <ClCompile Include="variants.cpp" />
   </ItemGroup>
