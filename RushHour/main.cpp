@@ -92,6 +92,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_KEYUP:
 		//键盘松开事件
 		break;
+	case WM_MOUSEMOVE:
+		MouseMove(hWnd, wParam, lParam);
+		break;
 	case WM_LBUTTONDOWN:
 		//左鼠标事件
 		LButtonDown(hWnd, wParam, lParam);

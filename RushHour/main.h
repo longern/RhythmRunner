@@ -109,6 +109,8 @@ VOID Render(HWND hWnd);
 VOID TimerUpdate(HWND hWnd, WPARAM wParam, LPARAM lParam);
 //  Key Press Down Event
 VOID KeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam);
+//  Mouse Move Event
+VOID MouseMove(HWND hWnd, WPARAM wParam, LPARAM lParam);
 //  Left Mouse Button Press Down Event
 VOID LButtonDown(HWND hWnd, WPARAM wParam, LPARAM lParam);
 //  Touch Screen Event

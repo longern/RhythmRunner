@@ -87,7 +87,9 @@
     <ClInclude Include="audio.h" />
     <ClInclude Include="osureader.h" />
     <ClInclude Include="main.h" />
+    <ClInclude Include="render.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="welcome.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="animator.cpp" />
@@ -97,9 +99,11 @@
     <ClCompile Include="inpevents.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="osureader.cpp" />
+    <ClCompile Include="playing.cpp" />
     <ClCompile Include="render.cpp" />
     <ClCompile Include="timer.cpp" />
     <ClCompile Include="variants.cpp" />
+    <ClCompile Include="welcome.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\ui\1.bmp" />

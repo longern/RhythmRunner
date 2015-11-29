@@ -12,7 +12,7 @@ struct ANIMATION
 	enum CURVE { LINEAR = 0, SINE, EXPR } curve;
 };
 
-VOID aniAdd(DOUBLE *prop, LONG lastTime, ANIMATION::CURVE curve, BOOL loop = FALSE, LONG delay = 0);
+VOID aniAdd(DOUBLE *prop, DOUBLE finalValue, LONG lastTime, ANIMATION::CURVE curve, BOOL loop = FALSE, LONG delay = 0);
 
 VOID refreshAnimations();
 

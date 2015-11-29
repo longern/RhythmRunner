@@ -1,5 +1,7 @@
 #include "audio.h"
 #include "osureader.h"
+#include "welcome.h"
+#include "animator.h"
 
 VOID DoJump(int track)
 {
@@ -126,6 +128,43 @@ VOID KeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	}
 }
 
+VOID MouseMove(HWND hWnd, WPARAM wParam, LPARAM lParam)
+{
+	POINT ptMouse;
+	ptMouse.x = LOWORD(lParam);
+	ptMouse.y = HIWORD(lParam);
+
+	switch (global.status)
+	{
+	case global.GS_WELCOME:
+		if (PtInRect(&PlayButton, ptMouse) && !isPlayButtonHover)
+		{
+			isPlayButtonHover = true;
+			aniAdd(&PlayButtonZoom, 1.05, 250, ANIMATION::SINE);
+		}
+		else if (PtInRect(&OptionButton, ptMouse) && !isOptionButtonHover)
+		{
+			isOptionButtonHover = true;
+			aniAdd(&OptionButtonZoom, 1.05, 250, ANIMATION::SINE);
+		}
+		if(!PtInRect(&PlayButton, ptMouse) && isPlayButtonHover)
+		{
+			isPlayButtonHover = false;
+			aniAdd(&PlayButtonZoom, 1., 250, ANIMATION::SINE);
+		}
+		if (!PtInRect(&OptionButton, ptMouse) && isOptionButtonHover)
+		{
+			isOptionButtonHover = false;
+			aniAdd(&OptionButtonZoom, 1., 250, ANIMATION::SINE);
+		}
+		break;
+	case global.GS_SONGSELECT:
+		break;
+	case global.GS_PLAYING:
+		break;
+	}
+}
+
 VOID LButtonDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 {
 	POINT ptMouse;
@@ -134,6 +173,12 @@ VOID LButtonDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 
 	switch (global.status)
 	{
+	case global.GS_WELCOME:
+		if (PtInRect(&PlayButton, ptMouse))
+			global.status = global.GS_SONGSELECT;
+		else if (PtInRect(&ExitButton, ptMouse))
+			global.status = global.GS_SONGSELECT;
+		break;
 	case global.GS_SONGSELECT:
 		if (ptMouse.y <= ToWindowY(0.33))
 		{

@@ -10,6 +10,7 @@ VOID aniAdd(DOUBLE *prop, DOUBLE finalValue, LONG lastTime, ANIMATION::CURVE cur
 	animations.back().lastTime = lastTime;
 	animations.back().prop = prop;
 	animations.back().fromProperty = *prop;
+	animations.back().toProperty = finalValue;
 	animations.back().curve = curve;
 	animations.back().loop = loop;
 	animations.back().delay = delay;
@@ -23,7 +24,7 @@ VOID refreshAnimations()
 
 	for (UINT i = 0; i < animations.size(); i++)
 	{
-		tp = (LONG)(ct.QuadPart - animations[i].begin.QuadPart);
+		tp = (LONG)((ct.QuadPart - animations[i].begin.QuadPart) / double(global.clockFrequency.QuadPart) * 1000);
 		if (tp <= animations[i].delay)
 			continue;
 		tp -= animations[i].delay;
@@ -41,7 +42,7 @@ VOID refreshAnimations()
 				continue;
 			}
 		}
-		double x = tp / animations[i].lastTime;
+		double x = double(tp) / animations[i].lastTime;
 		switch (animations[i].curve)
 		{
 		case ANIMATION::SINE:
@@ -52,7 +53,7 @@ VOID refreshAnimations()
 			//  x = x;
 			break;
 		}
-		*animations[i].prop = x * animations[i].toProperty - (1 - x) * animations[i].fromProperty;
+		*animations[i].prop = x * animations[i].toProperty + (1 - x) * animations[i].fromProperty;
 	}
 }
 
