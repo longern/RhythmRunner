@@ -51,6 +51,9 @@ VOID SongSelectKeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 
 VOID GamePlayKeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 {
+	if (lParam & 1 << 30)
+		return;
+
 	gameTimePass = global.timePass();
 
 	switch (wParam)
