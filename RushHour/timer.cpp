@@ -14,48 +14,92 @@ VOID GameStatusUpdate()
 		global.accummulatedTime = 0;
 		gameTimePass = global.timePass();
 	}
-	if ((gameTimePass - global.barriers.back().msecs) / global.currSong().msPerBeat >= 8)
+
+	BOOL isGameOver = TRUE;
+	for (int i = 0; i < 4; i++)
+		if ((gameTimePass - global.barriers[i].back().msecs) / global.currSong().msPerBeat <= 8)
+			isGameOver = FALSE;
+	if (isGameOver)
 		GameOverInit();
+}
+
+DOUBLE GetCurrentHeight(int i)
+{
+	DOUBLE currHeight = 0.;
+	for (UINT j = 0; j < global.barriers[i].size(); j++)
+		if (global.barriers[i][j].type == 0 || (global.barriers[i][j].type == 1 && global.barriers[i][j].height == 0.))
+			if (global.barriers[i][j].msecs <= gameTimePass)
+				currHeight = global.barriers[i][j].height;
+			else
+				break;
+		else if (global.barriers[i][j].type == 1 && global.barriers[i][j].height == 1.)
+			if (global.barriers[i][j].msecs + global.currSong().msPerBeat * 0.2 <= gameTimePass)
+				currHeight = global.barriers[i][j].height;
+			else
+				break;
+	//  O(n), can be decreased to O(logn)
+
+	return currHeight;
 }
 
 VOID HeroUpdate()
 {
 	for (int i = 0; i < 4; i++)
 	{
-		if (!global.heroes[i].jpCount)
+		DOUBLE currHeight = GetCurrentHeight(i);
+		int jpTime;
+		DOUBLE jumpCent;
+		if (!global.heroes[i].jpCount && global.heroes[i].height == currHeight)
 			continue;
-		int jpTime = gameTimePass - global.heroes[i].jpStartTime;
-		DOUBLE jumpCent = jpTime / global.currSong().msPerBeat / 0.4;
+
+		if (global.heroes[i].jpStartTime == INT_MIN)
+			global.heroes[i].jpStartTime = gameTimePass;
+
+		jpTime = gameTimePass - global.heroes[i].jpStartTime;
+		jumpCent = jpTime / global.currSong().msPerBeat / 0.4;
 		//  Jump will last for 0.4 Beats
-		global.heroes[i].height = jumpCent * (1 - jumpCent) + global.heroes[i].startHeight;
-		if (global.heroes[i].height <= 0)
-			global.heroes[i].height = global.heroes[i].jpCount = 0;
+		if (global.heroes[i].jpCount)
+			global.heroes[i].height = jumpCent * (1 - jumpCent) / 0.25 + global.heroes[i].startHeight;
+		else
+		{
+			jumpCent += 0.5;
+			global.heroes[i].height = jumpCent * (1 - jumpCent) / 0.25;
+		}
+		//  Max height will be 1.
+
+		if (global.heroes[i].height <= currHeight)
+		{
+			global.heroes[i].height = currHeight;
+			global.heroes[i].startHeight = 0.;
+			global.heroes[i].jpCount = 0;
+			global.heroes[i].jpStartTime = INT_MIN;
+		}
 	}
 }
 
 VOID DetectCollision()
 {
 	double x;
-	int track;
-	for (UINT j = 0; j < global.barriers.size(); j++)
-	{
-		x = (global.barriers[j].msecs - gameTimePass) / global.currSong().msPerBeat / 0.4;
-		track = global.barriers[j].track;
-		if (global.barriers[j].type)
-			continue;
-		if (x < 0)
+	for (UINT i = 0; i < 4;i++)
+		for (UINT j = 0; j < global.barriers[i].size(); j++)
 		{
-			if (global.barriers[j].type == 0 && global.heroes[track].height <= 0)
+			x = (global.barriers[i][j].msecs - gameTimePass) / global.currSong().msPerBeat / 0.4;
+			if (global.barriers[i][j].type)
+				continue;
+			if (x < 0)
 			{
-				if (x < 0 && x >= -1. / 4 || x < -3. / 4 && x >= -1)
-					global.blood -= 0.2;
-				else if (x < -1. / 4 && x >= -3. / 4)
-					global.blood -= 4;
+				if (global.barriers[i][j].type == 0 && global.heroes[i].height <= 0)
+				{
+					if (x < 0 && x >= -1. / 4 || x < -3. / 4 && x >= -1)
+						global.blood -= 0.2;
+					else if (x < -1. / 4 && x >= -3. / 4)
+						global.blood -= 4;
+				}
 			}
+			else
+				break;
 		}
-		else
-			break;
-	}
+
 	global.blood += 0.05;
 	if (global.blood > 100)
 		global.blood = 100;

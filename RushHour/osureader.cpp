@@ -29,44 +29,50 @@ std::vector<std::string> strsplit(const std::string &str, char delimiter)
 
 VOID produceHitObject(int t, bool includeItem)
 {
-	global.barriers.push_back(BARRIERINFO());
-	UINT barrierLast = global.barriers.size() - 1;
-	global.barriers.back().msecs = t;
-	if (barrierLast == 0)
+	BARRIERINFO barr;
+	barr.msecs = t;
+	
+	BOOL firstBarrier = TRUE;
+	for (int i = 0; i < 4; i++)
+		if (!global.barriers[i].empty())
+			firstBarrier = FALSE;
+	if (firstBarrier)
 		srand(t);
+
 	if (includeItem)
 	{
-		global.barriers.back().type = std::rand() % 6;
-		if (global.barriers.back().type >= 1)
-			global.barriers.back().type = 0;
+		barr.type = std::rand() % 6;
+		if (barr.type >= 3)
+			barr.type = 0;
 	}
 	else
 	{
-		global.barriers.back().type = std::rand() % 5;
-		if (global.barriers.back().type >= 1)
-			global.barriers.back().type = 0;
-	}
-	global.barriers.back().track = std::rand() % 4;
-
-	//  Change the height
-	if (global.barriers.back().type == 1)
-	{
-		int i;
-		for (i = global.barriers.size() - 2; i >= 0; i--)
-			if (global.barriers[i].track == global.barriers.back().track)
-				global.barriers.back().height = 1 - global.barriers[i].height;
+		barr.type = std::rand() % 5;
+		if (barr.type >= 2)
+			barr.type = 0;
 	}
 
+	int track = std::rand() % 4;
 	//  Reproduce when too dense
-	if (barrierLast >= 2)
+	/*if (barrierLast >= 2)
 		while (global.barriers[barrierLast - 1].track == global.barriers[barrierLast].track
 			&& global.barriers[barrierLast - 2].track == global.barriers[barrierLast].track)
-			global.barriers.back().track = std::rand() % 4;
+			global.barriers.back().track = std::rand() % 4;*/
+
+	//  Change the height
+	int lastHeight = 0;
+	if (global.barriers[track].size())
+		lastHeight = global.barriers[track].back().height;
+	if (barr.type == 1)
+		barr.height = 1 - lastHeight;
+	else
+		barr.height = lastHeight;
+
+	global.barriers[track].push_back(barr);
 }
 
 VOID readHitObjects(std::string str)
 {
-	UINT barrierLast = global.barriers.size() - 1;
 	UINT comaCount = 0;
 	UINT i;
 
@@ -164,7 +170,8 @@ VOID readBasicInfo(const WCHAR *filePathName, SONGINFO *info)
 
 VOID readBeats(const WCHAR *filePathName)
 {
-	global.barriers.clear();
+	for (int i = 0; i < 4;i++)
+		global.barriers[i].clear();
 	std::ifstream osuFileStream;
 	osuFileStream.open(filePathName);
 	std::string line, state;

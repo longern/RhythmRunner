@@ -19,10 +19,11 @@ VOID zoomWidget(RECT rect, double zoom, RECT *res)
 VOID RenderWelcome(HDC hdcBmp)
 {
 	RECT rect;
+	HFONT font = CreateFont(32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, DEFAULT_PITCH, _T("Times New Roman"));
 	Rectangle(hdcBuffer, 0, 0, WNDWIDTH, WNDHEIGHT);
 	SelectObject(hdcBuffer, GetStockObject(NULL_BRUSH));
 	SelectObject(hdcBuffer, GetStockObject(BLACK_PEN));
-	SelectObject(hdcBuffer, CreateFont(32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, DEFAULT_PITCH, _T("Times New Roman")));
+	SelectObject(hdcBuffer, font);
 
 	zoomWidget(WelcomeButtons[0].geo, WelcomeButtons[0].zoom, &rect);
 	Rectangle(hdcBuffer, rect.left, rect.top, rect.right, rect.bottom);
@@ -35,4 +36,6 @@ VOID RenderWelcome(HDC hdcBmp)
 	zoomWidget(WelcomeButtons[2].geo, WelcomeButtons[2].zoom, &rect);
 	Rectangle(hdcBuffer, rect.left, rect.top, rect.right, rect.bottom);
 	TextOut(hdcBuffer, ToWindowX(0.48), ToWindowY(0.723), _T("Exit"), 4);
+
+	DeleteObject(font);
 }

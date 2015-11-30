@@ -1,30 +1,55 @@
 #include "render.h"
 
-VOID DrawSpikes(double bottom)
+VOID DrawSpikes(int i, int j)
 {
+	DOUBLE trackBottom = (i + 1) * 0.25 + ((i + 1) % 2) * 0.01;
 	INT pitWidth = ToWindowX(0.4 / beatPerScreen) - global.heroWidth;
 	INT spikeWidth = pitWidth / 4;
 	POINT spike[3];
+
+	if (global.barriers[i][j].height > 0)
+	{
+		Rectangle(hdcBuffer,
+			ToWindowX(barrierX) - 1, ToWindowY(trackBottom - 0.05 * global.barriers[i][j].height) - 1,
+			ToWindowX(barrierX + 0.4 / beatPerScreen) + 1, ToWindowY(trackBottom) + 1);
+		trackBottom -= 0.05 * global.barriers[i][j].height;
+	}
+
+	Rectangle(hdcBuffer, ToWindowX(barrierX) - 1, ToWindowY(trackBottom - 0.05) - 1,
+		ToWindowX(barrierX) + global.heroWidth / 2, ToWindowY(trackBottom) + 1);
+	Rectangle(hdcBuffer,
+		ToWindowX(barrierX + 0.4 / beatPerScreen) - global.heroWidth / 2 - 1, ToWindowY(trackBottom - 0.05) - 1,
+		ToWindowX(barrierX + 0.4 / beatPerScreen) + 1, ToWindowY(trackBottom) + 1);
+
 	for (int i = 0; i < 4; i++)
 	{
 		spike[0].x = ToWindowX(barrierX) + global.heroWidth / 2 + i * spikeWidth;
 		spike[1].x = ToWindowX(barrierX) + global.heroWidth / 2 + i * spikeWidth + spikeWidth / 2;
 		spike[2].x = ToWindowX(barrierX) + global.heroWidth / 2 + (i + 1) * spikeWidth;
-		spike[0].y = ToWindowY(bottom);
-		spike[1].y = ToWindowY(bottom - 0.05);
-		spike[2].y = ToWindowY(bottom);
+		spike[0].y = ToWindowY(trackBottom);
+		spike[1].y = ToWindowY(trackBottom - 0.05);
+		spike[2].y = ToWindowY(trackBottom);
 		Polygon(hdcBuffer, spike, 3);
 	}
 }
 
-VOID DrawCliff(int j)
+VOID DrawCliff(int i, int j)
 {
-	int track = global.barriers[j].track;
-	DOUBLE trackBottom = (track + 1) * 0.25 + ((track + 1) % 2) * 0.01;
-	Rectangle(hdcBuffer, ToWindowX(barrierX), ToWindowY(trackBottom - 0.05) - 1,
-		ToWindowX(barrierX + 0.4 / beatPerScreen), ToWindowY(trackBottom) + 1);
-	//Rectangle(hdcBuffer, ToWindowX(barrierX + 0.8 / 8 / 2) - 1, ToWindowY(trackBottom - 0.05) - 1,
-	//	ToWindowX(barrierX + 0.8 / 8), ToWindowY(trackBottom) + 1);
+	DOUBLE trackBottom = (i + 1) * 0.25 + ((i + 1) % 2) * 0.01;
+	if (global.barriers[i][j].height == 1.)
+	{
+		Rectangle(hdcBuffer, ToWindowX(barrierX) - 1, ToWindowY(trackBottom - 0.05) - 1,
+			ToWindowX(barrierX + 0.4 / beatPerScreen / 2), ToWindowY(trackBottom) + 1);
+		Rectangle(hdcBuffer, ToWindowX(barrierX + 0.4 / beatPerScreen / 2) - 1, ToWindowY(trackBottom - 0.1) - 1,
+			ToWindowX(barrierX + 0.4 / beatPerScreen) + 1, ToWindowY(trackBottom) + 1);
+	}
+	else
+	{
+		Rectangle(hdcBuffer, ToWindowX(barrierX) - 1, ToWindowY(trackBottom - 0.05) - 1,
+			ToWindowX(barrierX + 0.4 / beatPerScreen / 2), ToWindowY(trackBottom) + 1);
+		Rectangle(hdcBuffer, ToWindowX(barrierX + 0.4 / beatPerScreen / 2) - 1, ToWindowY(trackBottom - 0.05) - 1,
+			ToWindowX(barrierX + 0.4 / beatPerScreen) + 1, ToWindowY(trackBottom) + 1);
+	}
 }
 
 VOID DrawBarriers(int i)
@@ -33,14 +58,26 @@ VOID DrawBarriers(int i)
 	DOUBLE trackBottom = (i + 1) * 0.25 + ((i + 1) % 2) * 0.01;
 
 	HGDIOBJ backBrush;
-
-	for (UINT j = 0; j < global.barriers.size(); j++)
+	
+	SelectObject(hdcBuffer, GetStockObject(GRAY_BRUSH));
+	
+	for (UINT j = 0; j < global.barriers[i].size(); j++)
 	{
+		double lastBarrierX = -1.;
+		double lastBarrierHeight = 0.;
+
 		barrierX = 0.05 +  //  Position of Stickman
-			(global.barriers[j].msecs - gameTimePass) / global.currSong().msPerBeat / beatPerScreen;
-		if (barrierX < -0.2)
+			(global.barriers[i][j].msecs - gameTimePass) / global.currSong().msPerBeat / beatPerScreen;
+		if (barrierX < -0.2 && j < global.barriers[i].size() - 1)
 			continue;
-		if (barrierX > 1)
+		if (j >= 1)
+		{
+			lastBarrierX = 0.05 +  //  Position of Stickman
+				(global.barriers[i][j - 1].msecs - gameTimePass) / global.currSong().msPerBeat / beatPerScreen;
+			lastBarrierHeight = global.barriers[i][j - 1].height;
+		}
+
+		if (lastBarrierX >= 1.)
 			break;
 
 		if (i & 1)
@@ -48,29 +85,42 @@ VOID DrawBarriers(int i)
 		else
 			backBrush = GetStockObject(WHITE_BRUSH);
 
-		if (global.barriers[j].track == i)
+		//  Draw the Floor before this Barrier
+		SelectObject(hdcBuffer, GetStockObject(GRAY_BRUSH));
+		Rectangle(hdcBuffer,
+			ToWindowX(lastBarrierX + 0.4 / beatPerScreen), ToWindowY(trackBottom - 0.05 * (lastBarrierHeight + 1.)) - 1,
+			ToWindowX(barrierX), ToWindowY(trackBottom) + 1);
+
+		//  Draw Judge Line
+		SelectObject(hdcBuffer, GetStockObject(GRAY_BRUSH));
+		Rectangle(hdcBuffer, ToWindowX(barrierX), ToWindowY(trackTop) - 1,
+			ToWindowX(barrierX) + 2, ToWindowY(trackBottom) + 1);
+
+		//  Clear Barrier Area
+		SelectObject(hdcBuffer, backBrush);
+		Rectangle(hdcBuffer, ToWindowX(barrierX) + global.heroWidth / 2, ToWindowY(trackTop),
+			ToWindowX(barrierX + 0.4 / beatPerScreen) - global.heroWidth / 2, ToWindowY(trackBottom) + 1);
+
+		//  Draw Barrier
+		SelectObject(hdcBuffer, GetStockObject(GRAY_BRUSH));
+		switch (global.barriers[i][j].type)
 		{
-			SelectObject(hdcBuffer, GetStockObject(GRAY_BRUSH));
-			Rectangle(hdcBuffer, ToWindowX(barrierX), ToWindowY(trackTop) - 1,
-				ToWindowX(barrierX) + 2, ToWindowY(trackBottom) + 1);
+		case 0:
+			DrawSpikes(i, j);
+			break;
+		case 1:
+			DrawCliff(i, j);
+			break;
+		default:
+			DrawSpikes(i, j);
+			break;
+		}
 
-			SelectObject(hdcBuffer, backBrush);
-			Rectangle(hdcBuffer, ToWindowX(barrierX) + global.heroWidth / 2, ToWindowY(trackTop),
-				ToWindowX(barrierX + 0.4 / beatPerScreen) - global.heroWidth / 2, ToWindowY(trackBottom) + 1);
-
-			SelectObject(hdcBuffer, GetStockObject(GRAY_BRUSH));
-			switch (global.barriers[j].type)
-			{
-			case 0:
-				DrawSpikes(trackBottom);
-				break;
-			case 1:
-				DrawCliff(j);
-				break;
-			default:
-				DrawSpikes(trackBottom);
-				break;
-			}
+		if (j == global.barriers[i].size() - 1)
+		{
+			Rectangle(hdcBuffer,
+				ToWindowX(barrierX + 0.4 / beatPerScreen), ToWindowY(trackBottom - 0.05 * (global.barriers[i][j].height + 1.)) - 1,
+				ToWindowX(1) + 1, ToWindowY(trackBottom) + 1);
 		}
 	}
 }
@@ -86,11 +136,8 @@ VOID RenderPlaying(HDC hdcBmp)
 
 	for (i = 0; i < 4; i++) //  Four tracks. Want more?
 	{
-		//  Draw Floor
-		SelectObject(hdcBuffer, GetStockObject(GRAY_BRUSH));
 		DOUBLE trackTop = i * 0.25 + (i % 2) * 0.01;
 		DOUBLE trackBottom = (i + 1) * 0.25 + ((i + 1) % 2) * 0.01;
-		Rectangle(hdcBuffer, 0, ToWindowY(trackBottom - 0.05) - 1, WNDWIDTH, ToWindowY(trackBottom) + 1);
 
 		//  Draw Barriers
 		DrawBarriers(i);
@@ -113,7 +160,7 @@ VOID RenderPlaying(HDC hdcBmp)
 			SelectObject(hdcBmp, resource.wHero[heroFrame]);
 			TransparentBlt(
 				hdcBuffer,
-				ToWindowX(0.05) - 21, ToWindowY(trackBottom - 0.1 - global.heroes[i].height / 4) - 8, global.heroWidth, global.heroHeight,
+				ToWindowX(0.05) - 21, ToWindowY(trackBottom - 0.1 - global.heroes[i].height * 0.05) - 8, global.heroWidth, global.heroHeight,
 				hdcBmp,
 				0, 0, 420, 504,
 				RGB(0, 0, 0)
@@ -124,7 +171,7 @@ VOID RenderPlaying(HDC hdcBmp)
 			SelectObject(hdcBmp, resource.hero[heroFrame]);
 			TransparentBlt(
 				hdcBuffer,
-				ToWindowX(0.05) - 21, ToWindowY(trackBottom - 0.1 - global.heroes[i].height / 4) - 8, global.heroWidth, global.heroHeight,
+				ToWindowX(0.05) - 21, ToWindowY(trackBottom - 0.1 - global.heroes[i].height * 0.05) - 8, global.heroWidth, global.heroHeight,
 				hdcBmp,
 				0, 0, 420, 504,
 				RGB(255, 255, 255)
