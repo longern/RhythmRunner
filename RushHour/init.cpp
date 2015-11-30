@@ -47,9 +47,8 @@ VOID GlobalInit()
 		return;
 	}
 	AudioInit();
-	PreviewSong();
 
-	global.status = global.GS_SONGSELECT;
+	global.status = global.GS_WELCOME;
 	global.heroWidth = 38;
 	global.heroHeight = 45;
 }

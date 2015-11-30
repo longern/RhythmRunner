@@ -161,6 +161,7 @@ VOID MouseMove(HWND hWnd, WPARAM wParam, LPARAM lParam)
 			if (PtInRect(&WelcomeButtons[i].geo, ptMouse) && !WelcomeButtons[i].isHover)
 			{
 				WelcomeButtons[i].isHover = TRUE;
+				killAnimator(&WelcomeButtons[i].zoom);
 				aniAdd(&WelcomeButtons[i].zoom, 1.05, 250, ANIMATION::SINE);
 				break;
 			}
@@ -168,6 +169,7 @@ VOID MouseMove(HWND hWnd, WPARAM wParam, LPARAM lParam)
 			if (!PtInRect(&WelcomeButtons[i].geo, ptMouse) && WelcomeButtons[i].isHover)
 			{
 				WelcomeButtons[i].isHover = FALSE;
+				killAnimator(&WelcomeButtons[i].zoom);
 				aniAdd(&WelcomeButtons[i].zoom, 1., 250, ANIMATION::SINE);
 			}
 		break;
@@ -188,7 +190,10 @@ VOID LButtonDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	{
 	case global.GS_WELCOME:
 		if (PtInRect(&WelcomeButtons[0].geo, ptMouse))
+		{
+			PreviewSong();
 			global.status = global.GS_SONGSELECT;
+		}
 		else if (PtInRect(&WelcomeButtons[2].geo, ptMouse))
 			DestroyWindow(hWnd);
 		break;
