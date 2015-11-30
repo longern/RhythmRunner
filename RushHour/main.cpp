@@ -63,7 +63,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);
 
-	// Main message loop:
+	// Main message loop
 	while (GetMessage(&msg, NULL, 0, 0))
 	{
 		TranslateMessage(&msg);
@@ -78,32 +78,26 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	switch (message)
 	{
 	case WM_CREATE:
-		//初始化
 		WindowInit(hWnd, wParam, lParam);
 		break;
 	case WM_PAINT:
-		//绘制
 		Render(hWnd);
 		break;
 	case WM_KEYDOWN:
-		//键盘按下事件
 		KeyDown(hWnd, wParam, lParam);
 		break;
 	case WM_KEYUP:
-		//键盘松开事件
 		break;
 	case WM_MOUSEMOVE:
 		MouseMove(hWnd, wParam, lParam);
 		break;
 	case WM_LBUTTONDOWN:
-		//左鼠标事件
 		LButtonDown(hWnd, wParam, lParam);
 		break;
 	case WM_TOUCH:
 		TouchEvent(hWnd, wParam, lParam);
-		break;
+		return DefWindowProc(hWnd, message, wParam, lParam);
 	case WM_TIMER:
-		//定时器事件
 		TimerUpdate(hWnd, wParam, lParam);
 		break;
 	case WM_DESTROY:

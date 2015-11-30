@@ -1,16 +1,12 @@
 #include "render.h"
+#include "welcome.h"
 
-DOUBLE PlayButtonZoom = 1.0;
-DOUBLE OptionButtonZoom = 1.0;
-DOUBLE ExitButtonZoom = 1.0;
-
-RECT PlayButton = { 300, 133, WNDWIDTH - 300, 233 };
-RECT OptionButton = { 300, 325, WNDWIDTH - 300, 425 };
-RECT ExitButton = { 300, 517, WNDWIDTH - 300, 617 };
-
-BOOL isPlayButtonHover = false;
-BOOL isOptionButtonHover = false;
-BOOL isExitButtonHover = false;
+WELCOMEBUTTON WelcomeButtons[3] =
+{
+	{ { 300, 133, WNDWIDTH - 300, 233 }, FALSE, 1.0 },
+	{ { 300, 325, WNDWIDTH - 300, 425 }, FALSE, 1.0 },
+	{ { 300, 517, WNDWIDTH - 300, 617 }, FALSE, 1.0 }
+};
 
 VOID zoomWidget(RECT rect, double zoom, RECT *res)
 {
@@ -27,15 +23,15 @@ VOID RenderWelcome(HDC hdcBmp)
 	SelectObject(hdcBuffer, GetStockObject(NULL_BRUSH));
 	SelectObject(hdcBuffer, GetStockObject(BLACK_PEN));
 
-	zoomWidget(PlayButton, PlayButtonZoom, &rect);
+	zoomWidget(WelcomeButtons[0].geo, WelcomeButtons[0].zoom, &rect);
 	Rectangle(hdcBuffer, rect.left, rect.top, rect.right, rect.bottom);
 	TextOut(hdcBuffer, ToWindowX(0.48), ToWindowY(0.23), _T("Play"), 4);
 
-	zoomWidget(OptionButton, OptionButtonZoom, &rect);
+	zoomWidget(WelcomeButtons[1].geo, WelcomeButtons[1].zoom, &rect);
 	Rectangle(hdcBuffer, rect.left, rect.top, rect.right, rect.bottom);
 	TextOut(hdcBuffer, ToWindowX(0.48), ToWindowY(0.48), _T("Option"), 6);
 
-	zoomWidget(ExitButton, ExitButtonZoom, &rect);
+	zoomWidget(WelcomeButtons[2].geo, WelcomeButtons[2].zoom, &rect);
 	Rectangle(hdcBuffer, rect.left, rect.top, rect.right, rect.bottom);
 	TextOut(hdcBuffer, ToWindowX(0.48), ToWindowY(0.73), _T("Exit"), 4);
 }

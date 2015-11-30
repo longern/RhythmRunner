@@ -10,8 +10,8 @@ VOID GameStatusUpdate()
 	if (global.accummulatedTime < 0 && gameTimePass >= 0)
 	{
 		AudioPlayOnce();
-		global.beginTime.QuadPart -= global.accummulatedTime * global.clockFrequency.QuadPart / 1000;
-		global.accummulatedTime = gameTimePass;
+		QueryPerformanceCounter(&global.beginTime);
+		global.accummulatedTime = 0;
 	}
 	if ((gameTimePass - global.barriers.back().msecs) / global.currSong().msPerBeat >= 8)
 		GameOverInit();

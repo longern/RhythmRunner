@@ -3,6 +3,8 @@
 #include "welcome.h"
 #include "animator.h"
 
+extern LONG gameTimePass;
+
 VOID DoJump(int track)
 {
 	HERO *currHero = &global.heroes[track];
@@ -49,6 +51,8 @@ VOID SongSelectKeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 
 VOID GamePlayKeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 {
+	gameTimePass = global.timePass();
+
 	switch (wParam)
 	{
 	case '5':
@@ -80,17 +84,18 @@ VOID GamePlayKeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 		}
 		else
 		{
-			if (global.accummulatedTime == 0 || global.timePass() - global.accummulatedTime >= 3000)
+			if (global.accummulatedTime == 0 || gameTimePass - global.accummulatedTime >= 3000)
 			{
 				global.isGamePaused = true;
 				AudioPause();
-				global.accummulatedTime = global.timePass();
+				global.accummulatedTime = gameTimePass;
 			}
 		}
 		break;
 
 	case VK_ESCAPE:
 		AudioClose();
+		PreviewSong();
 		global.status = global.GS_SONGSELECT;
 		break;
 
@@ -137,26 +142,19 @@ VOID MouseMove(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	switch (global.status)
 	{
 	case global.GS_WELCOME:
-		if (PtInRect(&PlayButton, ptMouse) && !isPlayButtonHover)
-		{
-			isPlayButtonHover = true;
-			aniAdd(&PlayButtonZoom, 1.05, 250, ANIMATION::SINE);
-		}
-		else if (PtInRect(&OptionButton, ptMouse) && !isOptionButtonHover)
-		{
-			isOptionButtonHover = true;
-			aniAdd(&OptionButtonZoom, 1.05, 250, ANIMATION::SINE);
-		}
-		if(!PtInRect(&PlayButton, ptMouse) && isPlayButtonHover)
-		{
-			isPlayButtonHover = false;
-			aniAdd(&PlayButtonZoom, 1., 250, ANIMATION::SINE);
-		}
-		if (!PtInRect(&OptionButton, ptMouse) && isOptionButtonHover)
-		{
-			isOptionButtonHover = false;
-			aniAdd(&OptionButtonZoom, 1., 250, ANIMATION::SINE);
-		}
+		for (int i = 0; i < 3; i++)
+			if (PtInRect(&WelcomeButtons[i].geo, ptMouse) && !WelcomeButtons[i].isHover)
+			{
+				WelcomeButtons[i].isHover = TRUE;
+				aniAdd(&WelcomeButtons[i].zoom, 1.05, 250, ANIMATION::SINE);
+				break;
+			}
+		for (int i = 0; i < 3; i++)
+			if (!PtInRect(&WelcomeButtons[i].geo, ptMouse) && WelcomeButtons[i].isHover)
+			{
+				WelcomeButtons[i].isHover = FALSE;
+				aniAdd(&WelcomeButtons[i].zoom, 1., 250, ANIMATION::SINE);
+			}
 		break;
 	case global.GS_SONGSELECT:
 		break;
@@ -174,11 +172,12 @@ VOID LButtonDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	switch (global.status)
 	{
 	case global.GS_WELCOME:
-		if (PtInRect(&PlayButton, ptMouse))
+		if (PtInRect(&WelcomeButtons[0].geo, ptMouse))
 			global.status = global.GS_SONGSELECT;
-		else if (PtInRect(&ExitButton, ptMouse))
-			global.status = global.GS_SONGSELECT;
+		else if (PtInRect(&WelcomeButtons[2].geo, ptMouse))
+			DestroyWindow(hWnd);
 		break;
+
 	case global.GS_SONGSELECT:
 		if (ptMouse.y <= ToWindowY(0.33))
 		{
@@ -199,6 +198,7 @@ VOID LButtonDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 			PreviewSong();
 		}
 		break;
+
 	case global.GS_PLAYING:
 		if (ptMouse.y <= ToWindowY(0.26))
 			DoJump(0);
@@ -214,5 +214,21 @@ VOID LButtonDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 
 VOID TouchEvent(HWND hWnd, WPARAM wParam, LPARAM lParam)
 {
-	;
+	POINT ptTouch;
+	ptTouch.x = LOWORD(lParam);
+	ptTouch.y = HIWORD(lParam);
+	
+	switch (global.status)
+	{
+	case global.GS_PLAYING:
+		if (ptTouch.y <= ToWindowY(0.26))
+			DoJump(0);
+		else if (ptTouch.y <= ToWindowY(0.5))
+			DoJump(1);
+		else if (ptTouch.y <= ToWindowY(0.76))
+			DoJump(2);
+		else
+			DoJump(3);
+		break;
+	}
 }

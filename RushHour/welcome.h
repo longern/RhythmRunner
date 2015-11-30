@@ -1,13 +1,10 @@
 #include "main.h"
 
-extern DOUBLE PlayButtonZoom;
-extern DOUBLE OptionButtonZoom;
-extern DOUBLE ExitButtonZoom;
+struct WELCOMEBUTTON
+{
+	RECT geo;
+	BOOL isHover;
+	DOUBLE zoom;
+};
 
-extern BOOL isPlayButtonHover;
-extern BOOL isOptionButtonHover;
-extern BOOL isExitButtonHover;
-
-extern RECT PlayButton;
-extern RECT OptionButton;
-extern RECT ExitButton;
+extern WELCOMEBUTTON WelcomeButtons[3];
