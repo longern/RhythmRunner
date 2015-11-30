@@ -108,10 +108,11 @@ VOID GameInit()
 	if (global.currSong().audioLeadIn > 0)
 	{
 		global.accummulatedTime = -global.currSong().audioLeadIn;
-		AudioClose();
 		WCHAR firstMp3File[200];
 		wsprintf(firstMp3File, TEXT("%s/%s"), global.currSong().name.data(), global.currSong().audioFilename.data());
 		AudioOpen(firstMp3File);
+		AudioPlayOnce();
+		AudioPause();
 	}
 	else
 		SwitchSong();

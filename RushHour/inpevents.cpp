@@ -59,23 +59,35 @@ VOID GamePlayKeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	switch (wParam)
 	{
 	case '5':
-		DoJump(0);
-		InvalidateRect(hWnd, NULL, FALSE);
+		if (!global.isGamePaused)
+		{
+			DoJump(0);
+			InvalidateRect(hWnd, NULL, FALSE);
+		}
 		break;
 
 	case 'T':
-		DoJump(1);
-		InvalidateRect(hWnd, NULL, FALSE);
+		if (!global.isGamePaused)
+		{
+			DoJump(1);
+			InvalidateRect(hWnd, NULL, FALSE);
+		}
 		break;
 
 	case 'G':
-		DoJump(2);
-		InvalidateRect(hWnd, NULL, FALSE);
+		if (!global.isGamePaused)
+		{
+			DoJump(2);
+			InvalidateRect(hWnd, NULL, FALSE);
+		}
 		break;
 
 	case 'B':
-		DoJump(3);
-		InvalidateRect(hWnd, NULL, FALSE);
+		if (!global.isGamePaused)
+		{
+			DoJump(3);
+			InvalidateRect(hWnd, NULL, FALSE);
+		}
 		break;
 
 	case VK_SPACE:

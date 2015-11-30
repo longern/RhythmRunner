@@ -12,6 +12,7 @@ VOID GameStatusUpdate()
 		AudioPlayOnce();
 		QueryPerformanceCounter(&global.beginTime);
 		global.accummulatedTime = 0;
+		gameTimePass = global.timePass();
 	}
 	if ((gameTimePass - global.barriers.back().msecs) / global.currSong().msPerBeat >= 8)
 		GameOverInit();
