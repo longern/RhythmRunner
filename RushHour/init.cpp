@@ -118,7 +118,13 @@ VOID GameInit()
 
 	global.blood = 100.;
 	for (int i = 0; i < 4; i++)
+	{
+		global.heroes[i].height = 0.;
+		global.heroes[i].startHeight = 0.;
+		global.heroes[i].jpCount = 0;
+		global.heroes[i].jpStartTime = INT_MIN;
 		global.fHeight[i] = 0.;
+	}
 	global.status = global.GS_PLAYING;
 }
 

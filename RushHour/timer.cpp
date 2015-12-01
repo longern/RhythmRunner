@@ -80,25 +80,48 @@ VOID HeroUpdate()
 VOID DetectCollision()
 {
 	double x;
-	for (UINT i = 0; i < 4;i++)
+	for (UINT i = 0; i < 4; i++)
+	{
+		DOUBLE currHeight = GetCurrentHeight(i);
 		for (UINT j = 0; j < global.barriers[i].size(); j++)
 		{
-			x = (global.barriers[i][j].msecs - gameTimePass) / global.currSong().msPerBeat / 0.4;
-			if (global.barriers[i][j].type)
-				continue;
-			if (x < 0)
+			x = (global.barriers[i][j].msecs - gameTimePass) / global.currSong().msPerBeat;
+			if (x >= 0)
+				break;
+			if (global.barriers[i][j].type == 0 && global.heroes[i].height <= currHeight)
 			{
-				if (global.barriers[i][j].type == 0 && global.heroes[i].height <= 0)
+				x /= 0.4;
+				//  Width of danger zone is 0.4 beats
+				if (x >= -1. / 6 || x < -5. / 6 && x >= -1)
+					global.blood -= 0.2;
+				else if (x < -1. / 6 && x >= -5. / 6)
+					global.blood -= 4;
+			}
+			else if (global.barriers[i][j].type == 1)
+			{
+				if (global.barriers[i][j].height == 1. && global.heroes[i].height < currHeight)
 				{
-					if (x < 0 && x >= -1. / 4 || x < -3. / 4 && x >= -1)
+					if (currHeight == 1.)
+					{
+						if (global.heroes[i].height / currHeight <= 1. / 4)
+							global.blood -= 20;
+						else if (global.heroes[i].height / currHeight <= 3. / 4)
+							global.blood -= 5;
+						global.heroes[i].height = currHeight - 0.01;
+					}
+				}
+				else if (global.barriers[i][j].height == 0. && currHeight == 0. &&
+					global.heroes[i].height <= currHeight)
+				{
+					x /= 0.5;
+					if (x >= -1. / 6 || x < -5. / 6 && x >= -1)
 						global.blood -= 0.2;
-					else if (x < -1. / 4 && x >= -3. / 4)
+					else if (x < -1. / 6 && x >= -5. / 6)
 						global.blood -= 4;
 				}
 			}
-			else
-				break;
 		}
+	}
 
 	global.blood += 0.05;
 	if (global.blood > 100)
@@ -115,8 +138,8 @@ VOID TimerUpdate(HWND hWnd, WPARAM wParam, LPARAM lParam)
 		if (!global.isGamePaused)
 		{
 			GameStatusUpdate();
-			HeroUpdate();
 			DetectCollision();
+			HeroUpdate();
 		}
 		break;
 	}

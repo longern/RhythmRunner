@@ -8,12 +8,16 @@ extern LONG gameTimePass;
 VOID DoJump(int track)
 {
 	HERO *currHero = &global.heroes[track];
-	if (currHero->jpCount <= 1)
-	{
-		currHero->jpStartTime = global.timePass();
-		currHero->startHeight = currHero->height;
-		currHero->jpCount++;
-	}
+	if (currHero->jpCount >= 2)
+		return;
+	if (currHero->jpCount == 0)
+		if (currHero->jpStartTime != INT_MIN &&
+			(gameTimePass - currHero->jpStartTime) / global.currSong().msPerBeat / 0.4 <= 1. / 6)
+			return;
+
+	currHero->jpStartTime = global.timePass();
+	currHero->startHeight = currHero->height;
+	currHero->jpCount++;
 }
 
 VOID SongSelectKeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam)

@@ -4,7 +4,7 @@ VOID DrawSpikes(int i, int j)
 {
 	DOUBLE trackBottom = (i + 1) * 0.25 + ((i + 1) % 2) * 0.01;
 	INT pitWidth = ToWindowX(0.4 / beatPerScreen) - global.heroWidth;
-	INT spikeWidth = pitWidth / 4;
+	DOUBLE spikeWidth = pitWidth / 4.;
 	POINT spike[3];
 
 	if (global.barriers[i][j].height > 0)
@@ -23,9 +23,9 @@ VOID DrawSpikes(int i, int j)
 
 	for (int i = 0; i < 4; i++)
 	{
-		spike[0].x = ToWindowX(barrierX) + global.heroWidth / 2 + i * spikeWidth;
-		spike[1].x = ToWindowX(barrierX) + global.heroWidth / 2 + i * spikeWidth + spikeWidth / 2;
-		spike[2].x = ToWindowX(barrierX) + global.heroWidth / 2 + (i + 1) * spikeWidth;
+		spike[0].x = ToWindowX(barrierX) + int(global.heroWidth / 2. + i * spikeWidth);
+		spike[1].x = ToWindowX(barrierX) + int(global.heroWidth / 2. + i * spikeWidth + spikeWidth / 2.);
+		spike[2].x = ToWindowX(barrierX) + int(global.heroWidth / 2. + (i + 1) * spikeWidth);
 		spike[0].y = ToWindowY(trackBottom);
 		spike[1].y = ToWindowY(trackBottom - 0.05);
 		spike[2].y = ToWindowY(trackBottom);
@@ -45,10 +45,19 @@ VOID DrawCliff(int i, int j)
 	}
 	else
 	{
-		Rectangle(hdcBuffer, ToWindowX(barrierX) - 1, ToWindowY(trackBottom - 0.05) - 1,
-			ToWindowX(barrierX + 0.4 / beatPerScreen / 2), ToWindowY(trackBottom) + 1);
-		Rectangle(hdcBuffer, ToWindowX(barrierX + 0.4 / beatPerScreen / 2) - 1, ToWindowY(trackBottom - 0.05) - 1,
-			ToWindowX(barrierX + 0.4 / beatPerScreen) + 1, ToWindowY(trackBottom) + 1);
+		POINT spike[3];
+		INT pitWidth = ToWindowX(0.4 / beatPerScreen);
+		DOUBLE spikeWidth = pitWidth / 5.;
+		for (int i = 0; i < 5; i++)
+		{
+			spike[0].x = ToWindowX(barrierX) + int(i * spikeWidth);
+			spike[1].x = ToWindowX(barrierX) + int(i * spikeWidth + spikeWidth / 2);
+			spike[2].x = ToWindowX(barrierX) + int((i + 1) * spikeWidth);
+			spike[0].y = ToWindowY(trackBottom);
+			spike[1].y = ToWindowY(trackBottom - 0.05);
+			spike[2].y = ToWindowY(trackBottom);
+			Polygon(hdcBuffer, spike, 3);
+		}
 	}
 }
 

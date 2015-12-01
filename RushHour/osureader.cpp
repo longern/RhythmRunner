@@ -32,13 +32,6 @@ VOID produceHitObject(int t, bool includeItem)
 	BARRIERINFO barr;
 	barr.msecs = t;
 	
-	BOOL firstBarrier = TRUE;
-	for (int i = 0; i < 4; i++)
-		if (!global.barriers[i].empty())
-			firstBarrier = FALSE;
-	if (firstBarrier)
-		srand(t);
-
 	if (includeItem)
 	{
 		barr.type = std::rand() % 6;
@@ -52,12 +45,36 @@ VOID produceHitObject(int t, bool includeItem)
 			barr.type = 0;
 	}
 
-	int track = std::rand() % 4;
-	//  Reproduce when too dense
-	/*if (barrierLast >= 2)
-		while (global.barriers[barrierLast - 1].track == global.barriers[barrierLast].track
-			&& global.barriers[barrierLast - 2].track == global.barriers[barrierLast].track)
-			global.barriers.back().track = std::rand() % 4;*/
+	//  Check which track can be appended
+	int avlTrack[4] = { 1, 1, 1, 1 }, avlCount = 0;
+	for (int i = 0; i < 4; i++)
+	{
+		if (global.barriers[i].size() >= 1)
+		{
+			if (global.barriers[i].back().msecs + global.currSong().msPerBeat / 4. + 1. >= barr.msecs)
+				avlTrack[i] = 0;
+			if (global.barriers[i].back().type == 1 && global.barriers[i].back().height == 0. &&
+				global.barriers[i].back().msecs + global.currSong().msPerBeat / 2. + 1. >= barr.msecs)
+				avlTrack[i] = 0;
+		}
+		if (global.barriers[i].size() >= 2)
+		{
+			BOOL tripleBarr = TRUE;
+			for (int j = 0; j < 4; j++)
+				if (i != j && global.barriers[j].size() &&
+					global.barriers[j].back().msecs > global.barriers[i][global.barriers[i].size() - 2].msecs)
+					tripleBarr = FALSE;
+			if (tripleBarr)
+				avlTrack[i] = 0;
+		}
+	}
+	for (int i = 0; i < 4; i++)
+		if (avlTrack[i])
+			avlCount++;
+	int track = std::rand() % avlCount;
+	for (int i = 0; i <= track; i++)
+		if (!avlTrack[i])
+			track++;
 
 	//  Change the height
 	int lastHeight = 0;
@@ -106,6 +123,8 @@ VOID readBasicInfo(const WCHAR *filePathName, SONGINFO *info)
 	std::ifstream osuFileStream;
 	osuFileStream.open(filePathName);
 	std::string line, state;
+
+	info->beatmapSetId = _wtoi(filePathName);
 
 	while (osuFileStream)
 	{
@@ -175,6 +194,8 @@ VOID readBeats(const WCHAR *filePathName)
 	std::ifstream osuFileStream;
 	osuFileStream.open(filePathName);
 	std::string line, state;
+
+	srand(global.currSong().beatmapSetId);
 
 	while (osuFileStream)
 	{

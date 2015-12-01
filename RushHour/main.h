@@ -26,6 +26,7 @@ const double PI = 3.1415926535897932;
 
 typedef struct
 {
+	int beatmapSetId;
 	std::wstring name;
 	std::wstring title;
 	std::wstring audioFilename;
