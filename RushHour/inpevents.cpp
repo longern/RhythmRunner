@@ -62,7 +62,7 @@ VOID GamePlayKeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 
 	switch (wParam)
 	{
-	case '5':
+	case '5': case 'D':
 		if (!global.isGamePaused)
 		{
 			DoJump(0);
@@ -70,7 +70,7 @@ VOID GamePlayKeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 
-	case 'T':
+	case 'T': case 'F':
 		if (!global.isGamePaused)
 		{
 			DoJump(1);
@@ -78,7 +78,7 @@ VOID GamePlayKeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 
-	case 'G':
+	case 'G': case 'J':
 		if (!global.isGamePaused)
 		{
 			DoJump(2);
@@ -86,7 +86,7 @@ VOID GamePlayKeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 
-	case 'B':
+	case 'B': case 'K':
 		if (!global.isGamePaused)
 		{
 			DoJump(3);
