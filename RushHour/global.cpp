@@ -36,6 +36,8 @@ LONG GLOBAL::timePass()
 {
 	LARGE_INTEGER ct;
 	QueryPerformanceCounter(&ct);
+	if (global.isGamePaused)
+		return global.accummulatedTime;
 	return global.accummulatedTime
 		+ (long)((ct.QuadPart - beginTime.QuadPart) / (double)clockFrequency.QuadPart * 1000);
 }
