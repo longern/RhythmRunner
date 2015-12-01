@@ -29,44 +29,67 @@ std::vector<std::string> strsplit(const std::string &str, char delimiter)
 
 VOID produceHitObject(int t, bool includeItem)
 {
-	global.barriers.push_back(BARRIERINFO());
-	UINT barrierLast = global.barriers.size() - 1;
-	global.barriers.back().msecs = t;
-	if (barrierLast == 0)
-		srand(t);
+	BARRIERINFO barr;
+	barr.msecs = t;
+	
 	if (includeItem)
 	{
-		global.barriers.back().type = std::rand() % 6;
-		if (global.barriers.back().type >= 1)
-			global.barriers.back().type = 0;
+		barr.type = std::rand() % 6;
+		if (barr.type >= 3)
+			barr.type = 0;
 	}
 	else
 	{
-		global.barriers.back().type = std::rand() % 5;
-		if (global.barriers.back().type >= 1)
-			global.barriers.back().type = 0;
+		barr.type = std::rand() % 5;
+		if (barr.type >= 2)
+			barr.type = 0;
 	}
-	global.barriers.back().track = std::rand() % 4;
+
+	//  Check which track can be appended
+	int avlTrack[4] = { 1, 1, 1, 1 }, avlCount = 0;
+	for (int i = 0; i < 4; i++)
+	{
+		if (global.barriers[i].size() >= 1)
+		{
+			if (global.barriers[i].back().msecs + global.currSong().msPerBeat / 4. + 1. >= barr.msecs)
+				avlTrack[i] = 0;
+			if (global.barriers[i].back().type == 1 && global.barriers[i].back().height == 0. &&
+				global.barriers[i].back().msecs + global.currSong().msPerBeat / 2. + 1. >= barr.msecs)
+				avlTrack[i] = 0;
+		}
+		if (global.barriers[i].size() >= 2)
+		{
+			BOOL tripleBarr = TRUE;
+			for (int j = 0; j < 4; j++)
+				if (i != j && global.barriers[j].size() &&
+					global.barriers[j].back().msecs > global.barriers[i][global.barriers[i].size() - 2].msecs)
+					tripleBarr = FALSE;
+			if (tripleBarr)
+				avlTrack[i] = 0;
+		}
+	}
+	for (int i = 0; i < 4; i++)
+		if (avlTrack[i])
+			avlCount++;
+	int track = std::rand() % avlCount;
+	for (int i = 0; i <= track; i++)
+		if (!avlTrack[i])
+			track++;
 
 	//  Change the height
-	if (global.barriers.back().type == 1)
-	{
-		int i;
-		for (i = global.barriers.size() - 2; i >= 0; i--)
-			if (global.barriers[i].track == global.barriers.back().track)
-				global.barriers.back().height = 1 - global.barriers[i].height;
-	}
+	int lastHeight = 0;
+	if (global.barriers[track].size())
+		lastHeight = global.barriers[track].back().height;
+	if (barr.type == 1)
+		barr.height = 1 - lastHeight;
+	else
+		barr.height = lastHeight;
 
-	//  Reproduce when too dense
-	if (barrierLast >= 2)
-		while (global.barriers[barrierLast - 1].track == global.barriers[barrierLast].track
-			&& global.barriers[barrierLast - 2].track == global.barriers[barrierLast].track)
-			global.barriers.back().track = std::rand() % 4;
+	global.barriers[track].push_back(barr);
 }
 
 VOID readHitObjects(std::string str)
 {
-	UINT barrierLast = global.barriers.size() - 1;
 	UINT comaCount = 0;
 	UINT i;
 
@@ -100,6 +123,8 @@ VOID readBasicInfo(const WCHAR *filePathName, SONGINFO *info)
 	std::ifstream osuFileStream;
 	osuFileStream.open(filePathName);
 	std::string line, state;
+
+	info->beatmapSetId = _wtoi(filePathName);
 
 	while (osuFileStream)
 	{
@@ -164,10 +189,13 @@ VOID readBasicInfo(const WCHAR *filePathName, SONGINFO *info)
 
 VOID readBeats(const WCHAR *filePathName)
 {
-	global.barriers.clear();
+	for (int i = 0; i < 4;i++)
+		global.barriers[i].clear();
 	std::ifstream osuFileStream;
 	osuFileStream.open(filePathName);
 	std::string line, state;
+
+	srand(global.currSong().beatmapSetId);
 
 	while (osuFileStream)
 	{

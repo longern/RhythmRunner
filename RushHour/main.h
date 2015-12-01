@@ -26,6 +26,7 @@ const double PI = 3.1415926535897932;
 
 typedef struct
 {
+	int beatmapSetId;
 	std::wstring name;
 	std::wstring title;
 	std::wstring audioFilename;
@@ -40,7 +41,6 @@ typedef struct
 typedef struct
 {
 	LONG msecs;
-	UINT track;
 	UINT type;
 	INT height;
 } BARRIERINFO;
@@ -64,7 +64,7 @@ struct GLOBAL
 	LARGE_INTEGER beginTime;
 	LARGE_INTEGER clockFrequency;
 	BOOL isGamePaused;
-	std::vector<BARRIERINFO> barriers;
+	std::vector<BARRIERINFO> barriers[4];
 	HERO heroes[4];
 	DOUBLE blood;
 	DOUBLE fHeight[4];

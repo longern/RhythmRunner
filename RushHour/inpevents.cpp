@@ -8,12 +8,16 @@ extern LONG gameTimePass;
 VOID DoJump(int track)
 {
 	HERO *currHero = &global.heroes[track];
-	if (currHero->jpCount <= 1)
-	{
-		currHero->jpStartTime = global.timePass();
-		currHero->startHeight = currHero->height;
-		currHero->jpCount++;
-	}
+	if (currHero->jpCount >= 2)
+		return;
+	if (currHero->jpCount == 0)
+		if (currHero->jpStartTime != INT_MIN &&
+			(gameTimePass - currHero->jpStartTime) / global.currSong().msPerBeat / 0.4 <= 1. / 6)
+			return;
+
+	currHero->jpStartTime = global.timePass();
+	currHero->startHeight = currHero->height;
+	currHero->jpCount++;
 }
 
 VOID SongSelectKeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
@@ -161,6 +165,7 @@ VOID MouseMove(HWND hWnd, WPARAM wParam, LPARAM lParam)
 			if (PtInRect(&WelcomeButtons[i].geo, ptMouse) && !WelcomeButtons[i].isHover)
 			{
 				WelcomeButtons[i].isHover = TRUE;
+				killAnimator(&WelcomeButtons[i].zoom);
 				aniAdd(&WelcomeButtons[i].zoom, 1.05, 250, ANIMATION::SINE);
 				break;
 			}
@@ -168,6 +173,7 @@ VOID MouseMove(HWND hWnd, WPARAM wParam, LPARAM lParam)
 			if (!PtInRect(&WelcomeButtons[i].geo, ptMouse) && WelcomeButtons[i].isHover)
 			{
 				WelcomeButtons[i].isHover = FALSE;
+				killAnimator(&WelcomeButtons[i].zoom);
 				aniAdd(&WelcomeButtons[i].zoom, 1., 250, ANIMATION::SINE);
 			}
 		break;
@@ -188,7 +194,10 @@ VOID LButtonDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	{
 	case global.GS_WELCOME:
 		if (PtInRect(&WelcomeButtons[0].geo, ptMouse))
+		{
+			PreviewSong();
 			global.status = global.GS_SONGSELECT;
+		}
 		else if (PtInRect(&WelcomeButtons[2].geo, ptMouse))
 			DestroyWindow(hWnd);
 		break;
