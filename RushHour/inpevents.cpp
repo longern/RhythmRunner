@@ -166,7 +166,7 @@ VOID MouseMove(HWND hWnd, WPARAM wParam, LPARAM lParam)
 			{
 				WelcomeButtons[i].isHover = TRUE;
 				killAnimator(&WelcomeButtons[i].zoom);
-				aniAdd(&WelcomeButtons[i].zoom, 1.05, 250, ANIMATION::SINE);
+				aniAdd(&WelcomeButtons[i].zoom, 1.1, 250, ANIMATION::SINE);
 				break;
 			}
 		for (int i = 0; i < 3; i++)

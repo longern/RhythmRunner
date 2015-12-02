@@ -26,7 +26,7 @@ MCIERROR AudioPlay(DWORD time)
 	MCI_PLAY_PARMS pp;
 	pp.dwCallback = NULL;
 	pp.dwFrom = time;
-	return mciSendCommand(gAudio.ae.wDeviceID, MCI_PLAY, MCI_NOTIFY | MCI_DGV_PLAY_REPEAT, (DWORD)&pp);
+	return mciSendCommand(gAudio.ae.wDeviceID, MCI_PLAY, MCI_NOTIFY | MCI_DGV_PLAY_REPEAT | MCI_FROM, (DWORD)&pp);
 }
 
 MCIERROR AudioPlayOnce(DWORD time)

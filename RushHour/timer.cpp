@@ -92,9 +92,9 @@ VOID DetectCollision()
 			{
 				x /= 0.4;
 				//  Width of danger zone is 0.4 beats
-				if (x >= -1. / 6 || x < -5. / 6 && x >= -1)
+				if (x >= -1. / 4 || x < -3. / 4 && x >= -1)
 					global.blood -= 0.2;
-				else if (x < -1. / 6 && x >= -5. / 6)
+				else if (x < -1. / 4 && x >= -3. / 4)
 					global.blood -= 4;
 			}
 			else if (global.barriers[i][j].type == 1)
@@ -104,9 +104,9 @@ VOID DetectCollision()
 					if (currHeight == 1.)
 					{
 						if (global.heroes[i].height / currHeight <= 1. / 4)
-							global.blood -= 20;
+							global.blood -= 15;
 						else if (global.heroes[i].height / currHeight <= 3. / 4)
-							global.blood -= 5;
+							global.blood -= 4;
 						global.heroes[i].height = currHeight - 0.01;
 					}
 				}
@@ -114,9 +114,9 @@ VOID DetectCollision()
 					global.heroes[i].height <= currHeight)
 				{
 					x /= 0.5;
-					if (x >= -1. / 6 || x < -5. / 6 && x >= -1)
+					if (x >= -1. / 5 || x < -4. / 5 && x >= -1)
 						global.blood -= 0.2;
-					else if (x < -1. / 6 && x >= -5. / 6)
+					else if (x < -1. / 5 && x >= -4. / 5)
 						global.blood -= 4;
 				}
 			}
