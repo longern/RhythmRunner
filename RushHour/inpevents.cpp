@@ -98,7 +98,7 @@ VOID GamePlayKeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 		if (global.isGamePaused)
 		{
 			QueryPerformanceCounter(&global.beginTime);
-			AudioPlay();
+			AudioResume();
 			global.isGamePaused = false;
 		}
 		else
