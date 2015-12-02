@@ -1,5 +1,6 @@
 #include "audio.h"
 #include "osureader.h"
+#include <gdiplus.h>
 
 VOID GameFolderInit()
 {
@@ -12,6 +13,8 @@ VOID GameFolderInit()
 	while (FindNextFile(findFile, &fNextInfo))
 	{
 		if (fNextInfo.cFileName[0] == '.')
+			continue;
+		if (wcscmp(fNextInfo.cFileName, _T("res")) == 0)
 			continue;
 		else if (fNextInfo.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
 		{
@@ -47,6 +50,9 @@ VOID GlobalInit()
 		return;
 	}
 	AudioInit();
+
+	Gdiplus::GdiplusStartupInput gdiplusStartupInput;
+	Gdiplus::GdiplusStartup(&m_gdiplusToken, &gdiplusStartupInput, NULL);
 
 	global.status = global.GS_WELCOME;
 	global.heroWidth = 38;

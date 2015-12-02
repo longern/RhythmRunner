@@ -4,10 +4,9 @@
 std::wstring strtowstr(const std::string &str)
 {
 	std::wstring wstr;
-	wstr.resize(str.length() + 1);
+	wstr.resize(str.length());
 	for (unsigned int i = 0; i < str.length(); i++)
 		wstr[i] = wchar_t(str[i]);
-	wstr[str.length()] = '\0';
 	return wstr;
 }
 
@@ -20,7 +19,7 @@ std::vector<std::string> strsplit(const std::string &str, char delimiter)
 
 	while ((off = str.find(delimiter, prevoff)) != std::string::npos)
 	{
-		res.push_back(str.substr(prevoff, off));
+		res.push_back(str.substr(prevoff, off - prevoff));
 		prevoff = off + 1;
 	}
 	res.push_back(str.substr(prevoff));

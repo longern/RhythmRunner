@@ -11,12 +11,9 @@ WELCOMEBUTTON WelcomeButtons[3] =
 VOID RenderWelcome(HDC hdcBmp)
 {
 	RECT rect;
-	HFONT font = CreateFont(32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, DEFAULT_PITCH, _T("Times New Roman"));
-	SelectObject(hdcBuffer, font);
 
 	Rectangle(hdcBuffer, 0, 0, WNDWIDTH, WNDHEIGHT);
 	SelectObject(hdcBuffer, GetStockObject(NULL_PEN));
-	SetBkMode(hdcBuffer, TRANSPARENT);
 
 	HBRUSH hBrush = CreateSolidBrush(RGB(127 * WelcomeButtons[0].zoom, 127 * WelcomeButtons[0].zoom, 127 * WelcomeButtons[0].zoom));
 	SelectObject(hdcBuffer, hBrush);
@@ -38,6 +35,4 @@ VOID RenderWelcome(HDC hdcBmp)
 	Rectangle(hdcBuffer, rect.left, rect.top, rect.right, rect.bottom);
 	TextOut(hdcBuffer, ToWindowX(0.48), ToWindowY(0.723), _T("Exit"), 4);
 	DeleteObject(hBrush);
-
-	DeleteObject(font);
 }

@@ -41,8 +41,8 @@ typedef struct
 typedef struct
 {
 	LONG msecs;
-	UINT type;
-	INT height;
+	int type;
+	int height;
 } BARRIERINFO;
 
 typedef struct
@@ -92,6 +92,8 @@ extern GAMERESOURCE resource;
 
 extern TCHAR szWindowClass[];
 extern TCHAR szTitle[];
+
+extern ULONG_PTR m_gdiplusToken;
 
 /*  Global Functions  */
 VOID GlobalInit();

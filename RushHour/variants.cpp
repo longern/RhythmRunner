@@ -5,3 +5,5 @@ GAMERESOURCE resource;
 
 TCHAR szWindowClass[] = _T("win32app");
 TCHAR szTitle[] = _T("Rhythm Runner");
+
+ULONG_PTR m_gdiplusToken;

@@ -1,3 +1,7 @@
+#include <windows.h>
+#include <gdiplus.h>
+#pragma comment (lib, "gdiplus")
+
 #include "render.h"
 #include "audio.h"
 #include "animator.h"
@@ -17,20 +21,18 @@ VOID RenderNoSong()
 
 VOID RenderSongSelect(HDC hdcBmp)
 {
-	UINT i;
-
 	Rectangle(hdcBuffer, 0, 0, WNDWIDTH, WNDHEIGHT);
 
-	SetTextColor(hdcBuffer, RGB(255, 255, 255));
-	SetBkMode(hdcBuffer, TRANSPARENT);
-	for (i = 0; i < global.totalSongCount; i++)
-	{
-		if (i + 1 == global.currentSong)
-			SetTextColor(hdcBuffer, RGB(255, 0, 0));
-		TextOut(hdcBuffer, WNDWIDTH - 500, 15 + 25 * i, global.songs[i].name.data(), global.songs[i].name.length());
-		if (i + 1 == global.currentSong)
-			SetTextColor(hdcBuffer, RGB(255, 255, 255));
-	}
+	WCHAR bgFilePath[256];
+	wsprintf(bgFilePath, _T("%s/%s"), global.currSong().name.data(), global.currSong().bgImgFile.data());
+	Gdiplus::Graphics gra(hdcBuffer);
+	Gdiplus::Image bgImage(bgFilePath);
+	gra.DrawImage(&bgImage, 0, 0, WNDWIDTH, WNDHEIGHT);
+	Gdiplus::Image sonSelPic(_T("sonsel.png"));
+	gra.DrawImage(&sonSelPic, 0, 0, WNDWIDTH, WNDHEIGHT);
+
+	SetTextColor(hdcBuffer, RGB(0, 0, 0));
+	TextOut(hdcBuffer, 50, 355, global.currSong().title.data(), global.currSong().title.length());
 }
 
 VOID RenderOptions(HDC hdcBmp)
@@ -58,6 +60,9 @@ VOID Render(HWND hWnd)
 
 	hdc = BeginPaint(hWnd, &ps);
 
+	AddFontResource(_T("res/font/fantiquefour.ttf"));
+	HFONT font = CreateFont(32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, DEFAULT_PITCH, _T("Fantique Four"));
+
 	HDC	hdcBmp;
 	HBITMAP	cptBmp;
 
@@ -65,6 +70,9 @@ VOID Render(HWND hWnd)
 	hdcBmp = CreateCompatibleDC(hdc);
 	hdcBuffer = CreateCompatibleDC(hdc);
 	SelectObject(hdcBuffer, cptBmp);
+	SelectObject(hdcBuffer, font);
+
+	SetBkMode(hdcBuffer, TRANSPARENT);
 
 	switch (global.status)
 	{
@@ -94,6 +102,7 @@ VOID Render(HWND hWnd)
 	DeleteObject(cptBmp);
 	DeleteDC(hdcBuffer);
 	DeleteDC(hdcBmp);
+	RemoveFontResource(_T("res/font/fantiquefour.ttf"));
 
 	EndPaint(hWnd, &ps);
 }
