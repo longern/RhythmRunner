@@ -8,7 +8,7 @@ WELCOMEBUTTON WelcomeButtons[3] =
 	{ { 300, 517, WNDWIDTH - 300, 617 }, FALSE, 1.0 }
 };
 
-VOID RenderWelcome(HDC hdcBmp)
+VOID RenderWelcome()
 {
 	RECT rect;
 

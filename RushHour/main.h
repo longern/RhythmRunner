@@ -84,6 +84,7 @@ typedef struct
 {
 	HBITMAP hero[9];
 	HBITMAP wHero[9];
+	HBITMAP note[2];
 } GAMERESOURCE;
 
 /*  Global Variants  */

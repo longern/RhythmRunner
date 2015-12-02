@@ -115,6 +115,8 @@
     <Image Include="res\ui\7.bmp" />
     <Image Include="res\ui\8.bmp" />
     <Image Include="res\ui\9.bmp" />
+    <Image Include="res\ui\noteb.bmp" />
+    <Image Include="res\ui\notew.bmp" />
     <Image Include="res\ui\run.ico" />
     <Image Include="res\ui\w1.bmp" />
     <Image Include="res\ui\w2.bmp" />

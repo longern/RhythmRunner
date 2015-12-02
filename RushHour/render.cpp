@@ -8,6 +8,7 @@
 
 DOUBLE barrierX;
 HDC hdcBuffer;
+HDC hdcBmp;
 
 const double beatPerScreen = 4.0;
 
@@ -19,7 +20,7 @@ VOID RenderNoSong()
 	TextOut(hdcBuffer, ToWindowX(0.4), ToWindowY(0.45), _T("Please download from http://osu.ppy.sh/"), 39);
 }
 
-VOID RenderSongSelect(HDC hdcBmp)
+VOID RenderSongSelect()
 {
 	Rectangle(hdcBuffer, 0, 0, WNDWIDTH, WNDHEIGHT);
 
@@ -28,14 +29,14 @@ VOID RenderSongSelect(HDC hdcBmp)
 	Gdiplus::Graphics gra(hdcBuffer);
 	Gdiplus::Image bgImage(bgFilePath);
 	gra.DrawImage(&bgImage, 0, 0, WNDWIDTH, WNDHEIGHT);
-	Gdiplus::Image sonSelPic(_T("sonsel.png"));
+	Gdiplus::Image sonSelPic(_T("res/ui/sonsel.png"));
 	gra.DrawImage(&sonSelPic, 0, 0, WNDWIDTH, WNDHEIGHT);
 
-	SetTextColor(hdcBuffer, RGB(0, 0, 0));
+	SetTextColor(hdcBuffer, RGB(21, 21, 21));
 	TextOut(hdcBuffer, 50, 355, global.currSong().title.data(), global.currSong().title.length());
 }
 
-VOID RenderOptions(HDC hdcBmp)
+VOID RenderOptions()
 {
 
 }
@@ -63,7 +64,6 @@ VOID Render(HWND hWnd)
 	AddFontResource(_T("res/font/fantiquefour.ttf"));
 	HFONT font = CreateFont(32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, DEFAULT_PITCH, _T("Fantique Four"));
 
-	HDC	hdcBmp;
 	HBITMAP	cptBmp;
 
 	cptBmp = CreateCompatibleBitmap(hdc, WNDWIDTH, WNDHEIGHT);
@@ -80,16 +80,16 @@ VOID Render(HWND hWnd)
 		RenderNoSong();
 		break;
 	case global.GS_WELCOME:
-		RenderWelcome(hdcBmp);
+		RenderWelcome();
 		break;
 	case global.GS_SONGSELECT:
-		RenderSongSelect(hdcBmp);
+		RenderSongSelect();
 		break;
 	case global.GS_OPTIONS:
-		RenderOptions(hdcBmp);
+		RenderOptions();
 		break;
 	case global.GS_PLAYING:
-		RenderPlaying(hdcBmp);
+		RenderPlaying();
 		break;
 	case global.GS_GAMEOVER:
 		RenderGameOver();

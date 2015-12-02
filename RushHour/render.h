@@ -3,8 +3,9 @@
 extern LONG gameTimePass;
 extern DOUBLE barrierX;
 extern HDC hdcBuffer;
+extern HDC hdcBmp;
 
 extern const double beatPerScreen;
 
-VOID RenderWelcome(HDC hdcBmp);
-VOID RenderPlaying(HDC hdcBmp);
+VOID RenderWelcome();
+VOID RenderPlaying();

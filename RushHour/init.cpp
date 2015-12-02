@@ -100,6 +100,12 @@ VOID WindowInit(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	resource.wHero[8] = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
 		MAKEINTRESOURCE(IDB_WHITEHERO9));
 
+	//  Load Note Resource
+	resource.note[0] = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
+		MAKEINTRESOURCE(IDB_NOTEB));
+	resource.note[1] = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
+		MAKEINTRESOURCE(IDB_NOTEW));
+
 	//  Start Timer
 	SetTimer(hWnd, TIMER, 20, NULL);
 }
