@@ -61,7 +61,7 @@ VOID DrawCliff(int i, int j)
 	}
 }
 
-VOID DrawBonus(int i, int j)
+VOID DrawNoBarrier(int i, int j)
 {
 	DOUBLE trackBottom = (i + 1) * 0.25 + ((i + 1) % 2) * 0.01;
 	if (global.barriers[i][j].height == 1.)
@@ -69,10 +69,17 @@ VOID DrawBonus(int i, int j)
 			ToWindowX(barrierX + 0.4 / beatPerScreen) + 1, ToWindowY(trackBottom) + 1);
 	else
 		Rectangle(hdcBuffer, ToWindowX(barrierX) - 1, ToWindowY(trackBottom - 0.05) - 1,
-		ToWindowX(barrierX + 0.4 / beatPerScreen) + 1, ToWindowY(trackBottom) + 1);
+			ToWindowX(barrierX + 0.4 / beatPerScreen) + 1, ToWindowY(trackBottom) + 1);
+}
+
+VOID DrawBonus(int i, int j)
+{
+	DrawNoBarrier(i, j);
+	DOUBLE trackBottom = (i + 1) * 0.25 + ((i + 1) % 2) * 0.01;
 	SelectObject(hdcBmp, resource.note[i & 1]);
-	StretchBlt(hdcBuffer, ToWindowX(barrierX + 0.4 / beatPerScreen / 2) - 8, ToWindowY(trackBottom - 0.15) - 46 - global.heroHeight / 2,
-		16, 46,
+	StretchBlt(hdcBuffer, ToWindowX(barrierX + 0.4 / beatPerScreen / 2) - 6,
+		ToWindowY(trackBottom - 0.1 - global.barriers[i][j].height * 0.05) - 30 - global.heroHeight + 8,
+		12, 30,
 		hdcBmp, 0, 0, 83, 230, SRCCOPY);
 }
 
@@ -137,6 +144,9 @@ VOID DrawBarriers(int i)
 			break;
 		case 2:
 			DrawBonus(i, j);
+			break;
+		case INT_MAX:
+			DrawNoBarrier(i, j);
 			break;
 		default:
 			DrawSpikes(i, j);

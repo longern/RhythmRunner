@@ -120,6 +120,16 @@ VOID DetectCollision()
 						global.blood -= 4;
 				}
 			}
+			else if (global.barriers[i][j].type == 2)
+			{
+				x /= 0.4;
+				if (abs(x + 0.5) < 0.15 && global.heroes[i].height - currHeight > 0.95)
+				{
+					global.barriers[i][j].type = INT_MAX;
+					if (global.heroes[i].jpCount == 1)
+						global.blood += 10;
+				}
+			}
 		}
 	}
 
