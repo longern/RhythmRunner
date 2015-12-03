@@ -41,6 +41,7 @@ VOID GameFolderInit()
 
 VOID GlobalInit()
 {
+	AddFontResource(_T("res/font/fantiquefour.ttf"));
 	QueryPerformanceFrequency(&global.clockFrequency);
 
 	GameFolderInit();

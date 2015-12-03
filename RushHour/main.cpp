@@ -101,6 +101,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		TimerUpdate(hWnd, wParam, lParam);
 		break;
 	case WM_DESTROY:
+		RemoveFontResource(_T("res/font/fantiquefour.ttf"));
 		PostQuitMessage(0);
 		break;
 	default:

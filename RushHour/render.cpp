@@ -26,6 +26,7 @@ VOID RenderSongSelect()
 
 	WCHAR bgFilePath[256];
 	wsprintf(bgFilePath, _T("%s/%s"), global.currSong().name.data(), global.currSong().bgImgFile.data());
+
 	Gdiplus::Graphics gra(hdcBuffer);
 	Gdiplus::Image bgImage(bgFilePath);
 	gra.DrawImage(&bgImage, 0, 0, WNDWIDTH, WNDHEIGHT);
@@ -61,7 +62,6 @@ VOID Render(HWND hWnd)
 
 	hdc = BeginPaint(hWnd, &ps);
 
-	AddFontResource(_T("res/font/fantiquefour.ttf"));
 	HFONT font = CreateFont(32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, DEFAULT_PITCH, _T("Fantique Four"));
 
 	HBITMAP	cptBmp;
@@ -102,7 +102,8 @@ VOID Render(HWND hWnd)
 	DeleteObject(cptBmp);
 	DeleteDC(hdcBuffer);
 	DeleteDC(hdcBmp);
-	RemoveFontResource(_T("res/font/fantiquefour.ttf"));
+
+	DeleteObject(font);
 
 	EndPaint(hWnd, &ps);
 }
