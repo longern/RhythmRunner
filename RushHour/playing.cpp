@@ -221,8 +221,16 @@ VOID RenderPlaying()
 		gra.DrawImage(&sonSelPic, 0, 0, WNDWIDTH, WNDHEIGHT);
 	}
 
+	SelectObject(hdcBuffer, GetStockObject(WHITE_BRUSH));
+	Rectangle(hdcBuffer, 0, 0, ToWindowX(0.01), WNDHEIGHT);
+	HBRUSH darkRedBrush = CreateSolidBrush(RGB(194, 70, 49));
+	SelectObject(hdcBuffer, darkRedBrush);
+	Rectangle(hdcBuffer, 0, ToWindowY(1. - global.blood / 100.), ToWindowX(0.01), WNDHEIGHT);
+	SelectObject(hdcBuffer, GetStockObject(WHITE_BRUSH));
+	DeleteObject(darkRedBrush);
+
 	WCHAR timeText[20];
-	wsprintf(timeText, _T("%d %d"), gameTimePass, (int)global.blood);
+	wsprintf(timeText, _T("%d"), gameTimePass);
 	SetTextColor(hdcBuffer, RGB(0, 0, 0));
 	TextOut(hdcBuffer, ToWindowX(0.8), ToWindowY(0.05), timeText, wcslen(timeText));
 }

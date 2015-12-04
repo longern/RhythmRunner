@@ -17,3 +17,5 @@ VOID aniAdd(DOUBLE *prop, DOUBLE finalValue, LONG lastTime, ANIMATION::CURVE cur
 VOID refreshAnimations();
 
 VOID killAnimator(DOUBLE *prop);
+
+VOID finishAnimator(DOUBLE *prop);

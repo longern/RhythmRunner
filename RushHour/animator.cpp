@@ -65,3 +65,15 @@ VOID killAnimator(DOUBLE *prop)
 		else
 			i++;
 }
+
+VOID finishAnimator(DOUBLE *prop)
+{
+	for (UINT i = 0; i < animations.size();)
+		if (animations[i].prop == prop)
+		{
+			*prop = animations[i].toProperty;
+			animations.erase(animations.begin() + i);
+		}
+		else
+			i++;
+}
