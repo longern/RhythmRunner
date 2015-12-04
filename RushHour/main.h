@@ -87,9 +87,15 @@ typedef struct
 	HBITMAP note[2];
 } GAMERESOURCE;
 
+typedef struct
+{
+	BOOL foggyMode;
+} GAMESETTINGS;
+
 /*  Global Variants  */
 extern GLOBAL global;
 extern GAMERESOURCE resource;
+extern GAMESETTINGS settings;
 
 extern TCHAR szWindowClass[];
 extern TCHAR szTitle[];

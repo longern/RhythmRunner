@@ -44,6 +44,10 @@ VOID SongSelectKeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 		PreviewSong();
 		break;
 
+	case VK_F1:
+		settings.foggyMode = !settings.foggyMode;
+		break;
+
 	case VK_ESCAPE:
 		global.status = global.GS_WELCOME;
 		break;

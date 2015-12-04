@@ -58,6 +58,7 @@ VOID GlobalInit()
 	global.status = global.GS_WELCOME;
 	global.heroWidth = 38;
 	global.heroHeight = 45;
+	settings.foggyMode = FALSE;
 }
 
 VOID WindowInit(HWND hWnd, WPARAM wParam, LPARAM lParam)

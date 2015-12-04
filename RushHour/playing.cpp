@@ -1,4 +1,5 @@
 #include "render.h"
+#include <gdiplus.h>
 
 VOID DrawSpikes(int i, int j)
 {
@@ -89,21 +90,21 @@ VOID DrawBarriers(int i)
 	DOUBLE trackBottom = (i + 1) * 0.25 + ((i + 1) % 2) * 0.01;
 
 	HGDIOBJ backBrush;
-	
+
 	SelectObject(hdcBuffer, GetStockObject(GRAY_BRUSH));
-	
+
 	for (UINT j = 0; j < global.barriers[i].size(); j++)
 	{
 		double lastBarrierX = -1.;
 		double lastBarrierHeight = 0.;
 
-		barrierX = 0.05 +  //  Position of Stickman
+		barrierX = 0.08 +  //  Position of Stickman
 			(global.barriers[i][j].msecs - gameTimePass) / global.currSong().msPerBeat / beatPerScreen;
 		if (barrierX < -0.2 && j < global.barriers[i].size() - 1)
 			continue;
 		if (j >= 1)
 		{
-			lastBarrierX = 0.05 +  //  Position of Stickman
+			lastBarrierX = 0.08 +  //  Position of Stickman
 				(global.barriers[i][j - 1].msecs - gameTimePass) / global.currSong().msPerBeat / beatPerScreen;
 			lastBarrierHeight = global.barriers[i][j - 1].height;
 		}
@@ -192,28 +193,32 @@ VOID RenderPlaying()
 		//  prevent negative time (audioLeadIn)
 		if (heroFrame >= 6)
 			heroFrame++;
+
+		COLORREF backColor;
 		if (i & 1)
 		{
 			SelectObject(hdcBmp, resource.wHero[heroFrame]);
-			TransparentBlt(
-				hdcBuffer,
-				ToWindowX(0.05) - 21, ToWindowY(trackBottom - 0.1 - global.heroes[i].height * 0.05) - 8, global.heroWidth, global.heroHeight,
-				hdcBmp,
-				0, 0, 420, 504,
-				RGB(0, 0, 0)
-				);
+			backColor = RGB(0, 0, 0);
 		}
 		else
 		{
 			SelectObject(hdcBmp, resource.hero[heroFrame]);
-			TransparentBlt(
-				hdcBuffer,
-				ToWindowX(0.05) - 21, ToWindowY(trackBottom - 0.1 - global.heroes[i].height * 0.05) - 8, global.heroWidth, global.heroHeight,
-				hdcBmp,
-				0, 0, 420, 504,
-				RGB(255, 255, 255)
-				);
+			backColor = RGB(255, 255, 255);
 		}
+		TransparentBlt(
+			hdcBuffer,
+			ToWindowX(0.08) - 21, ToWindowY(trackBottom - 0.1 - global.heroes[i].height * 0.05) - 8, global.heroWidth, global.heroHeight,
+			hdcBmp,
+			0, 0, 420, 504,
+			backColor
+			);
+	}
+
+	if (settings.foggyMode)
+	{
+		Gdiplus::Graphics gra(hdcBuffer);
+		Gdiplus::Image sonSelPic(_T("res/ui/foggy.png"));
+		gra.DrawImage(&sonSelPic, 0, 0, WNDWIDTH, WNDHEIGHT);
 	}
 
 	WCHAR timeText[20];
