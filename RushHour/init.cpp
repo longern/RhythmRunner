@@ -1,5 +1,6 @@
 #include "audio.h"
 #include "osureader.h"
+#include "animator.h"
 #include <gdiplus.h>
 
 VOID GameFolderInit()
@@ -130,6 +131,7 @@ VOID GameInit()
 	else
 		SwitchSong();
 
+	killAnimator(&global.blood);
 	global.blood = 100.;
 	for (int i = 0; i < 4; i++)
 	{

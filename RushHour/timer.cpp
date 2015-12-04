@@ -77,6 +77,18 @@ VOID HeroUpdate()
 	}
 }
 
+VOID addBloodValue(DOUBLE delta)
+{
+	refreshAnimations();
+	DOUBLE currBlood = global.blood;
+	finishAnimator(&global.blood);
+	DOUBLE targetBlood = global.blood + delta;
+	if (targetBlood > 100.)
+		targetBlood = 100.;
+	global.blood = currBlood;
+	aniAdd(&global.blood, targetBlood, 250, ANIMATION::SINE);
+}
+
 VOID DetectCollision()
 {
 	double x;
@@ -93,9 +105,9 @@ VOID DetectCollision()
 				x /= 0.4;
 				//  Width of danger zone is 0.4 beats
 				if (x >= -1. / 4 || x < -3. / 4 && x >= -1)
-					global.blood -= 0.2;
+					addBloodValue(-0.2);
 				else if (x < -1. / 4 && x >= -3. / 4)
-					global.blood -= 4;
+					addBloodValue(-4);
 			}
 			else if (global.barriers[i][j].type == 1)
 			{
@@ -104,9 +116,9 @@ VOID DetectCollision()
 					if (currHeight == 1.)
 					{
 						if (global.heroes[i].height / currHeight <= 1. / 4)
-							global.blood -= 15;
+							addBloodValue(-15);
 						else if (global.heroes[i].height / currHeight <= 3. / 4)
-							global.blood -= 4;
+							addBloodValue(-4);
 						global.heroes[i].height = currHeight - 0.01;
 					}
 				}
@@ -115,9 +127,9 @@ VOID DetectCollision()
 				{
 					x /= 0.5;
 					if (x >= -1. / 5 || x < -4. / 5 && x >= -1)
-						global.blood -= 0.2;
+						addBloodValue(-0.2);
 					else if (x < -1. / 5 && x >= -4. / 5)
-						global.blood -= 4;
+						addBloodValue(-4);
 				}
 			}
 			else if (global.barriers[i][j].type == 2)
@@ -127,16 +139,14 @@ VOID DetectCollision()
 				{
 					global.barriers[i][j].type = INT_MAX;
 					if (global.heroes[i].jpCount == 1)
-						global.blood += 10;
+						addBloodValue(10);
 				}
 			}
 		}
 	}
 
-	global.blood += 0.05;
-	if (global.blood > 100)
-		global.blood = 100;
-	else if (global.blood <= 0)
+	addBloodValue(0.05);
+	if (global.blood <= 0)
 		GameOverInit();
 }
 
