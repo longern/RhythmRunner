@@ -48,6 +48,10 @@ VOID SongSelectKeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 		settings.foggyMode = !settings.foggyMode;
 		break;
 
+	case VK_F2:
+		settings.hideJudgeLine = !settings.hideJudgeLine;
+		break;
+
 	case VK_ESCAPE:
 		global.status = global.GS_WELCOME;
 		break;
@@ -258,18 +262,21 @@ LRESULT TouchEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			{
 				for (UINT i = 0; i < cInputs; i++)
 				{
-					if (pInputs[i].dwFlags & TOUCHEVENTF_MOVE || pInputs[i].dwFlags & TOUCHEVENTF_UP)
-						continue;
+					int track;
 					double ix = double(pInputs[i].x / 100 - cliCoord.x) / WNDWIDTH;
 					double iy = double(pInputs[i].y / 100 - cliCoord.y) / WNDHEIGHT;
+					if (ix < 0. || ix > 1.)
+						continue;
 					if (iy <= 0.26)
-						DoJump(0);
+						track = 0;
 					else if (iy <= 0.5)
-						DoJump(1);
+						track = 1;
 					else if (iy <= 0.76)
-						DoJump(2);
+						track = 2;
 					else
-						DoJump(3);
+						track = 3;
+					if (global.heroes[i].jpCount == 0 || (pInputs[i].dwFlags & TOUCHEVENTF_DOWN))
+						DoJump(track);
 				}
 				CloseTouchInputHandle((HTOUCHINPUT)lParam);
 			}

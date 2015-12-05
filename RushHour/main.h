@@ -91,6 +91,7 @@ typedef struct
 typedef struct
 {
 	BOOL foggyMode;
+	BOOL hideJudgeLine;
 	INT universalOffset;
 } GAMESETTINGS;
 

@@ -25,6 +25,7 @@ VOID GameFolderInit()
 			wsprintf(firstOsuFile, TEXT("%s.osu"), _T("*"));
 			findOsuFile = FindFirstFile(firstOsuFile, &fOsuInfo);
 			global.songs.push_back(SONGINFO());
+			global.songs.back().beatmapSetId = _wtoi(fNextInfo.cFileName);
 			if (findOsuFile != INVALID_HANDLE_VALUE)
 			{
 				global.songs[global.totalSongCount].osuFile = fOsuInfo.cFileName;
@@ -40,12 +41,27 @@ VOID GameFolderInit()
 	FindClose(findFile);
 }
 
+VOID MCIOffsetInit()
+{
+	FILE *mciOffsetFile = fopen("mcioffset.txt", "r");
+	if(mciOffsetFile)
+	{
+		int beatmapSetID, offset;
+		while (fscanf(mciOffsetFile, "%d %d", &beatmapSetID, &offset) != EOF)
+			for (size_t i = 0; i < global.songs.size(); ++i)
+				if (global.songs[i].beatmapSetId == beatmapSetID)
+					global.songs[i].mciOffset = offset;
+		fclose(mciOffsetFile);
+	}
+}
+
 VOID GlobalInit()
 {
 	AddFontResource(_T("res/font/fantiquefour.ttf"));
 	QueryPerformanceFrequency(&global.clockFrequency);
 
 	GameFolderInit();
+	MCIOffsetInit();
 	if (global.songs.empty())
 	{
 		global.status = global.GS_NOSONG;
@@ -60,7 +76,8 @@ VOID GlobalInit()
 	global.heroWidth = 38;
 	global.heroHeight = 45;
 	settings.foggyMode = FALSE;
-	settings.universalOffset = 50;
+	settings.hideJudgeLine = FALSE;
+	settings.universalOffset = 0;
 }
 
 VOID WindowInit(HWND hWnd, WPARAM wParam, LPARAM lParam)

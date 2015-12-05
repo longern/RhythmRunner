@@ -114,8 +114,6 @@ VOID readBasicInfo(const WCHAR *filePathName, SONGINFO *info)
 	osuFileStream.open(filePathName);
 	std::string line, state;
 
-	info->beatmapSetId = _wtoi(filePathName);
-
 	while (osuFileStream)
 	{
 		std::getline(osuFileStream, line);

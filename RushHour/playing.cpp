@@ -124,9 +124,12 @@ VOID DrawBarriers(int i)
 			ToWindowX(barrierX), ToWindowY(trackBottom) + 1);
 
 		//  Draw Judge Line
-		SelectObject(hdcBuffer, GetStockObject(GRAY_BRUSH));
-		Rectangle(hdcBuffer, ToWindowX(barrierX) - 2, ToWindowY(trackTop) - 1,
-			ToWindowX(barrierX) + 2, ToWindowY(trackBottom) + 1);
+		if (!settings.hideJudgeLine)
+		{
+			SelectObject(hdcBuffer, GetStockObject(GRAY_BRUSH));
+			Rectangle(hdcBuffer, ToWindowX(barrierX) - 2, ToWindowY(trackTop) - 1,
+				ToWindowX(barrierX) + 2, ToWindowY(trackBottom) + 1);
+		}
 
 		//  Clear Barrier Area
 		SelectObject(hdcBuffer, backBrush);
