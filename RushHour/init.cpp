@@ -50,7 +50,11 @@ VOID MCIOffsetInit()
 		while (fscanf(mciOffsetFile, "%d %d", &beatmapSetID, &offset) != EOF)
 			for (size_t i = 0; i < global.songs.size(); ++i)
 				if (global.songs[i].beatmapSetId == beatmapSetID)
+				{
 					global.songs[i].mciOffset = offset;
+					if (global.songs[i].audioLeadIn < offset)
+						global.songs[i].audioLeadIn = offset + 100;
+				}
 		fclose(mciOffsetFile);
 	}
 }
@@ -167,6 +171,10 @@ VOID GameInit()
 VOID GameOverInit()
 {
 	global.finalScore = global.timePass();
-	AudioClose();
+	if (global.blood <= 0)
+	{
+		AudioClose();
+		PlaySound(_T("res/sound/falldown.wav"), NULL, SND_ASYNC | SND_FILENAME);
+	}
 	global.status = global.GS_GAMEOVER;
 }
