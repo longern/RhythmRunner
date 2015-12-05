@@ -125,7 +125,7 @@ VOID MouseMove(HWND hWnd, WPARAM wParam, LPARAM lParam);
 //  Left Mouse Button Press Down Event
 VOID LButtonDown(HWND hWnd, WPARAM wParam, LPARAM lParam);
 //  Touch Screen Event
-VOID TouchEvent(HWND hWnd, WPARAM wParam, LPARAM lParam);
+LRESULT TouchEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 //Global Functions
 int ToWindowX(double rx);

@@ -95,8 +95,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		LButtonDown(hWnd, wParam, lParam);
 		break;
 	case WM_TOUCH:
-		TouchEvent(hWnd, wParam, lParam);
-		return DefWindowProc(hWnd, message, wParam, lParam);
+		return TouchEvent(hWnd, message, wParam, lParam);
 	case WM_TIMER:
 		TimerUpdate(hWnd, wParam, lParam);
 		break;

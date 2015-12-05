@@ -119,7 +119,6 @@ VOID GamePlayKeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 		break;
 
 	case VK_ESCAPE:
-		AudioClose();
 		PreviewSong();
 		global.status = global.GS_SONGSELECT;
 		break;
@@ -231,17 +230,23 @@ VOID LButtonDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 
 	case global.GS_PLAYING:
 		break;
+
+	case global.GS_GAMEOVER:
+		PreviewSong();
+		global.status = global.GS_SONGSELECT;
+		break;
 	}
 }
 
-VOID TouchEvent(HWND hWnd, WPARAM wParam, LPARAM lParam)
+LRESULT TouchEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 
 	switch (global.status)
 	{
 	case global.GS_PLAYING:
+	{
 		if (global.isGamePaused)
-			return;
+			return 0;
 
 		UINT cInputs = LOWORD(wParam);
 		PTOUCHINPUT pInputs = (PTOUCHINPUT)malloc(sizeof(TOUCHINPUT) * cInputs);
@@ -250,25 +255,33 @@ VOID TouchEvent(HWND hWnd, WPARAM wParam, LPARAM lParam)
 			POINT cliCoord = { 0 };
 			ClientToScreen(hWnd, &cliCoord);
 			if (GetTouchInputInfo((HTOUCHINPUT)lParam, cInputs, pInputs, sizeof(TOUCHINPUT)))
+			{
 				for (UINT i = 0; i < cInputs; i++)
 				{
-					if (!(pInputs[i].dwFlags & TOUCHEVENTF_DOWN))
+					if (pInputs[i].dwFlags & TOUCHEVENTF_MOVE || pInputs[i].dwFlags & TOUCHEVENTF_UP)
 						continue;
 					double ix = double(pInputs[i].x / 100 - cliCoord.x) / WNDWIDTH;
 					double iy = double(pInputs[i].y / 100 - cliCoord.y) / WNDHEIGHT;
-					if (ix < 0 || ix > 1)
-						continue;
 					if (iy <= 0.26)
 						DoJump(0);
 					else if (iy <= 0.5)
 						DoJump(1);
 					else if (iy <= 0.76)
 						DoJump(2);
-					else if (iy <= 1)
+					else
 						DoJump(3);
 				}
+				CloseTouchInputHandle((HTOUCHINPUT)lParam);
+			}
 			free(pInputs);
 		}
+		return 0;
 		break;
 	}
+
+	default:
+		break;
+	}
+
+	return DefWindowProc(hWnd, message, wParam, lParam);
 }
