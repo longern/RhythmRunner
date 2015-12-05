@@ -34,6 +34,7 @@ typedef struct
 	std::wstring bgImgFile;
 	DOUBLE msPerBeat;
 	INT audioLeadIn;
+	INT mciOffset;
 	UINT previewTime;
 	DOUBLE sliderMultiplier;
 } SONGINFO;
@@ -90,6 +91,7 @@ typedef struct
 typedef struct
 {
 	BOOL foggyMode;
+	INT universalOffset;
 } GAMESETTINGS;
 
 /*  Global Variants  */

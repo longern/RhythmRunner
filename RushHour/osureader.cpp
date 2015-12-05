@@ -139,6 +139,11 @@ VOID readBasicInfo(const WCHAR *filePathName, SONGINFO *info)
 				line = line.substr(12);
 				info->audioLeadIn = std::atoi(line.substr(line.find_first_not_of(' ')).data());
 			}
+			else if (line.find("MCIOffset:") != std::string::npos)
+			{
+				line = line.substr(10);
+				info->mciOffset = std::atoi(line.substr(line.find_first_not_of(' ')).data());
+			}
 			else if (line.find("PreviewTime:") != std::string::npos)
 			{
 				line = line.substr(12);

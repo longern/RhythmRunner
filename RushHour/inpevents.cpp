@@ -102,12 +102,14 @@ VOID GamePlayKeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 		if (global.isGamePaused)
 		{
 			QueryPerformanceCounter(&global.beginTime);
-			AudioResume();
+			if(global.accummulatedTime >= 0)
+				AudioResume();
 			global.isGamePaused = false;
 		}
 		else
 		{
-			if (global.accummulatedTime == 0 || gameTimePass - global.accummulatedTime >= 3000)
+			if (global.accummulatedTime == global.currSong().mciOffset - global.currSong().audioLeadIn ||
+				gameTimePass - global.accummulatedTime >= 1)
 			{
 				global.isGamePaused = true;
 				AudioPause();
@@ -228,35 +230,45 @@ VOID LButtonDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 		break;
 
 	case global.GS_PLAYING:
-		if (ptMouse.y <= ToWindowY(0.26))
-			DoJump(0);
-		else if (ptMouse.y <= ToWindowY(0.5))
-			DoJump(1);
-		else if (ptMouse.y <= ToWindowY(0.76))
-			DoJump(2);
-		else
-			DoJump(3);
 		break;
 	}
 }
 
 VOID TouchEvent(HWND hWnd, WPARAM wParam, LPARAM lParam)
 {
-	POINT ptTouch;
-	ptTouch.x = LOWORD(lParam);
-	ptTouch.y = HIWORD(lParam);
-	
+
 	switch (global.status)
 	{
 	case global.GS_PLAYING:
-		if (ptTouch.y <= ToWindowY(0.26))
-			DoJump(0);
-		else if (ptTouch.y <= ToWindowY(0.5))
-			DoJump(1);
-		else if (ptTouch.y <= ToWindowY(0.76))
-			DoJump(2);
-		else
-			DoJump(3);
+		if (global.isGamePaused)
+			return;
+
+		UINT cInputs = LOWORD(wParam);
+		PTOUCHINPUT pInputs = (PTOUCHINPUT)malloc(sizeof(TOUCHINPUT) * cInputs);
+		if (pInputs)
+		{
+			POINT cliCoord = { 0 };
+			ClientToScreen(hWnd, &cliCoord);
+			if (GetTouchInputInfo((HTOUCHINPUT)lParam, cInputs, pInputs, sizeof(TOUCHINPUT)))
+				for (UINT i = 0; i < cInputs; i++)
+				{
+					if (!(pInputs[i].dwFlags & TOUCHEVENTF_DOWN))
+						continue;
+					double ix = double(pInputs[i].x / 100 - cliCoord.x) / WNDWIDTH;
+					double iy = double(pInputs[i].y / 100 - cliCoord.y) / WNDHEIGHT;
+					if (ix < 0 || ix > 1)
+						continue;
+					if (iy <= 0.26)
+						DoJump(0);
+					else if (iy <= 0.5)
+						DoJump(1);
+					else if (iy <= 0.76)
+						DoJump(2);
+					else if (iy <= 1)
+						DoJump(3);
+				}
+			free(pInputs);
+		}
 		break;
 	}
 }

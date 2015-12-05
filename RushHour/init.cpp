@@ -60,6 +60,7 @@ VOID GlobalInit()
 	global.heroWidth = 38;
 	global.heroHeight = 45;
 	settings.foggyMode = FALSE;
+	settings.universalOffset = 50;
 }
 
 VOID WindowInit(HWND hWnd, WPARAM wParam, LPARAM lParam)
@@ -108,6 +109,8 @@ VOID WindowInit(HWND hWnd, WPARAM wParam, LPARAM lParam)
 		MAKEINTRESOURCE(IDB_NOTEB));
 	resource.note[1] = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
 		MAKEINTRESOURCE(IDB_NOTEW));
+	
+	RegisterTouchWindow(hWnd, 0);
 
 	//  Start Timer
 	SetTimer(hWnd, TIMER, 20, NULL);

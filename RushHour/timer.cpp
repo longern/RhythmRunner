@@ -7,11 +7,11 @@ LONG gameTimePass;
 VOID GameStatusUpdate()
 {
 	gameTimePass = global.timePass();
-	if (global.accummulatedTime < 0 && gameTimePass >= 0)
+	if (global.accummulatedTime < -global.currSong().mciOffset && gameTimePass + global.currSong().mciOffset >= 0)
 	{
-		AudioPlayOnce();
+ 		AudioPlayOnce();
 		QueryPerformanceCounter(&global.beginTime);
-		global.accummulatedTime = 0;
+		global.accummulatedTime = -global.currSong().mciOffset;
 		gameTimePass = global.timePass();
 	}
 
