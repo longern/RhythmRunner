@@ -238,8 +238,10 @@ VOID LButtonDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 
 	case global.GS_GAMEOVER:
 		if (ptMouse.x >= ToWindowX(0.67) && ptMouse.y >= ToWindowY(0.67))
+		{
 			PreviewSong();
-		global.status = global.GS_SONGSELECT;
+			global.status = global.GS_SONGSELECT;
+		}
 		break;
 	}
 }

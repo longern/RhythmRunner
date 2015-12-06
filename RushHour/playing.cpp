@@ -117,9 +117,9 @@ VOID DrawNoise(int i, int j)
 	DrawNoBarrier(i, j);
 	DOUBLE trackBottom = (i + 1) * 0.25 + ((i + 1) % 2) * 0.01;
 	SelectObject(hdcBmp, resource.noise[i & 1]);
-	StretchBlt(hdcBuffer, ToWindowX(barrierX + 0.4 / beatPerScreen / 2) - 12,
-		ToWindowY(trackBottom - 0.075 - global.barriers[i][j].height * 0.05) - 24,
-		24, 24,
+	StretchBlt(hdcBuffer, ToWindowX(barrierX + 0.4 / beatPerScreen / 2) - 16,
+		ToWindowY(trackBottom - 0.075 - global.barriers[i][j].height * 0.05) - 28,
+		32, 32,
 		hdcBmp, 0, 0, 64, 64, SRCCOPY);
 }
 
