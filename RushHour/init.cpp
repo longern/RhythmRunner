@@ -137,6 +137,14 @@ VOID WindowInit(HWND hWnd, WPARAM wParam, LPARAM lParam)
 		MAKEINTRESOURCE(IDB_NOISEB));
 	resource.noise[1] = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
 		MAKEINTRESOURCE(IDB_NOISEW));
+
+	//  Load Other Bitmaps
+	resource.cloud = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
+		MAKEINTRESOURCE(IDB_CLOUD));
+	resource.machine = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
+		MAKEINTRESOURCE(IDB_MACHINE));
+	resource.machineok = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
+		MAKEINTRESOURCE(IDB_MACHINEOK));
 	
 	//  Register Touch Window To Enable Touch Event
 	RegisterTouchWindow(hWnd, 0);

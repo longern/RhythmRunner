@@ -221,6 +221,12 @@ VOID RenderPlaying()
 	Rectangle(hdcBuffer, 0, 0, WNDWIDTH, (int)(WNDHEIGHT * 0.26));
 	Rectangle(hdcBuffer, 0, (int)(WNDHEIGHT * 0.5), WNDWIDTH, (int)(WNDHEIGHT * 0.76));
 
+	INT totalLength = INT_MIN;
+	for (i = 0; i < 4; i++)
+		if (global.barriers[i].size() && totalLength < global.barriers[i].back().msecs)
+			totalLength = global.barriers[i].back().msecs;
+	totalLength += INT(global.currSong().msPerBeat * 0.5);
+
 	for (i = 0; i < 4; i++) //  Four tracks. Want more?
 	{
 		DOUBLE trackTop = i * 0.25 + (i % 2) * 0.01;
@@ -228,6 +234,26 @@ VOID RenderPlaying()
 
 		//  Draw Barriers
 		DrawBarriers(i);
+
+		//  Draw Card Machine
+		if (i == 0)
+			for (int k = 0; k <= 2; k++)
+			{
+				DOUBLE machineX = (totalLength * k / 2 - gameTimePass) / global.currSong().msPerBeat / beatPerScreen;
+				if (machineX < 1.02 && machineX > -0.18)
+				{
+					int height = 0;
+					for (size_t j = 0; j < global.barriers[0].size(); j++)
+						if (global.barriers[0][j].msecs <= totalLength * k / 2)
+							height = global.barriers[0][j].height;
+						else
+							break;
+					SelectObject(hdcBmp, machineX > 0 ? resource.machine : resource.machineok);
+					TransparentBlt(hdcBuffer, ToWindowX(machineX + 0.08) - 24, ToWindowY(0.21 - height * 0.05) - 49,
+						48, 48,
+						hdcBmp, 0, 0, 48, 48, RGB(255, 255, 255));
+				}
+			}
 
 		//  Draw StickMan
 		DOUBLE beatPassed = gameTimePass / global.currSong().msPerBeat;
@@ -262,6 +288,10 @@ VOID RenderPlaying()
 			backColor
 			);
 	}
+
+	SelectObject(hdcBmp, resource.cloud);
+	TransparentBlt(hdcBuffer, ToWindowX(1 - gameTimePass  * 0.99 / totalLength), 10, 48, 48,
+		hdcBmp, 0, 0, 48, 48, RGB(255, 255, 255));
 
 	if (settings.foggyMode)
 	{

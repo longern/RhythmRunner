@@ -145,6 +145,15 @@
     <Image Include="res\ui\noisew.bmp">
       <Filter>资源文件</Filter>
     </Image>
+    <Image Include="res\ui\machine.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\ui\cloud.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\ui\machineok.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="RushHour.rc">

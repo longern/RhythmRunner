@@ -89,6 +89,9 @@ typedef struct
 	HBITMAP wHero[9];
 	HBITMAP note[2];
 	HBITMAP noise[2];
+	HBITMAP cloud;
+	HBITMAP machine;
+	HBITMAP machineok;
 } GAMERESOURCE;
 
 typedef struct

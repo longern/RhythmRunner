@@ -115,6 +115,9 @@
     <Image Include="res\ui\7.bmp" />
     <Image Include="res\ui\8.bmp" />
     <Image Include="res\ui\9.bmp" />
+    <Image Include="res\ui\cloud.bmp" />
+    <Image Include="res\ui\machine.bmp" />
+    <Image Include="res\ui\machineok.bmp" />
     <Image Include="res\ui\noiseb.bmp" />
     <Image Include="res\ui\noisew.bmp" />
     <Image Include="res\ui\noteb.bmp" />
