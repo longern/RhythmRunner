@@ -2,6 +2,7 @@
 #include "osureader.h"
 #include "animator.h"
 #include <gdiplus.h>
+#include <algorithm>
 
 VOID GameFolderInit()
 {
@@ -130,7 +131,14 @@ VOID WindowInit(HWND hWnd, WPARAM wParam, LPARAM lParam)
 		MAKEINTRESOURCE(IDB_NOTEB));
 	resource.note[1] = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
 		MAKEINTRESOURCE(IDB_NOTEW));
+
+	//  Load Noise Resource
+	resource.noise[0] = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
+		MAKEINTRESOURCE(IDB_NOISEB));
+	resource.noise[1] = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
+		MAKEINTRESOURCE(IDB_NOISEW));
 	
+	//  Register Touch Window To Enable Touch Event
 	RegisterTouchWindow(hWnd, 0);
 
 	//  Start Timer
@@ -164,17 +172,41 @@ VOID GameInit()
 		global.heroes[i].jpCount = 0;
 		global.heroes[i].jpStartTime = INT_MIN;
 		global.fHeight[i] = 0.;
+		global.keySequence[i].clear();
 	}
 	global.status = global.GS_PLAYING;
 }
 
 VOID GameOverInit()
 {
-	global.finalScore = global.timePass();
+	global.finalTime = global.timePass();
 	if (global.blood <= 0)
 	{
 		AudioClose();
 		PlaySound(_T("res/sound/falldown.wav"), NULL, SND_ASYNC | SND_FILENAME);
 	}
+
+	UINT totalCombo = 0;
+	DOUBLE finalScore = 0.;
+	for (int i = 0; i < 4; i++)
+	{
+		totalCombo += global.barriers[i].size();
+		for (size_t j = 0; j < global.barriers[i].size(); j++)
+		{
+			auto keyToBarrier = std::lower_bound(global.keySequence[i].begin(), global.keySequence[i].end(), global.barriers[i][j].msecs);
+			INT delta = INT_MAX;
+			if (keyToBarrier != global.keySequence[i].begin())
+				delta = abs(*(keyToBarrier - 1) - global.barriers[i][j].msecs);
+			if (keyToBarrier != global.keySequence[i].end())
+				delta = min(delta, abs(*keyToBarrier - global.barriers[i][j].msecs));
+			if (delta <= global.currSong().msPerBeat * 0.4 / 4.)
+				finalScore += 1;
+			else if (delta <= global.currSong().msPerBeat * 0.4 / 2.)
+				finalScore += 0.6;
+		}
+	}
+
+	global.finalScore = finalScore / totalCombo;
+
 	global.status = global.GS_GAMEOVER;
 }

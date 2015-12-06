@@ -139,6 +139,12 @@
     <Image Include="res\ui\notew.bmp">
       <Filter>资源文件</Filter>
     </Image>
+    <Image Include="res\ui\noiseb.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\ui\noisew.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="RushHour.rc">

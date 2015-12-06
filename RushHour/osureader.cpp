@@ -31,8 +31,8 @@ VOID produceHitObject(int t, bool includeItem)
 	BARRIERINFO barr;
 	barr.msecs = t;
 
-	barr.type = std::rand() % (5 + includeItem);
-	if (barr.type >= (2 + includeItem))
+	barr.type = std::rand() % (5 + includeItem * 3);
+	if (barr.type >= (2 + includeItem * 3))
 		barr.type = 0;
 
 	//  Check which track can be appended

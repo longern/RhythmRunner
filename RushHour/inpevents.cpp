@@ -15,6 +15,7 @@ VOID DoJump(int track)
 			(gameTimePass - currHero->jpStartTime) / global.currSong().msPerBeat / 0.4 <= 1. / 6)
 			return;
 
+	global.keySequence[track].push_back(gameTimePass);
 	currHero->jpStartTime = global.timePass();
 	currHero->startHeight = currHero->height;
 	currHero->jpCount++;

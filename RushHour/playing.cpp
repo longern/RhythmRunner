@@ -84,6 +84,45 @@ VOID DrawBonus(int i, int j)
 		hdcBmp, 0, 0, 83, 230, SRCCOPY);
 }
 
+VOID DrawStar(int i, int j)
+{
+	DrawNoBarrier(i, j);
+
+	HGDIOBJ foreBrush;
+	HGDIOBJ backBrush;
+	if (i & 1)
+	{
+		foreBrush = GetStockObject(WHITE_BRUSH);
+		backBrush = GetStockObject(BLACK_BRUSH);
+	}
+	else
+	{
+		foreBrush = GetStockObject(BLACK_BRUSH);
+		backBrush = GetStockObject(WHITE_BRUSH);
+	}
+
+	SelectObject(hdcBuffer, foreBrush);
+	DOUBLE trackBottom = (i + 1) * 0.25 + ((i + 1) % 2) * 0.01;
+	Circle(hdcBuffer, ToWindowX(barrierX + 0.4 / beatPerScreen / 2),
+		ToWindowY(trackBottom - 0.1 - global.barriers[i][j].height * 0.05) - global.heroHeight + 4
+		, 8);
+	SelectObject(hdcBuffer, backBrush);
+	DrawSquare(hdcBuffer, ToWindowX(barrierX + 0.4 / beatPerScreen / 2),
+		ToWindowY(trackBottom - 0.1 - global.barriers[i][j].height * 0.05) - global.heroHeight + 4
+		, 4);
+}
+
+VOID DrawNoise(int i, int j)
+{
+	DrawNoBarrier(i, j);
+	DOUBLE trackBottom = (i + 1) * 0.25 + ((i + 1) % 2) * 0.01;
+	SelectObject(hdcBmp, resource.noise[i & 1]);
+	StretchBlt(hdcBuffer, ToWindowX(barrierX + 0.4 / beatPerScreen / 2) - 12,
+		ToWindowY(trackBottom - 0.075 - global.barriers[i][j].height * 0.05) - 24,
+		24, 24,
+		hdcBmp, 0, 0, 64, 64, SRCCOPY);
+}
+
 VOID DrawBarriers(int i)
 {
 	DOUBLE trackTop = i * 0.25 + (i % 2) * 0.01;
@@ -149,6 +188,12 @@ VOID DrawBarriers(int i)
 		case 2:
 			DrawBonus(i, j);
 			break;
+		case 3:
+			DrawStar(i, j);
+			break;
+		case 4:
+			DrawNoise(i, j);
+			break;
 		case INT_MAX:
 			DrawNoBarrier(i, j);
 			break;
@@ -157,6 +202,7 @@ VOID DrawBarriers(int i)
 			break;
 		}
 
+		SelectObject(hdcBuffer, GetStockObject(GRAY_BRUSH));
 		if (j == global.barriers[i].size() - 1)
 		{
 			Rectangle(hdcBuffer,

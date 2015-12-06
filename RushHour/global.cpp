@@ -16,6 +16,11 @@ BOOL Circle(HDC hdc, int x, int y, int r)
 	return Ellipse(hdc, x - r, y - r, x + r, y + r);
 }
 
+BOOL DrawSquare(HDC hdc, int cx, int cy, int ha)
+{
+	return Rectangle(hdc, cx - ha, cy - ha, cx + ha, cy + ha);
+}
+
 VOID PreviewSong()
 {
 	WCHAR firstMp3File[200];

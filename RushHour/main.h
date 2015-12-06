@@ -69,7 +69,9 @@ struct GLOBAL
 	HERO heroes[4];
 	DOUBLE blood;
 	DOUBLE fHeight[4];
-	UINT finalScore;
+	std::vector<INT> keySequence[4];
+	LONG finalTime;
+	DOUBLE finalScore;
 
 	MCI_OPEN_PARMS ae; //Audio Engine
 
@@ -86,6 +88,7 @@ typedef struct
 	HBITMAP hero[9];
 	HBITMAP wHero[9];
 	HBITMAP note[2];
+	HBITMAP noise[2];
 } GAMERESOURCE;
 
 typedef struct
@@ -132,6 +135,7 @@ LRESULT TouchEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 int ToWindowX(double rx);
 int ToWindowY(double ry);
 BOOL Circle(HDC hdc, int x, int y, int r);
+BOOL DrawSquare(HDC hdc, int cx, int cy, int ha);
 VOID PreviewSong();
 VOID SwitchSong();
 

@@ -9,6 +9,7 @@
 DOUBLE barrierX;
 HDC hdcBuffer;
 HDC hdcBmp;
+DOUBLE quakeScreen = 0.;
 
 const double beatPerScreen = 4.0;
 
@@ -47,12 +48,14 @@ VOID RenderGameOver()
 	Rectangle(hdcBuffer, 0, 0, WNDWIDTH, WNDHEIGHT);
 
 	if (global.blood <= 0)
-		TextOut(hdcBuffer, ToWindowX(0.4), ToWindowY(0.4), _T("Failed"), 6);
+		TextOut(hdcBuffer, ToWindowX(0.38), ToWindowY(0.43), _T("Failed"), 6);
 	else
-		TextOut(hdcBuffer, ToWindowX(0.4), ToWindowY(0.4), _T("You won!"), 8);
-	WCHAR timeText[20];
-	wsprintf(timeText, _T("Your Score: %u"), global.finalScore);
-	TextOut(hdcBuffer, ToWindowX(0.4), ToWindowY(0.45), timeText, wcslen(timeText));
+		TextOut(hdcBuffer, ToWindowX(0.38), ToWindowY(0.43), _T("You won!"), 8);
+	WCHAR outputText[30];
+	wsprintf(outputText, _T("Your Distance: %d m"), global.finalTime / 10);
+	TextOut(hdcBuffer, ToWindowX(0.38), ToWindowY(0.48), outputText, wcslen(outputText));
+	swprintf(outputText, 30, _T("Your Score: %.2lf%%"), global.finalScore * 100.);
+	TextOut(hdcBuffer, ToWindowX(0.38), ToWindowY(0.53), outputText, wcslen(outputText));
 }
 
 VOID Render(HWND hWnd)
@@ -97,7 +100,7 @@ VOID Render(HWND hWnd)
 		break;
 	}
 
-	BitBlt(hdc, 0, 0, WNDWIDTH, WNDHEIGHT, hdcBuffer, 0, 0, SRCCOPY);
+	BitBlt(hdc, 0, (INT)(quakeScreen), WNDWIDTH, WNDHEIGHT, hdcBuffer, 0, 0, SRCCOPY);
 
 	DeleteObject(cptBmp);
 	DeleteDC(hdcBuffer);

@@ -142,6 +142,26 @@ VOID DetectCollision()
 						addBloodValue(10);
 				}
 			}
+			else if (global.barriers[i][j].type == 3)
+			{
+				x /= 0.4;
+				if (abs(x + 0.5) < 0.15 && global.heroes[i].height - currHeight > 0.95)
+					global.barriers[i][j].type = INT_MAX;
+			}
+			else if (global.barriers[i][j].type == 4)
+			{
+				x /= 0.4;
+				if (abs(x + 0.5) < 0.1 && global.heroes[i].height - currHeight <= 0.75)
+				{
+					extern DOUBLE quakeScreen;
+					resetAnimator(&quakeScreen);
+					quakeScreen = 0.;
+					aniAdd(&quakeScreen, 20., 1000, ANIMATION::QUAKE8);
+					aniAdd(&quakeScreen, 0, 1, ANIMATION::LINEAR, 9, 1000);
+					addBloodValue(-10);
+					global.barriers[i][j].type = INT_MAX;
+				}
+			}
 		}
 	}
 

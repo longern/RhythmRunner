@@ -48,6 +48,9 @@ VOID refreshAnimations()
 		case ANIMATION::SINE:
 			x = sin(PI / 2 * x);
 			break;
+		case ANIMATION::QUAKE8:
+			x = int(x * 16) % 2;
+			break;
 		case ANIMATION::LINEAR:
 		default:
 			//  x = x;
@@ -72,6 +75,18 @@ VOID finishAnimator(DOUBLE *prop)
 		if (animations[i].prop == prop)
 		{
 			*prop = animations[i].toProperty;
+			animations.erase(animations.begin() + i);
+		}
+		else
+			i++;
+}
+
+VOID resetAnimator(DOUBLE *prop)
+{
+	for (UINT i = 0; i < animations.size();)
+		if (animations[i].prop == prop)
+		{
+			*prop = animations[i].fromProperty;
 			animations.erase(animations.begin() + i);
 		}
 		else
