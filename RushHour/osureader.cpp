@@ -192,6 +192,7 @@ VOID readBeats(const WCHAR *filePathName)
 
 	while (osuFileStream)
 	{
+		line.clear();
 		std::getline(osuFileStream, line);
 		if (!line.length())
 			continue;
