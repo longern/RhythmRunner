@@ -62,6 +62,27 @@ VOID SongSelectKeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	}
 }
 
+VOID togglePause()
+{
+	if (global.isGamePaused)
+	{
+		QueryPerformanceCounter(&global.beginTime);
+		if (global.accummulatedTime >= 0)
+			AudioResume();
+		global.isGamePaused = false;
+	}
+	else
+	{
+		if (global.accummulatedTime == global.currSong().mciOffset - global.currSong().audioLeadIn ||
+			gameTimePass - global.accummulatedTime >= 1)
+		{
+			global.isGamePaused = true;
+			AudioPause();
+			global.accummulatedTime = gameTimePass;
+		}
+	}
+}
+
 VOID GamePlayKeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 {
 	if (lParam & 1 << 30)
@@ -104,23 +125,7 @@ VOID GamePlayKeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 		break;
 
 	case VK_SPACE:
-		if (global.isGamePaused)
-		{
-			QueryPerformanceCounter(&global.beginTime);
-			if(global.accummulatedTime >= 0)
-				AudioResume();
-			global.isGamePaused = false;
-		}
-		else
-		{
-			if (global.accummulatedTime == global.currSong().mciOffset - global.currSong().audioLeadIn ||
-				gameTimePass - global.accummulatedTime >= 1)
-			{
-				global.isGamePaused = true;
-				AudioPause();
-				global.accummulatedTime = gameTimePass;
-			}
-		}
+		togglePause();
 		break;
 
 	case VK_ESCAPE:
@@ -234,6 +239,8 @@ VOID LButtonDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 		break;
 
 	case global.GS_PLAYING:
+		if (ptMouse.x >= WNDWIDTH - 45 && ptMouse.y <= 31)
+			togglePause();
 		break;
 
 	case global.GS_GAMEOVER:

@@ -122,6 +122,7 @@
     <Image Include="res\ui\noisew.bmp" />
     <Image Include="res\ui\noteb.bmp" />
     <Image Include="res\ui\notew.bmp" />
+    <Image Include="res\ui\pause.bmp" />
     <Image Include="res\ui\run.ico" />
     <Image Include="res\ui\w1.bmp" />
     <Image Include="res\ui\w2.bmp" />

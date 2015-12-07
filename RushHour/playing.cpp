@@ -312,4 +312,8 @@ VOID RenderPlaying()
 	wsprintf(timeText, _T("%d"), gameTimePass);
 	SetTextColor(hdcBuffer, RGB(0, 0, 0));
 	TextOut(hdcBuffer, ToWindowX(0.8), ToWindowY(0.05), timeText, wcslen(timeText));
+
+	SelectObject(hdcBmp, resource.pauseButton);
+	TransparentBlt(hdcBuffer, WNDWIDTH - 45, 10, 15, 21,
+		hdcBmp, 0, 0, 124, 175, RGB(255, 255, 255));
 }
