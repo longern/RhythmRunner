@@ -68,6 +68,7 @@ struct GLOBAL
 	std::vector<BARRIERINFO> barriers[4];
 	HERO heroes[4];
 	DOUBLE blood;
+	DOUBLE accuracyIndicator;
 	DOUBLE fHeight[4];
 	std::vector<INT> keySequence[4];
 	LONG finalTime;
@@ -99,6 +100,7 @@ typedef struct
 {
 	BOOL foggyMode;
 	BOOL hideJudgeLine;
+	BOOL showAccuracyIndicator;
 	INT universalOffset;
 } GAMESETTINGS;
 

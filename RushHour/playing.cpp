@@ -1,6 +1,8 @@
 #include "render.h"
 #include <gdiplus.h>
 
+DOUBLE stickmanX = 0.1;
+
 VOID DrawSpikes(int i, int j)
 {
 	DOUBLE trackBottom = (i + 1) * 0.25 + ((i + 1) % 2) * 0.01;
@@ -137,13 +139,13 @@ VOID DrawBarriers(int i)
 		double lastBarrierX = -1.;
 		double lastBarrierHeight = 0.;
 
-		barrierX = 0.08 +  //  Position of Stickman
+		barrierX = stickmanX +  //  Position of Stickman
 			(global.barriers[i][j].msecs - gameTimePass) / global.currSong().msPerBeat / beatPerScreen;
 		if (barrierX < -0.2 && j < global.barriers[i].size() - 1)
 			continue;
 		if (j >= 1)
 		{
-			lastBarrierX = 0.08 +  //  Position of Stickman
+			lastBarrierX = stickmanX +  //  Position of Stickman
 				(global.barriers[i][j - 1].msecs - gameTimePass) / global.currSong().msPerBeat / beatPerScreen;
 			lastBarrierHeight = global.barriers[i][j - 1].height;
 		}
@@ -249,7 +251,7 @@ VOID RenderPlaying()
 						else
 							break;
 					SelectObject(hdcBmp, machineX > 0 ? resource.machine : resource.machineok);
-					TransparentBlt(hdcBuffer, ToWindowX(machineX + 0.08) - 24, ToWindowY(0.21 - height * 0.05) - 49,
+					TransparentBlt(hdcBuffer, ToWindowX(machineX + stickmanX) - 24, ToWindowY(0.21 - height * 0.05) - 49,
 						48, 48,
 						hdcBmp, 0, 0, 48, 48, RGB(255, 255, 255));
 				}
@@ -282,7 +284,7 @@ VOID RenderPlaying()
 		}
 		TransparentBlt(
 			hdcBuffer,
-			ToWindowX(0.08) - 21, ToWindowY(trackBottom - 0.1 - global.heroes[i].height * 0.05) - 8, global.heroWidth, global.heroHeight,
+			ToWindowX(stickmanX) - 21, ToWindowY(trackBottom - 0.1 - global.heroes[i].height * 0.05) - 8, global.heroWidth, global.heroHeight,
 			hdcBmp,
 			0, 0, 420, 504,
 			backColor
@@ -300,6 +302,7 @@ VOID RenderPlaying()
 		gra.DrawImage(&sonSelPic, 0, 0, WNDWIDTH, WNDHEIGHT);
 	}
 
+	// Draw blood
 	SelectObject(hdcBuffer, GetStockObject(WHITE_BRUSH));
 	Rectangle(hdcBuffer, 0, 0, ToWindowX(0.01), WNDHEIGHT);
 	HBRUSH darkRedBrush = CreateSolidBrush(RGB(194, 70, 49));
@@ -308,11 +311,34 @@ VOID RenderPlaying()
 	SelectObject(hdcBuffer, GetStockObject(WHITE_BRUSH));
 	DeleteObject(darkRedBrush);
 
+	//  Draw accuracy indicator
+	if (settings.showAccuracyIndicator)
+	{
+		HBRUSH indicatorYellowBrush = CreateSolidBrush(RGB(242, 215, 80));
+		SelectObject(hdcBuffer, indicatorYellowBrush);
+		Rectangle(hdcBuffer, ToWindowX(0.01) - 1, 0, ToWindowX(0.02), WNDHEIGHT);
+
+		HBRUSH indicatorGreenBrush = CreateSolidBrush(RGB(36, 180, 85));
+		SelectObject(hdcBuffer, indicatorGreenBrush);
+		DeleteObject(indicatorYellowBrush);
+		Rectangle(hdcBuffer, ToWindowX(0.01) - 1, ToWindowY(0.25), ToWindowX(0.02), ToWindowY(0.75));
+
+		HBRUSH indicatorBrush = CreateSolidBrush(RGB(6, 145, 205));
+		SelectObject(hdcBuffer, indicatorBrush);
+		DeleteObject(indicatorGreenBrush);
+		Rectangle(hdcBuffer, ToWindowX(0.01) - 1, ToWindowY(0.5 - global.accuracyIndicator) - 5,
+			ToWindowX(0.02), ToWindowY(0.5 - global.accuracyIndicator) + 5);
+
+		SelectObject(hdcBuffer, GetStockObject(WHITE_BRUSH));
+		DeleteObject(indicatorBrush);
+	}
+
 	WCHAR timeText[20];
 	wsprintf(timeText, _T("%d"), gameTimePass);
 	SetTextColor(hdcBuffer, RGB(0, 0, 0));
 	TextOut(hdcBuffer, ToWindowX(0.8), ToWindowY(0.05), timeText, wcslen(timeText));
 
+	//  Draw pause button
 	SelectObject(hdcBmp, resource.pauseButton);
 	TransparentBlt(hdcBuffer, WNDWIDTH - 45, 10, 15, 21,
 		hdcBmp, 0, 0, 124, 175, RGB(255, 255, 255));

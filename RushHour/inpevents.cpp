@@ -16,6 +16,16 @@ VOID DoJump(int track)
 			return;
 
 	global.keySequence[track].push_back(gameTimePass);
+	INT minDelta = INT_MAX;
+	for (size_t j = 0; j < global.barriers[track].size(); j++)
+		if (abs(minDelta) > abs(global.barriers[track][j].msecs - gameTimePass))
+			minDelta = global.barriers[track][j].msecs - gameTimePass;
+	if (abs(minDelta / (global.currSong().msPerBeat * 0.4)) <= 0.5)
+		global.accuracyIndicator = minDelta / (global.currSong().msPerBeat * 0.4);
+	else
+		if (abs(minDelta / (global.currSong().msPerBeat * 0.4)) <= 1.)
+			global.accuracyIndicator = minDelta > 0 ? 0.5 : -0.5;
+
 	currHero->jpStartTime = global.timePass();
 	currHero->startHeight = currHero->height;
 	currHero->jpCount++;
@@ -51,6 +61,10 @@ VOID SongSelectKeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 
 	case VK_F2:
 		settings.hideJudgeLine = !settings.hideJudgeLine;
+		break;
+
+	case VK_F3:
+		settings.showAccuracyIndicator = !settings.showAccuracyIndicator;
 		break;
 
 	case VK_ESCAPE:
@@ -126,6 +140,10 @@ VOID GamePlayKeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 
 	case VK_SPACE:
 		togglePause();
+		break;
+
+	case VK_F3:
+		settings.showAccuracyIndicator = !settings.showAccuracyIndicator;
 		break;
 
 	case VK_ESCAPE:

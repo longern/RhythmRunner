@@ -82,6 +82,7 @@ VOID GlobalInit()
 	global.heroHeight = 45;
 	settings.foggyMode = FALSE;
 	settings.hideJudgeLine = FALSE;
+	settings.showAccuracyIndicator = FALSE;
 	settings.universalOffset = 0;
 }
 
@@ -175,6 +176,7 @@ VOID GameInit()
 
 	killAnimator(&global.blood);
 	global.blood = 100.;
+	global.accuracyIndicator = 0.;
 	for (int i = 0; i < 4; i++)
 	{
 		global.heroes[i].height = 0.;
