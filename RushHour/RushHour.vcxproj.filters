@@ -157,6 +157,9 @@
     <Image Include="res\ui\pause.bmp">
       <Filter>资源文件</Filter>
     </Image>
+    <Image Include="res\ui\welbg.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="RushHour.rc">

@@ -134,6 +134,7 @@
     <Image Include="res\ui\w7.bmp" />
     <Image Include="res\ui\w8.bmp" />
     <Image Include="res\ui\w9.bmp" />
+    <Image Include="res\ui\welbg.bmp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="RushHour.rc" />

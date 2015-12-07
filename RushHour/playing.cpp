@@ -323,7 +323,7 @@ VOID RenderPlaying()
 		DeleteObject(indicatorYellowBrush);
 		Rectangle(hdcBuffer, ToWindowX(0.01) - 1, ToWindowY(0.25), ToWindowX(0.02), ToWindowY(0.75));
 
-		HBRUSH indicatorBrush = CreateSolidBrush(RGB(6, 145, 205));
+		HBRUSH indicatorBrush = CreateSolidBrush(RGB(107, 203, 255));
 		SelectObject(hdcBuffer, indicatorBrush);
 		DeleteObject(indicatorGreenBrush);
 		Rectangle(hdcBuffer, ToWindowX(0.01) - 1, ToWindowY(0.5 - global.accuracyIndicator) - 5,

@@ -5,6 +5,13 @@
 
 extern LONG gameTimePass;
 
+VOID setAccuracyIndicator(DOUBLE value)
+{
+	refreshAnimations();
+	killAnimator(&global.accuracyIndicator);
+	aniAdd(&global.accuracyIndicator, value, 150, ANIMATION::SINE);
+}
+
 VOID DoJump(int track)
 {
 	HERO *currHero = &global.heroes[track];
@@ -21,10 +28,10 @@ VOID DoJump(int track)
 		if (abs(minDelta) > abs(global.barriers[track][j].msecs - gameTimePass))
 			minDelta = global.barriers[track][j].msecs - gameTimePass;
 	if (abs(minDelta / (global.currSong().msPerBeat * 0.4)) <= 0.5)
-		global.accuracyIndicator = minDelta / (global.currSong().msPerBeat * 0.4);
+		setAccuracyIndicator(minDelta / (global.currSong().msPerBeat * 0.4));
 	else
 		if (abs(minDelta / (global.currSong().msPerBeat * 0.4)) <= 1.)
-			global.accuracyIndicator = minDelta > 0 ? 0.5 : -0.5;
+			setAccuracyIndicator(minDelta > 0 ? 0.5 : -0.5);
 
 	currHero->jpStartTime = global.timePass();
 	currHero->startHeight = currHero->height;

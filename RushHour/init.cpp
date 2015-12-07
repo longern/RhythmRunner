@@ -148,6 +148,8 @@ VOID WindowInit(HWND hWnd, WPARAM wParam, LPARAM lParam)
 		MAKEINTRESOURCE(IDB_MACHINEOK));
 	resource.pauseButton = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
 		MAKEINTRESOURCE(IDB_PAUSEBUTTON));
+	resource.welcomeBackground = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance,
+		MAKEINTRESOURCE(IDB_WELCOMEBACKGROUND));
 	
 	//  Register Touch Window To Enable Touch Event
 	RegisterTouchWindow(hWnd, 0);

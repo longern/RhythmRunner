@@ -94,6 +94,7 @@ typedef struct
 	HBITMAP machine;
 	HBITMAP machineok;
 	HBITMAP pauseButton;
+	HBITMAP welcomeBackground;
 } GAMERESOURCE;
 
 typedef struct

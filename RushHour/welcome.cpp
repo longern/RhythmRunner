@@ -15,6 +15,10 @@ VOID RenderWelcome()
 	Rectangle(hdcBuffer, 0, 0, WNDWIDTH, WNDHEIGHT);
 	SelectObject(hdcBuffer, GetStockObject(NULL_PEN));
 
+	SelectObject(hdcBmp, resource.welcomeBackground);
+	StretchBlt(hdcBuffer, 0, 0, WNDWIDTH, WNDHEIGHT,
+		hdcBmp, 0, 0, 500, 331, SRCCOPY);
+
 	HBRUSH hBrush = CreateSolidBrush(RGB(127 * WelcomeButtons[0].zoom, 127 * WelcomeButtons[0].zoom, 127 * WelcomeButtons[0].zoom));
 	SelectObject(hdcBuffer, hBrush);
 	rect = WelcomeButtons[0].geo;
