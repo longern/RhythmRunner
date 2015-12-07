@@ -74,6 +74,10 @@ VOID SongSelectKeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 		settings.showAccuracyIndicator = !settings.showAccuracyIndicator;
 		break;
 
+	case VK_F4:
+		settings.randomMode = !settings.randomMode;
+		break;
+
 	case VK_ESCAPE:
 		global.status = global.GS_WELCOME;
 		break;

@@ -102,6 +102,7 @@ typedef struct
 	BOOL foggyMode;
 	BOOL hideJudgeLine;
 	BOOL showAccuracyIndicator;
+	BOOL randomMode;
 	INT universalOffset;
 } GAMESETTINGS;
 

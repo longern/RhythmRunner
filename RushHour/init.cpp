@@ -83,6 +83,7 @@ VOID GlobalInit()
 	settings.foggyMode = FALSE;
 	settings.hideJudgeLine = FALSE;
 	settings.showAccuracyIndicator = FALSE;
+	settings.randomMode = FALSE;
 	settings.universalOffset = 0;
 }
 

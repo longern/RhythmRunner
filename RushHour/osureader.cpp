@@ -1,4 +1,5 @@
 #include <fstream>
+#include <ctime>
 #include "osureader.h"
 
 std::wstring strtowstr(const std::string &str)
@@ -188,7 +189,10 @@ VOID readBeats(const WCHAR *filePathName)
 	osuFileStream.open(filePathName);
 	std::string line, state;
 
-	srand(global.currSong().beatmapSetId);
+	if(settings.randomMode)
+		srand((unsigned int)time(NULL));
+	else
+		srand(global.currSong().beatmapSetId);
 
 	while (osuFileStream)
 	{
