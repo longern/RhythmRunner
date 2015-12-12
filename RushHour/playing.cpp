@@ -120,7 +120,7 @@ VOID DrawNoise(int i, int j)
 	DOUBLE trackBottom = (i + 1) * 0.25 + ((i + 1) % 2) * 0.01;
 	SelectObject(hdcBmp, resource.noise[i & 1]);
 	StretchBlt(hdcBuffer, ToWindowX(barrierX + 0.4 / beatPerScreen / 2) - 16,
-		ToWindowY(trackBottom - 0.075 - global.barriers[i][j].height * 0.05) - 28,
+		ToWindowY(trackBottom - 0.075 - global.barriers[i][j].height * 0.05) - 24,
 		32, 32,
 		hdcBmp, 0, 0, 64, 64, SRCCOPY);
 }
@@ -321,7 +321,7 @@ VOID RenderPlaying()
 		HBRUSH indicatorGreenBrush = CreateSolidBrush(RGB(36, 180, 85));
 		SelectObject(hdcBuffer, indicatorGreenBrush);
 		DeleteObject(indicatorYellowBrush);
-		Rectangle(hdcBuffer, ToWindowX(0.01) - 1, ToWindowY(0.25), ToWindowX(0.02), ToWindowY(0.75));
+		Rectangle(hdcBuffer, ToWindowX(0.01) - 1, ToWindowY(0.1667), ToWindowX(0.02), ToWindowY(0.8333));
 
 		HBRUSH indicatorBrush = CreateSolidBrush(RGB(107, 203, 255));
 		SelectObject(hdcBuffer, indicatorBrush);

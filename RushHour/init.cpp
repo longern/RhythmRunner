@@ -214,8 +214,10 @@ VOID GameOverInit()
 				delta = abs(*(keyToBarrier - 1) - global.barriers[i][j].msecs);
 			if (keyToBarrier != global.keySequence[i].end())
 				delta = min(delta, abs(*keyToBarrier - global.barriers[i][j].msecs));
-			if (delta <= global.currSong().msPerBeat * 0.4 / 4.)
+			if (delta <= global.currSong().msPerBeat * 0.4 / 3.)
 				finalScore += 1;
+			else if (delta <= global.currSong().msPerBeat * 0.4 / 3.)
+				finalScore += 0.9;
 			else if (delta <= global.currSong().msPerBeat * 0.4 / 2.)
 				finalScore += 0.6;
 		}
