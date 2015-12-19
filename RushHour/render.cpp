@@ -54,8 +54,13 @@ VOID RenderGameOver()
 	WCHAR outputText[30];
 	wsprintf(outputText, _T("Your Distance: %d m"), global.finalTime / 10);
 	TextOut(hdcBuffer, ToWindowX(0.38), ToWindowY(0.48), outputText, wcslen(outputText));
-	swprintf(outputText, 30, _T("Your Score: %.2lf%%"), global.finalScore * 100.);
+	
+	if(settings.foggyMode)
+		swprintf(outputText, 30, _T("Your Score: %.2lf%%"), global.finalScore * 120.);
+	else
+		swprintf(outputText, 30, _T("Your Score: %.2lf%%"), global.finalScore * 100.);
 	TextOut(hdcBuffer, ToWindowX(0.38), ToWindowY(0.53), outputText, wcslen(outputText));
+
 	if(global.finalScore == 1.)
 		TextOut(hdcBuffer, ToWindowX(0.38), ToWindowY(0.58), _T("All Charming"), 12);
 	else if(global.finalScore >= 0.95)
